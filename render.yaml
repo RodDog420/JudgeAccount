@@ -2,6 +2,7 @@ services:
   - type: web
     name: judgeaccount
     runtime: python
+    plan: free
     buildCommand: "./build.sh"
     startCommand: "gunicorn judge_review:app"
     envVars:
@@ -16,5 +17,6 @@ services:
 
 databases:
   - name: judgeaccount-db
+    plan: free
     databaseName: judgeaccount
     user: judgeaccount
