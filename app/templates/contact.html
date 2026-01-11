@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Contact Us - Judge Account{% endblock %}
+{% block content %}
+<div class="page-container">
+    <h1>Contact Us</h1>
+    
+    <section class="page-section">
+        <h2>Get in Touch</h2>
+        <p>We welcome your questions, feedback, and inquiries. JudgeAccount.com is committed to promoting judicial accountability and transparency, and we value communication with our user community.</p>
+    </section>
+
+    <section class="page-section">
+        <h2>Email Us</h2>
+        <div class="contact-email-box">
+            <p class="contact-email-label">General Inquiries & Support:</p>
+            <p class="contact-email-address">
+                <a href="mailto:Admin@JudgeAccount.com">Admin@JudgeAccount.com</a>
+            </p>
+        </div>
+        <p class="contact-response-time">We strive to respond to all legitimate inquiries within a reasonable timeframe.</p>
+    </section>
+
+    <section class="page-section">
+        <h2>What to Include in Your Message</h2>
+        <p>To help us respond more effectively, please include:</p>
+        <ul>
+            <li><strong>Subject Line:</strong> A clear, descriptive subject that summarizes your inquiry</li>
+            <li><strong>Your Username:</strong> If your inquiry relates to your account (optional for general questions)</li>
+            <li><strong>Detailed Description:</strong> A thorough explanation of your question, concern, or feedback</li>
+            <li><strong>Relevant Information:</strong> Any supporting details, screenshots, or context that may help us assist you</li>
+        </ul>
+    </section>
+
+    <section class="page-section">
+        <h2>Types of Inquiries</h2>
+        <div class="inquiry-types-grid">
+            <div class="inquiry-type-card">
+                <h3>Technical Issues</h3>
+                <p>Report bugs, technical problems, or issues accessing the site.</p>
+                <p class="inquiry-type-subject"><strong>Subject:</strong> Technical Support</p>
+            </div>
+
+            <div class="inquiry-type-card">
+                <h3>Account Questions</h3>
+                <p>Questions about account registration, login issues, or account management.</p>
+                <p class="inquiry-type-subject"><strong>Subject:</strong> Account Inquiry</p>
+            </div>
+
+            <div class="inquiry-type-card">
+                <h3>Content Moderation</h3>
+                <p>Questions about moderation decisions, appeals, or Community Guidelines.</p>
+                <p class="inquiry-type-subject"><strong>Subject:</strong> Moderation Inquiry</p>
+            </div>
+
+            <div class="inquiry-type-card">
+                <h3>Privacy & Legal</h3>
+                <p>Privacy concerns, data requests, legal inquiries, or DMCA notices.</p>
+                <p class="inquiry-type-subject"><strong>Subject:</strong> Privacy/Legal Inquiry</p>
+            </div>
+
+            <div class="inquiry-type-card">
+                <h3>Media & Press</h3>
+                <p>Media inquiries, press requests, or partnership opportunities.</p>
+                <p class="inquiry-type-subject"><strong>Subject:</strong> Media Inquiry</p>
+            </div>
+
+            <div class="inquiry-type-card">
+                <h3>General Feedback</h3>
+                <p>Suggestions, feature requests, or general comments about our platform.</p>
+                <p class="inquiry-type-subject"><strong>Subject:</strong> Feedback</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <h2>Before You Contact Us</h2>
+        <p>You may find answers to common questions in the following resources:</p>
+        <ul>
+            <li><a href="{{ url_for('main.guidelines') }}">Community Guidelines</a> - Standards for content and user conduct</li>
+            <li><a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a> - How we handle your information</li>
+            <li><a href="{{ url_for('main.terms_of_service') }}">Terms of Service</a> - Legal terms governing use of our platform</li>
+        </ul>
+    </section>
+
+    <section class="page-section">
+        <h2>Our Mission</h2>
+        <p>JudgeAccount.com is dedicated to promoting judicial accountability and transparency into the character and conduct of United States judges. Our platform serves as a critical resource for voters, litigants, attorneys, and citizens seeking verified information about judicial officers prior to elections, retention votes, and appointments.</p>
+        <p>We operate with unwavering commitment to integrity, truthfulness, and fairness. Every communication we receive helps us better serve our mission and improve our platform.</p>
+    </section>
+
+    <section class="page-section">
+        <h2>Important Notice</h2>
+        <div class="alert-info">
+            <p class="alert-text"><strong>We do not provide legal advice.</strong> JudgeAccount.com is an informational platform and does not offer legal counsel, case evaluations, or attorney services. If you need legal assistance, please consult a qualified attorney in your jurisdiction.</p>
+        </div>
+    </section>
+</div>
+{% endblock %}

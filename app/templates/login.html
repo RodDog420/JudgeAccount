@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Log In - Judge Review{% endblock %}
+{% block content %}
+<h1>Log In</h1>
+<form method="POST" action="{{ url_for('auth.login') }}">
+    {{ form.hidden_tag() }}
+    
+    <div class="form-group">
+        {{ form.username.label }}
+        {{ form.username(class="form-control") }}
+        {% if form.username.errors %}
+            {% for error in form.username.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.password.label }}
+        {{ form.password(type="password", class="form-control") }}
+        {% if form.password.errors %}
+            {% for error in form.password.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="checkbox-group">
+        {{ form.remember_me() }}
+        {{ form.remember_me.label }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+<p class="spacing-top-md">
+    Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>
+</p>
+{% endblock %}

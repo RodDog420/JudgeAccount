@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Moderation Queue - Admin{% endblock %}
+
+{% block content %}
+<h1>Flagged Content</h1>
+<p class="admin-mode-notice">Admin Mode - Review and resolve flagged content</p>
+
+<div class="form-actions spacing-bottom-sm">
+    {% if show_resolved %}
+        <a href="{{ url_for('auth.moderation_queue') }}" class="btn btn-primary">Show Unresolved Only</a>
+    {% else %}
+        <a href="{{ url_for('auth.moderation_queue', show_resolved='true') }}" class="btn btn-primary">Show All (Including Resolved)</a>
+    {% endif %}
+    <a href="{{ url_for('auth.admin_dashboard') }}" class="btn btn-gray">Back to Admin</a>
+</div>
+
+{% if flags %}
+    <p class="content-count">{{ flags|length }} flag(s)</p>
+    
+    {% for flag in flags %}
+    <div class="review-card {% if flag.is_resolved %}flag-card-resolved{% else %}flag-card-unresolved{% endif %}">
+        <div class="review-header">
+            <div>
+                <h3 class="flag-header-title">
+                    {% if flag.review_id %}
+                        Review by {{ flag.review.user.username if flag.review and flag.review.user else 'Deleted User' }}
+                    {% else %}
+                        Media Link by {{ flag.media_link.user.username if flag.media_link and flag.media_link.user else 'Deleted User' }}
+                    {% endif %}
+                </h3>
+                <p class="flag-reporter-info">
+                    Reported by: <strong>{{ flag.flagger.username }}</strong> on {{ flag.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                </p>
+            </div>
+            <span class="badge badge-concern">{{ flag.flag_type.replace('_', ' ').title() }}</span>
+        </div>
+        
+        {% if flag.description %}
+        <div class="reporter-note-box">
+            <strong>Reporter's Note:</strong> {{ flag.description }}
+        </div>
+        {% endif %}
+        
+        <div class="flagged-content-box">
+            <h4 class="flagged-content-heading">Flagged Content:</h4>
+            {% if flag.review_id and flag.review %}
+                <p class="flagged-content-meta"><strong>Judge:</strong> {{ flag.review.judge.full_name() if flag.review.judge else 'Deleted Judge' }}</p>
+                <p class="flagged-content-meta"><strong>Rating:</strong> {{ flag.review.rating }}/5</p>
+                <p class="flagged-content-text">{{ flag.review.review_text }}</p>
+            {% elif flag.media_link_id and flag.media_link %}
+                <p class="flagged-content-meta"><strong>Judge:</strong> {{ flag.media_link.judge.full_name() if flag.media_link.judge else 'Deleted Judge' }}</p>
+                <p class="flagged-content-meta"><strong>Headline:</strong> {{ flag.media_link.headline }}</p>
+                <p class="flagged-content-meta"><strong>Source:</strong> {{ flag.media_link.news_source }}</p>
+                <p class="flagged-content-text">{{ flag.media_link.summary }}</p>
+            {% else %}
+                <p class="flagged-content-meta"><em>Content has been deleted</em></p>
+            {% endif %}
+        </div>
+        
+        {% if flag.is_resolved %}
+            <div class="resolved-box">
+                <strong class="resolved-text">Resolved:</strong>
+                <span class="resolved-text">{{ flag.resolution_action.replace('_', ' ').title() }} by {{ flag.resolved_by.username if flag.resolved_by else 'System' }} on {{ flag.resolved_at.strftime('%B %d, %Y') }}</span>
+            </div>
+        {% else %}
+            <div class="admin-actions spacing-top-sm">
+                <a href="{{ url_for('auth.dismiss_flag', flag_id=flag.id) }}" 
+                    class="btn btn-primary"
+                    onclick="return confirm('Dismiss this flag? (Content will remain)');">
+                    Dismiss Flag
+                </a>
+                
+                <button type="button" class="btn btn-secondary" 
+                        onclick="if(confirm('Delete this content permanently?')) { document.getElementById('delete-form-{{ flag.id }}').submit(); }">
+                    Delete Content
+                </button>
+                <form id="delete-form-{{ flag.id }}" method="POST" action="{{ url_for('auth.flag_action', flag_id=flag.id) }}" class="hidden">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="action" value="delete_content">
+                </form>
+                
+                {% if (flag.review_id and flag.review and flag.review.user) or (flag.media_link_id and flag.media_link and flag.media_link.user) %}
+                <button type="button" class="btn btn-warning"
+                        onclick="if(confirm('Ban this user for violating guidelines?')) { document.getElementById('ban-form-{{ flag.id }}').submit(); }">
+                    Ban User
+                </button>
+                <form id="ban-form-{{ flag.id }}" method="POST" action="{{ url_for('auth.flag_action', flag_id=flag.id) }}" class="hidden">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="action" value="ban_user">
+                </form>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="no-reviews">
+        <p>{% if show_resolved %}No flags found.{% else %}No unresolved flags. Great job!{% endif %}</p>
+    </div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Banned Users - Admin{% endblock %}
+
+{% block content %}
+<h1>Banned Users</h1>
+<p class="admin-mode-notice">List of all users who have been banned from the site</p>
+
+<div class="form-actions spacing-bottom-sm">
+    {% if show_unbanned %}
+        <a href="{{ url_for('auth.view_banned_users') }}" class="btn btn-primary">
+            Show Active Bans Only
+        </a>
+    {% else %}
+        <a href="{{ url_for('auth.view_banned_users', show_unbanned='true') }}" class="btn btn-primary">
+            Show All (Including Unbanned)
+        </a>
+    {% endif %}
+    <a href="{{ url_for('auth.manage_users') }}" class="btn btn-gray">
+        Back to User Management
+    </a>
+</div>
+
+{% if banned_users %}
+    <p class="content-count">
+        Showing {{ banned_users|length }} banned user record(s)
+        {% if not show_unbanned %}(active bans only){% endif %}
+    </p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Banned Date</th>
+                <th>Banned By</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for banned in banned_users %}
+            <tr {% if banned.is_unbanned %}class="table-row-muted"{% endif %}>
+                <td>
+                    {{ banned.username }}
+                    {% if banned.is_unbanned %}
+                        <span class="badge badge-unbanned badge-small">UNBANNED</span>
+                    {% endif %}
+                </td>
+                <td class="table-cell-muted">{{ banned.email }}</td>
+                <td class="table-cell-muted">
+                    {{ banned.banned_at.strftime('%b %d, %Y') }}
+                </td>
+                <td class="text-small">
+                    {{ banned.banned_by.username if banned.banned_by else 'System' }}
+                </td>
+                <td class="text-small">
+                    {{ banned.ban_reason[:100] }}{% if banned.ban_reason|length > 100 %}...{% endif %}
+                </td>
+                <td>
+                    {% if banned.is_unbanned %}
+                        <span class="badge badge-active">UNBANNED</span>
+                        <div class="text-smaller text-muted spacing-top-sm">
+                            {{ banned.unbanned_at.strftime('%b %d, %Y') if banned.unbanned_at else '' }}
+                        </div>
+                    {% else %}
+                        <span class="badge badge-concern">BANNED</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if banned.user_id %}
+                        <a href="{{ url_for('auth.view_user_activity', user_id=banned.user_id) }}" 
+                            class="btn btn-primary btn-small">
+                            View User
+                        </a>
+                    {% else %}
+                        <span class="text-smaller text-muted-italic">
+                            User Deleted
+                        </span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="no-reviews">
+        <p>
+            {% if show_unbanned %}
+                No ban records found.
+            {% else %}
+                No active bans. All previously banned users have been unbanned.
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
+
+{% endblock %}

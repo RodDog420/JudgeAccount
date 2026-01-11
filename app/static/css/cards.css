@@ -1,0 +1,202 @@
+.judge-profile {
+    background-color: white;
+    padding: 1.875rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.875rem;
+}
+.judge-profile h1 {
+    color: #2c3e50;
+    margin-bottom: 0.625rem;
+}
+.judge-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+    gap: 0.9375rem;
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    background-color: #f8f9fa;
+    border-radius: 0.3125rem;
+}
+.judge-info-item {
+    display: flex;
+    flex-direction: column;
+}
+.judge-info-label {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.3125rem;
+}
+.judge-info-value {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+.review-card {
+    background-color: white;
+    padding: 1.5625rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.25rem;
+    border-left: 0.25rem solid #3498db;
+}
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.9375rem;
+    padding-bottom: 0.9375rem;
+    border-bottom: 0.0625rem solid #eee;
+}
+.review-rating {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f39c12;
+}
+.review-date {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+.review-concerns {
+    display: flex;
+    gap: 0.625rem;
+    margin-bottom: 0.9375rem;
+    flex-wrap: wrap;
+}
+.review-text {
+    color: #555;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+.no-reviews {
+    text-align: center;
+    padding: 3.75rem 1.25rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    color: #999;
+}
+.no-reviews p {
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+}
+.no-reviews a {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 0.75rem 1.875rem;
+    border-radius: 0.3125rem;
+    text-decoration: none;
+    font-weight: 600;
+}
+.no-reviews a:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+}
+/* Media Link Cards */
+.media-link-card {
+    background-color: white;
+    padding: 1.5625rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.25rem;
+    border-left: 0.25rem solid #27ae60;
+}
+.media-link-header {
+    margin-bottom: 0.75rem;
+}
+.media-link-headline {
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+}
+.media-link-headline a {
+    color: #2c3e50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.media-link-headline a:hover {
+    color: #27ae60;
+    text-decoration: underline;
+}
+.media-link-source {
+    display: inline-block;
+    background-color: #f8f9fa;
+    color: #7f8c8d;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.media-link-date {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 0.9375rem;
+}
+.media-link-summary {
+    color: #555;
+    line-height: 1.8;
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+}
+.content-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.9375rem;
+    border-top: 0.0625rem solid #eee;
+}
+
+/* .media-link-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.9375rem;
+    border-top: 0.0625rem solid #eee;
+} */
+.media-link-button {
+    background-color: #3498db;
+    color: white;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.3125rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    min-width: 7.5rem;
+}
+.media-link-button:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+}
+.media-link-submitted {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+}
+.no-media-links {
+    text-align: center;
+    padding: 3.75rem 1.25rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    color: #999;
+}
+.no-media-links p {
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+}
+.no-media-links a {
+    display: inline-block;
+    background-color: #27ae60;
+    color: white;
+    padding: 0.75rem 1.875rem;
+    border-radius: 0.3125rem;
+    text-decoration: none;
+    font-weight: 600;
+}
+.no-media-links a:hover {
+    background-color: #229954;
+    text-decoration: none;
+}

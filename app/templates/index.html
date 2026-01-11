@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Judge Directory - Judge Review{% endblock %}
+{% block content %}
+<h1>Judge Index</h1>
+<form method="POST" action="{{ url_for('main.index') }}" class="spacing-bottom-xl">
+    {{ form.hidden_tag() }}
+    
+    <div class="filter-bar">
+        <div class="flex-grow min-width-300">
+            {{ form.search_query(placeholder="Search by judge name, court, or location...", class="width-100") }}
+        </div>
+        <div class="min-width-150">
+            {{ form.filter_state(class="width-100") }}
+        </div>
+        <div class="min-width-180">
+            {{ form.filter_federal(class="width-100") }}
+        </div>
+        <div class="min-width-160">
+            {{ form.filter_retired(class="width-100") }}
+        </div>
+        <div class="min-width-180">
+            {{ form.filter_content(class="width-100") }}
+        </div>
+        <div class="min-width-200">
+            {{ form.sort_by(class="width-100") }}
+        </div>
+        <div>
+            {{ form.search_submit(class="btn btn-primary width-auto no-margin height-100") }}
+        </div>
+    </div>
+</form>
+{% if judges %}
+<p class="content-count">Showing {{ judges|length }} judge(s)</p>
+<table>
+    <thead>
+        <tr>
+            <th>Judge Name</th>
+            <th>Court</th>
+            <th>Location</th>
+            <th>Average Rating</th>
+            <th>Reviews</th>
+            <th>Verified Links</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for judge in judges %}
+        <tr>
+            <td>
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
+                    {{ judge.full_name() }}
+                    {% if judge.is_federal %}
+                        <span class="badge badge-federal">Federal</span>
+                    {% endif %}
+                    {% if judge.is_retired %}
+                        <span class="badge badge-retired">Retired</span>
+                    {% endif %}
+                </a>
+            </td>
+            <td>{{ judge.court }}</td>
+            <td>{{ judge.city }}, {{ judge.state }}</td>
+            <td class="rating-cell">
+                {% if judge.review_count() > 0 %}
+                    {{ "%.1f"|format(judge.average_rating()) }} / 5.0
+                {% else %}
+                    No ratings yet
+                {% endif %}
+            </td>
+            <td class="review-count">{{ judge.review_count() }} reviews</td>
+            <td class="review-count">{{ judge.media_link_count() }} links</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="no-reviews">
+    <p>No judges found matching your search criteria.</p>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary">Clear Filters & View All</a>
+</div>
+{% endif %}
+{% endblock %}

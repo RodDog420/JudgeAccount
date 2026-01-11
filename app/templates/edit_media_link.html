@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Edit Media Link - Judge Review{% endblock %}
+{% block content %}
+<h1>Edit Media Link</h1>
+<p>Update your media link submission. Changes will require re-verification.</p>
+
+<form method="POST" action="{{ url_for('auth.edit_media_link', media_link_id=media_link.id) }}">
+    {{ form.hidden_tag() }}
+    
+    <h3>Judge Information</h3>
+    
+    <div class="form-group">
+        {{ form.judge_first_name.label }}
+        {{ form.judge_first_name(class="form-control", disabled=true) }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.judge_last_name.label }}
+        {{ form.judge_last_name(class="form-control", disabled=true) }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.state.label }}
+        {{ form.state(class="form-control", id="state-select", disabled=true) }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.court.label }}
+        {{ form.court(class="form-control", id="court-select", disabled=true) }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.city.label }}
+        {{ form.city(class="form-control", disabled=true) }}
+    </div>
+    
+    <div class="checkbox-group">
+        {{ form.is_federal(disabled=true) }}
+        {{ form.is_federal.label }}
+    </div>
+    
+    <h3>Media Link Details</h3>
+    
+    <div class="form-group">
+        {{ form.headline.label }}
+        {{ form.headline(class="form-control", placeholder="Enter the article or report headline...") }}
+        {% if form.headline.errors %}
+            {% for error in form.headline.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.news_source.label }}
+        {{ form.news_source(class="form-control", placeholder="e.g., New York Times, Court Records, AP News") }}
+        {% if form.news_source.errors %}
+            {% for error in form.news_source.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.url.label }}
+        {{ form.url(class="form-control", placeholder="https://...") }}
+        {% if form.url.errors %}
+            {% for error in form.url.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.publication_date.label }}
+        {{ form.publication_date(class="form-control") }}
+        {% if form.publication_date.errors %}
+            {% for error in form.publication_date.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.summary.label }}
+        {{ form.summary(class="form-control", placeholder="Provide a brief summary of what this article/report discusses about the judge...") }}
+        {% if form.summary.errors %}
+            {% for error in form.summary.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="user-actions">
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+<script>
+// Convert Python dictionary to JavaScript object
+const courtsByState = {{ courts_by_state | tojson }};
+
+// Get the state and court dropdown elements
+const stateSelect = document.getElementById('state-select');
+const courtSelect = document.getElementById('court-select');
+
+// Store the pre-selected court value
+const preselectedCourt = "{{ media_link.judge.court }}";
+
+// Function to update court dropdown based on selected state
+function updateCourtOptions() {
+    const selectedState = stateSelect.value;
+    
+    // Clear current court options
+    courtSelect.innerHTML = '<option value="">Select a court...</option>';
+    
+    // If a state is selected, add its courts
+    if (selectedState && courtsByState[selectedState]) {
+        courtsByState[selectedState].forEach(function(court) {
+            const option = document.createElement('option');
+            option.value = court[0];  // The court value
+            option.text = court[1];   // The court display name
+            
+            // Pre-select the current court
+            if (court[0] === preselectedCourt) {
+                option.selected = true;
+            }
+            
+            courtSelect.appendChild(option);
+        });
+        courtSelect.disabled = true;  // Keep disabled since judge info can't be changed
+    } else {
+        courtSelect.disabled = true;
+    }
+}
+
+// Listen for state selection changes
+stateSelect.addEventListener('change', updateCourtOptions);
+
+// Initialize on page load
+updateCourtOptions();
+</script>
+{% endblock %}

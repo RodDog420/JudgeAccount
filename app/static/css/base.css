@@ -1,0 +1,652 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+input,
+textarea,
+select,
+button {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.container {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 1.25rem;
+    flex: 1;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.9375rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+h1 {
+    font-size: 2.5rem;
+}
+h2 {
+    font-size: 2rem;
+}
+h3 {
+    font-size: 1.5rem;
+}
+p {
+    margin-bottom: 0.9375rem;
+}
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+.flash-message {
+    background-color: #d4edda;
+    border: 0.0625rem solid #c3e6cb;
+    color: #155724;
+    padding: 0.9375rem;
+    margin-bottom: 1.25rem;
+    border-radius: 0.3125rem;
+    font-weight: 500;
+}
+
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+footer {
+    background-color: #2c3e50;
+    color: white;
+    margin-top: 3.75rem;
+    padding: 2.5rem 0 1.25rem 0;
+}
+
+.footer-container {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+    gap: 2.5rem;
+}
+
+.footer-section h3 {
+    color: #3498db;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.footer-mission {
+    color: #ecf0f1;
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.625rem;
+}
+
+.footer-links a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 1.25rem 1.25rem 0 1.25rem;
+    margin-top: 2rem;
+    border-top: 0.0625rem solid #34495e;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: #95a5a6;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   GENERIC CONTENT PAGES (Guidelines, Legal, Contact, Sitemap, Support)
+   ========================================================================== */
+
+.page-container {
+    max-width: 50rem;
+    margin: 0 auto;
+}
+
+.page-container h1 {
+    color: #2c3e50;
+    margin-bottom: 1.875rem;
+    font-size: 2.5rem;
+}
+
+.page-container h2 {
+    color: #2c3e50;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 0.125rem solid #3498db;
+    font-size: 1.8rem;
+}
+
+.page-container h3 {
+    color: #34495e;
+    margin-top: 1.875rem;
+    margin-bottom: 0.9375rem;
+    font-size: 1.3rem;
+}
+
+.page-container h4 {
+    color: #34495e;
+    margin-top: 1.25rem;
+    margin-bottom: 0.625rem;
+    font-size: 1.1rem;
+}
+
+.page-container p {
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+    color: #2c3e50;
+}
+
+.page-container ul,
+.page-container ol {
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+    padding-left: 2.5rem;
+}
+
+.page-container li {
+    margin-bottom: 0.625rem;
+}
+
+.page-section {
+    margin-bottom: 3.125rem;
+    scroll-margin-top: 10rem;
+}
+
+
+/* ==========================================================================
+   GUIDELINES PAGE - UNIQUE STYLES
+   ========================================================================== */
+
+.toc-list {
+    list-style: decimal;
+    padding-left: 2rem;
+}
+
+.toc-list li {
+    margin-bottom: 0.625rem;
+}
+
+.toc-list a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.toc-list a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.guidelines-footer {
+    margin-top: 3.75rem;
+    padding-top: 1.875rem;
+    border-top: 0.125rem solid #ddd;
+    text-align: center;
+    color: #7f8c8d;
+}
+
+.guidelines-footer p {
+    margin: 0.3125rem 0;
+}
+
+
+/* ==========================================================================
+   LEGAL DOCUMENTS - UNIQUE STYLES
+   ========================================================================== */
+
+.legal-document-meta {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.3125rem;
+    margin-bottom: 1.875rem;
+}
+
+.legal-document-meta p {
+    margin: 0.3125rem 0;
+    color: #7f8c8d;
+}
+
+.legal-document-footer {
+    margin-top: 3.75rem;
+    padding-top: 1.875rem;
+    border-top: 0.125rem solid #ddd;
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.3125rem;
+}
+
+.legal-document-footer p {
+    margin: 0.625rem 0;
+}
+
+.contact-info {
+    background-color: #f8f9fa;
+    padding: 1.25rem;
+    border-radius: 0.3125rem;
+    margin: 1.25rem 0;
+}
+
+
+/* ==========================================================================
+   CONTACT PAGE - UNIQUE STYLES
+   ========================================================================== */
+
+.contact-email-box {
+    background-color: #e3f2fd;
+    border-left: 0.25rem solid #3498db;
+    padding: 2rem;
+    border-radius: 0.3125rem;
+    text-align: center;
+    margin: 1.875rem 0;
+}
+
+.contact-email-label {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin-bottom: 0.625rem;
+    font-weight: 600;
+}
+
+.contact-email-address {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.contact-email-address a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.contact-email-address a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.contact-response-time {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-style: italic;
+    text-align: center;
+}
+
+.inquiry-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.25rem;
+    margin: 1.875rem 0;
+}
+
+.inquiry-type-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+    border-left: 0.25rem solid #3498db;
+}
+
+.inquiry-type-card h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.inquiry-type-card p {
+    margin-bottom: 0.625rem;
+    font-size: 0.95rem;
+}
+
+.inquiry-type-subject {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+
+/* ==========================================================================
+   SITEMAP PAGE - UNIQUE STYLES
+   ========================================================================== */
+
+.sitemap-intro {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 2.5rem;
+}
+
+.sitemap-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sitemap-list li {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+    border-left: 0.1875rem solid #3498db;
+}
+
+.sitemap-list a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.sitemap-list a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.sitemap-description {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    margin-top: 0.3125rem;
+    margin-bottom: 0;
+}
+
+.sitemap-about-box {
+    background-color: #f8f9fa;
+    padding: 1.875rem;
+    border-radius: 0.5rem;
+    margin-top: 1.25rem;
+}
+
+.sitemap-about-box h3 {
+    margin-top: 1.5rem;
+}
+
+.sitemap-about-box h3:first-child {
+    margin-top: 0;
+}
+
+.sitemap-about-box p {
+    line-height: 1.8;
+    color: #2c3e50;
+}
+
+.sitemap-about-box ul {
+    line-height: 1.8;
+    padding-left: 2rem;
+}
+
+.sitemap-about-box li {
+    margin-bottom: 0.625rem;
+}
+
+.seo-info-box {
+    background-color: #e3f2fd;
+    border-left: 0.25rem solid #3498db;
+    padding: 1.875rem;
+    border-radius: 0.3125rem;
+    margin-top: 1.25rem;
+}
+
+.seo-info-box h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.seo-info-box p {
+    line-height: 1.8;
+    color: #2c3e50;
+}
+
+.seo-keywords-list {
+    line-height: 1.8;
+    padding-left: 2rem;
+}
+
+.seo-keywords-list li {
+    margin-bottom: 0.5rem;
+    color: #34495e;
+}
+
+.sitemap-footer {
+    margin-top: 3.75rem;
+    padding-top: 1.875rem;
+    border-top: 0.125rem solid #ddd;
+    text-align: center;
+    color: #7f8c8d;
+}
+
+.sitemap-footer p {
+    margin: 0.3125rem 0;
+}
+
+
+/* ==========================================================================
+   SUPPORT PAGE - UNIQUE STYLES
+   ========================================================================== */
+
+.why-support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.25rem;
+    margin: 1.875rem 0;
+}
+
+.why-support-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+    border-left: 0.25rem solid #27ae60;
+}
+
+.why-support-card h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.why-support-card p {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+.donation-options {
+    background-color: #f8f9fa;
+    padding: 1.875rem;
+    border-radius: 0.5rem;
+    margin: 1.875rem 0;
+}
+
+.donation-options h3 {
+    margin-top: 0;
+}
+
+.donation-tiers,
+.monthly-tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+}
+
+.donation-tier-card,
+.monthly-tier-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border-top: 0.25rem solid #3498db;
+}
+
+.donation-amount {
+    color: #3498db;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 0.625rem 0;
+}
+
+.donation-tier-description {
+    color: #555;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.payment-integration-placeholder {
+    background-color: #fff3cd;
+    border-left: 0.25rem solid #ffc107;
+    padding: 1.5rem;
+    border-radius: 0.3125rem;
+    margin-top: 1.875rem;
+}
+
+.payment-integration-placeholder h4 {
+    margin-top: 0;
+    color: #856404;
+}
+
+.placeholder-notice {
+    color: #856404;
+    font-weight: 600;
+}
+
+.payment-methods-list {
+    padding-left: 2rem;
+    color: #555;
+}
+
+.placeholder-contact {
+    color: #555;
+    margin-bottom: 0;
+}
+
+.fund-allocation {
+    background-color: #e3f2fd;
+    border-left: 0.25rem solid #3498db;
+    padding: 1.5rem;
+    border-radius: 0.3125rem;
+    margin: 1.25rem 0;
+}
+
+.fund-allocation p {
+    margin-bottom: 1rem;
+}
+
+.fund-allocation ul {
+    margin-bottom: 1rem;
+}
+
+.transparency-note {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+.support-footer {
+    margin-top: 3.75rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.support-footer h3 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+.support-signature {
+    color: #3498db;
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+}
+
+
+/*
+UPDATED COMPLETE COLOR DICTIONARY
+
+BLACKS & GRAYS:
+#000000 - Black - Shadow effects (rgba variations)
+#333333 - Dark Gray - Body text color
+#555555 - Medium Gray - Review text, table body text
+#7f8c8d - Gray - Review dates, metadata, labels, counts, source badges
+#95a5a6 - Light Gray - (REMOVED - no longer used)
+#999999 - Very Light Gray - No reviews/media text, table empty state
+#ddd - Very Light Gray Border - Input borders, star-empty color, table row borders
+#eee - Ultra Light Gray - Review header border, media link footer border, table row borders
+
+WHITES & OFF-WHITES:
+#ffffff - White - Backgrounds (cards, forms, tables, buttons), text on dark backgrounds, badge text
+#f4f4f4 - Off-White - Body background
+#f8f9fa - Light Background Gray - Judge info background, stat box background, media link source badge, table row hover
+
+BLUES:
+#3498db - Primary Blue - Links, review card border, federal badge, "View Article" button, table links, form focus border
+#2980b9 - Dark Blue - Primary button hover, no-reviews link hover, submit button hover, "View Article" button hover
+#5dade2 - Light Blue - Welcome text color
+#34495e - Dark Slate Blue - Navigation hover background
+
+NAVIGATION & HEADERS:
+#2c3e50 - Dark Blue-Gray - Headers (h1-h6), navigation background, footer background, judge name headings, table header background
+
+PINKS/REDS:
+#e91e63 - Pink/Magenta - "Delete" buttons everywhere
+#c2185b - Dark Pink - "Delete" button hover, temperament badge
+#e74c3c - Red - Admin mode notice, error text, concern badge, field error borders
+#ff6b6b - Coral Red - Admin link color
+
+GREENS:
+#27ae60 - Green - "Edit" buttons everywhere, verified badge, media link card border, no-media-links button
+#229954 - Dark Green - "Edit" button hover, no-media-links button hover
+#d4edda - Light Green - Flash message background
+#c3e6cb - Green Border - Flash message border
+#155724 - Dark Green - Flash message text
+
+ORANGES:
+#f39c12 - Orange - Star rating color, review rating, table rating cell
+#e67e22 - Dark Orange - Fairness concern badge
+
+PURPLES:
+#9b59b6 - Purple - Bias concern badge
+
+YELLOWS:
+#fff3cd - Light Yellow - Pending verification background
+#ffc107 - Yellow/Gold - Pending verification border
+#856404 - Dark Yellow/Brown - Pending verification text
+*/

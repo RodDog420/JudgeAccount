@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Judge Review{% endblock %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+<p class="admin-mode-notice">Admin Mode - You can moderate all content</p>
+
+<form method="POST" action="{{ url_for('auth.admin_dashboard') }}" class="admin-search-form">
+    {{ form.hidden_tag() }}
+    
+    <h3 class="form-section-title">Search & Filter Content</h3>
+    
+    <div class="admin-filter-grid">
+        <div class="form-group">
+            {{ form.search_judge.label }}
+            {{ form.search_judge(placeholder="e.g., John Smith") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.search_content.label }}
+            {{ form.search_content(placeholder="Search text/summary") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.filter_username.label }}
+            {{ form.filter_username(placeholder="e.g., Juan Doe") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.filter_rating.label }}
+            {{ form.filter_rating() }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.filter_concerns.label }}
+            {{ form.filter_concerns() }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.sort_by.label }}
+            {{ form.sort_by() }}
+        </div>
+    </div>
+    
+    <div class="form-actions">
+        {{ form.admin_submit(class="btn btn-primary") }}
+        <a href="{{ url_for('auth.admin_dashboard') }}" class="btn btn-secondary">Clear All Filters</a>
+    </div>
+</form>
+
+<!-- Media Links Section -->
+<h2>Media Links</h2>
+{% if media_links %}
+    <p class="content-count">Showing {{ media_links|length }} media link(s)</p>
+    
+    {% for media_link in media_links %}
+    <div class="media-link-card">
+        <div class="media-link-header">
+            <div>
+                <h3 class="judge-name-heading">
+                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}">
+                        {{ media_link.judge.full_name() }}
+                    </a>
+                    {% if media_link.judge.is_federal %}
+                        <span class="badge badge-federal">Federal</span>
+                    {% endif %}
+                </h3>
+                <p class="judge-court-info">
+                    {{ media_link.judge.court }} - {{ media_link.judge.city }}, {{ media_link.judge.state }}
+                </p>
+                <p class="submitter-info">
+                    {% if media_link.author %}
+                        Submitted by: <strong>{{ media_link.author.username }}</strong>
+                    {% else %}
+                        Submitted by: <em>Anonymous</em>
+                    {% endif %}
+                </p>
+            </div>
+            <span class="media-link-source">{{ media_link.news_source }}</span>
+        </div>
+        
+        <h4 class="media-link-headline">
+            <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer">
+                {{ media_link.headline }}
+            </a>
+        </h4>
+        
+        <div class="media-link-date">
+            Published: {{ media_link.publication_date.strftime('%B %d, %Y') }} | 
+            Submitted: {{ media_link.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+        </div>
+        
+        <div class="media-link-summary">
+            {{ media_link.summary }}
+        </div>
+        
+        {% if not media_link.is_verified %}
+        <div class="pending-verification-admin">
+            <strong>⚠️ PENDING VERIFICATION</strong>
+        </div>
+        {% endif %}
+        
+        <div class="admin-actions">
+            {% if not media_link.is_verified %}
+                <a href="{{ url_for('auth.admin_approve_media_link', media_link_id=media_link.id) }}" 
+                   class="btn btn-primary" 
+                   onclick="return confirm('Approve this media link and make it public?');">
+                    ✓ Approve
+                </a>
+                <a href="{{ url_for('auth.admin_reject_media_link', media_link_id=media_link.id) }}" 
+                   class="btn btn-secondary" 
+                   onclick="return confirm('Reject and delete this media link?');">
+                    ✗ Reject
+                </a>
+            {% else %}
+                <span class="verified-badge">✓ Verified</span>
+            {% endif %}
+            <a href="{{ url_for('auth.admin_delete_media_link', media_link_id=media_link.id) }}" 
+               class="btn btn-secondary" 
+               onclick="return confirm('Admin action: Delete this media link permanently?');">
+                Delete
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+    
+{% else %}
+    <div class="no-media-links">
+        <p>No media links match your search criteria.</p>
+    </div>
+{% endif %}
+
+<!-- Reviews Section -->
+<h2 class="section-divider">Reviews</h2>
+{% if reviews %}
+    <p class="content-count">Showing {{ reviews|length }} review(s)</p>
+    
+    {% for review in reviews %}
+    <div class="review-card">
+        <div class="review-header">
+            <div>
+                <h3 class="judge-name-heading">
+                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
+                        {{ review.judge.full_name() }}
+                    </a>
+                    {% if review.judge.is_federal %}
+                        <span class="badge badge-federal">Federal</span>
+                    {% endif %}
+                </h3>
+                <p class="judge-court-info">
+                    {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
+                </p>
+                <p class="submitter-info">
+                    {% if review.author %}
+                        Submitted by: <strong>{{ review.author.username }}</strong>
+                    {% else %}
+                        Submitted by: <em>Anonymous (before user system)</em>
+                    {% endif %}
+                </p>
+            </div>
+            <span class="review-rating">{{ review.rating }} / 5 stars</span>
+        </div>
+        
+        <div class="review-metadata">
+            Court Date: {{ review.court_date.strftime('%B %d, %Y') }} | 
+            Submitted: {{ review.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+        </div>
+        
+        {% if review.fairness_concern or review.bias_concern or review.temperament_concern %}
+        <div class="review-concerns">
+            {% if review.fairness_concern %}
+                <span class="badge badge-fairness">Fairness Concern</span>
+            {% endif %}
+            {% if review.bias_concern %}
+                <span class="badge badge-bias">Bias Concern</span>
+            {% endif %}
+            {% if review.temperament_concern %}
+                <span class="badge badge-temperament">Temperament Concern</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="review-text">
+            {{ review.review_text }}
+        </div>
+        
+        <div class="admin-actions">
+            <a href="{{ url_for('auth.admin_delete_review', review_id=review.id) }}" 
+               class="btn btn-secondary" 
+               onclick="return confirm('Admin action: Delete this review permanently?');">
+                Delete Review (Admin)
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+    
+{% else %}
+    <div class="no-reviews">
+        <p>No reviews match your search criteria.</p>
+    </div>
+{% endif %}
+{% endblock %}

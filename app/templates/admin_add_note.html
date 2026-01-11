@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Notes: {{ user.username }} - Admin{% endblock %}
+
+{% block content %}
+<h1>Admin Notes for {{ user.username }}</h1>
+<p class="admin-mode-notice">Internal notes visible only to administrators</p>
+
+<div class="admin-search-form admin-search-form-centered">
+    <h3 class="form-section-title">User Information</h3>
+    
+    <div class="spacing-bottom-sm">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        {% if user.is_banned %}
+        <p><strong>Status:</strong> <span class="badge badge-concern">BANNED</span></p>
+        {% endif %}
+    </div>
+    
+    <div class="alert-info">
+        <h4 class="alert-heading">About Admin Notes</h4>
+        <p class="alert-text">
+            Use admin notes to track warnings, patterns of behavior, previous actions taken, or any other information 
+            that might be useful for managing this user. These notes are <strong>only visible to administrators</strong> 
+            and are not shown to the user or the public.
+        </p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('auth.add_admin_note', user_id=user.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        
+        <div class="form-group">
+            <label for="admin_note">Admin Notes</label>
+            <textarea id="admin_note" name="admin_note" class="form-control" rows="10"
+                    placeholder="Add internal notes about this user (warnings given, suspicious patterns, etc.)...">{{ user.admin_notes if user.admin_notes else '' }}</textarea>
+            <span class="form-help-text">
+                Examples: "Warned on 01/15/2026 for spam-like posting pattern" or "Multiple low-quality submissions flagged"
+            </span>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                Save Admin Notes
+            </button>
+            <a href="{{ url_for('auth.view_user_activity', user_id=user.id) }}" class="btn btn-gray">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

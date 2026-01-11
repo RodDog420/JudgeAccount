@@ -1,0 +1,77 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+thead {
+    background-color: #2c3e50;
+    color: white;
+}
+thead th {
+    padding: 0.9375rem;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.03125rem;
+}
+tbody tr {
+    border-bottom: 0.0625rem solid #eee;
+    transition: background-color 0.2s ease;
+}
+tbody tr:hover {
+    background-color: #f8f9fa;
+}
+tbody tr:last-child {
+    border-bottom: none;
+}
+tbody td {
+    padding: 0.9375rem;
+    color: #555;
+}
+tbody td a {
+    color: #3498db;
+    font-weight: 600;
+    text-decoration: none;
+}
+tbody td a:hover {
+    text-decoration: underline;
+}
+.table-empty {
+    text-align: center;
+    padding: 2.5rem;
+    color: #999;
+    font-style: italic;
+}
+.rating-cell {
+    font-weight: 600;
+    color: #f39c12;
+}
+.review-count {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+/* Table Utility Classes */
+.table-no-shadow {
+    box-shadow: none;
+}
+.table-cell-nowrap {
+    white-space: nowrap;
+}
+.table-cell-center {
+    text-align: center;
+}
+.table-cell-muted {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+.table-col-narrow {
+    width: 3rem;
+}
+.table-row-muted {
+    background-color: #f8f9fa;
+    opacity: 0.7;
+}

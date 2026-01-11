@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}User Management - Admin{% endblock %}
+
+{% block content %}
+<h1>User Management</h1>
+<p class="admin-mode-notice">Admin Mode - Manage all users</p>
+
+<!-- Search and Filter Form -->
+<form method="GET" action="{{ url_for('auth.manage_users') }}" class="admin-search-form">
+    <h3 class="form-section-title">Search & Filter Users</h3>
+    
+    <div class="admin-filter-grid">
+        <div class="form-group">
+            <label for="search">Search</label>
+            <input type="text" id="search" name="search" value="{{ search_query }}" 
+                    placeholder="Username or email..." class="form-control">
+        </div>
+        
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" class="form-control">
+                <option value="all" {% if filter_status == 'all' %}selected{% endif %}>All Users</option>
+                <option value="active" {% if filter_status == 'active' %}selected{% endif %}>Active Users</option>
+                <option value="banned" {% if filter_status == 'banned' %}selected{% endif %}>Banned Users</option>
+                <option value="admin" {% if filter_status == 'admin' %}selected{% endif %}>Administrators</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="sort">Sort By</label>
+            <select id="sort" name="sort" class="form-control">
+                <option value="username_asc" {% if sort_by == 'username_asc' %}selected{% endif %}>Username (A-Z)</option>
+                <option value="username_desc" {% if sort_by == 'username_desc' %}selected{% endif %}>Username (Z-A)</option>
+                <option value="email_asc" {% if sort_by == 'email_asc' %}selected{% endif %}>Email (A-Z)</option>
+                <option value="join_date_desc" {% if sort_by == 'join_date_desc' %}selected{% endif %}>Newest First</option>
+                <option value="join_date_asc" {% if sort_by == 'join_date_asc' %}selected{% endif %}>Oldest First</option>
+                <option value="reviews_desc" {% if sort_by == 'reviews_desc' %}selected{% endif %}>Most Reviews</option>
+                <option value="media_desc" {% if sort_by == 'media_desc' %}selected{% endif %}>Most Media Links</option>
+                <option value="last_activity_desc" {% if sort_by == 'last_activity_desc' %}selected{% endif %}>Recently Active</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+        <a href="{{ url_for('auth.manage_users') }}" class="btn btn-secondary">Clear Filters</a>
+        <a href="{{ url_for('auth.view_banned_users') }}" class="btn btn-danger">View Banned Users</a>
+    </div>
+</form>
+
+<!-- Bulk Actions Form -->
+<form method="POST" action="{{ url_for('auth.bulk_actions') }}" id="bulk-action-form" class="spacing-top-sm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    
+    <div class="bulk-action-bar">
+        <label for="bulk-action-select">Bulk Action:</label>
+        <select id="bulk-action-select" name="bulk_action" class="form-control">
+            <option value="">Select Action</option>
+            <option value="ban">Ban Selected Users</option>
+            <option value="delete">Delete Selected Users</option>
+        </select>
+        
+        <input type="text" id="bulk-reason" name="bulk_ban_reason" placeholder="Reason for action..." 
+                class="form-control" required>
+        
+        <button type="submit" class="btn btn-danger" 
+                onclick="return confirm('Are you sure you want to perform this bulk action on selected users?');">
+            Execute
+        </button>
+        
+        <span id="selected-count" class="bulk-count">0 selected</span>
+    </div>
+
+    <!-- Users Table -->
+    <p class="content-count">Showing {{ user_data|length }} user(s)</p>
+
+    {% if user_data %}
+    <table>
+        <thead>
+            <tr>
+                <th class="table-col-narrow">
+                    <input type="checkbox" id="select-all" title="Select All">
+                </th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Reviews</th>
+                <th>Media Links</th>
+                <th>Last Activity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in user_data %}
+            <tr>
+                <td>
+                    {% if not data.user.is_admin and data.user.id != current_user.id %}
+                    <input type="checkbox" name="user_ids[]" value="{{ data.user.id }}" class="user-checkbox">
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('auth.view_user_activity', user_id=data.user.id) }}">
+                        {{ data.user.username }}
+                    </a>
+                    {% if data.user.is_admin %}
+                        <span class="badge badge-federal badge-small">ADMIN</span>
+                    {% endif %}
+                    {% if data.user.id == current_user.id %}
+                        <span class="badge badge-you badge-small">YOU</span>
+                    {% endif %}
+                </td>
+                <td class="table-cell-muted">{{ data.user.email }}</td>
+                <td>
+                    {% if data.user.is_banned %}
+                        <span class="badge badge-concern">BANNED</span>
+                    {% else %}
+                        <span class="badge badge-active">ACTIVE</span>
+                    {% endif %}
+                </td>
+                <td class="table-cell-muted">
+                    {{ data.user.created_at.strftime('%b %d, %Y') }}
+                </td>
+                <td class="table-cell-center">{{ data.review_count }}</td>
+                <td class="table-cell-center">
+                    {{ data.media_link_count }}
+                    {% if data.verified_media_count > 0 %}
+                        <span class="text-smaller text-success">({{ data.verified_media_count }} verified)</span>
+                    {% endif %}
+                </td>
+                <td class="table-cell-muted">
+                    {% if data.user.last_activity %}
+                        {{ data.user.last_activity.strftime('%b %d, %Y') }}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('auth.view_user_activity', user_id=data.user.id) }}" 
+                        class="btn btn-primary btn-small">
+                        View
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-reviews">
+        <p>No users found matching your criteria.</p>
+    </div>
+    {% endif %}
+</form>
+
+<script>
+// Bulk action checkbox handling
+const selectAllCheckbox = document.getElementById('select-all');
+const userCheckboxes = document.querySelectorAll('.user-checkbox');
+const selectedCount = document.getElementById('selected-count');
+const bulkReasonInput = document.getElementById('bulk-reason');
+const bulkActionSelect = document.getElementById('bulk-action-select');
+
+function updateSelectedCount() {
+    const checked = document.querySelectorAll('.user-checkbox:checked').length;
+    selectedCount.textContent = `${checked} selected`;
+}
+
+if (selectAllCheckbox) {
+    selectAllCheckbox.addEventListener('change', function() {
+        userCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        updateSelectedCount();
+    });
+}
+
+userCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelectedCount);
+});
+
+// Update reason field name based on action
+bulkActionSelect.addEventListener('change', function() {
+    if (this.value === 'ban') {
+        bulkReasonInput.name = 'bulk_ban_reason';
+        bulkReasonInput.placeholder = 'Reason for banning...';
+    } else if (this.value === 'delete') {
+        bulkReasonInput.name = 'bulk_delete_reason';
+        bulkReasonInput.placeholder = 'Reason for deletion...';
+    }
+});
+
+// Form validation
+document.getElementById('bulk-action-form').addEventListener('submit', function(e) {
+    const checkedCount = document.querySelectorAll('.user-checkbox:checked').length;
+    const action = bulkActionSelect.value;
+    
+    if (checkedCount === 0) {
+        e.preventDefault();
+        alert('Please select at least one user.');
+        return false;
+    }
+    
+    if (!action) {
+        e.preventDefault();
+        alert('Please select an action.');
+        return false;
+    }
+    
+    if (!bulkReasonInput.value.trim()) {
+        e.preventDefault();
+        alert('Please provide a reason for this action.');
+        return false;
+    }
+});
+</script>
+
+{% endblock %}

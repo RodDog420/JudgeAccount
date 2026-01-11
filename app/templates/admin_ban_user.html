@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Ban User: {{ user.username }} - Admin{% endblock %}
+
+{% block content %}
+<h1>Ban User: {{ user.username }}</h1>
+<p class="admin-mode-notice">⚠️ Warning: This action will prevent the user from accessing the site and re-registering</p>
+
+<div class="admin-search-form admin-search-form-centered">
+    <h3 class="form-section-title">User Information</h3>
+    
+    <div class="spacing-bottom-sm">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Reviews:</strong> {{ user.get_review_count() }}</p>
+        <p><strong>Media Links:</strong> {{ user.get_media_link_count() }}</p>
+        <p><strong>Joined:</strong> {{ user.created_at.strftime('%B %d, %Y') }}</p>
+    </div>
+    
+    <div class="alert-warning">
+        <h4 class="alert-heading">What Happens When You Ban This User?</h4>
+        <ul class="alert-list">
+            <li>The user will be immediately logged out and cannot log back in</li>
+            <li>Their content (reviews and media links) will remain visible</li>
+            <li>They cannot create a new account with the same username or email</li>
+            <li>The ban can be reversed later if needed</li>
+            <li>This action will be logged in the admin activity log</li>
+        </ul>
+    </div>
+    
+    <form method="POST" action="{{ url_for('auth.ban_user', user_id=user.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        
+        <div class="form-group">
+            <label for="ban_reason">Reason for Ban *</label>
+            <textarea id="ban_reason" name="ban_reason" class="form-control" rows="5" required
+                        placeholder="Explain why this user is being banned (spam, harassment, inappropriate content, etc.)..."></textarea>
+            <span class="form-help-text">
+                This reason will be visible to other administrators but not to the user.
+            </span>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Are you absolutely sure you want to ban {{ user.username }}? This will prevent them from accessing the site.');">
+                ✓ Confirm Ban
+            </button>
+            <a href="{{ url_for('auth.view_user_activity', user_id=user.id) }}" class="btn btn-gray">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

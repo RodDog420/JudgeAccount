@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block title %}User: {{ user.username }} - Admin{% endblock %}
+
+{% block content %}
+<div class="user-profile-admin">
+    <h1>User Profile: {{ user.username }}
+        {% if user.is_admin %}
+            <span class="badge badge-federal">ADMINISTRATOR</span>
+        {% endif %}
+        {% if user.is_banned %}
+            <span class="badge badge-concern">BANNED</span>
+        {% endif %}
+    </h1>
+    
+    <!-- User Info Card -->
+    <div class="admin-search-form spacing-bottom-md">
+        <h3 class="form-section-title">User Information</h3>
+        
+        <div class="admin-filter-grid admin-filter-grid-wide">
+            <div>
+                <strong>Username:</strong> {{ user.username }}
+            </div>
+            <div>
+                <strong>Email:</strong> {{ user.email }}
+            </div>
+            <div>
+                <strong>Joined:</strong> {{ user.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+            </div>
+            <div>
+                <strong>Last Login:</strong> 
+                {% if user.last_login %}
+                    {{ user.last_login.strftime('%B %d, %Y at %I:%M %p') }}
+                {% else %}
+                    Never
+                {% endif %}
+            </div>
+            <div>
+                <strong>Last Activity:</strong> 
+                {% if user.last_activity %}
+                    {{ user.last_activity.strftime('%B %d, %Y at %I:%M %p') }}
+                {% else %}
+                    Never
+                {% endif %}
+            </div>
+            <div>
+                <strong>Total Reviews:</strong> {{ reviews|length }}
+            </div>
+            <div>
+                <strong>Total Media Links:</strong> {{ media_links|length }}
+            </div>
+            <div>
+                <strong>Verified Media:</strong> {{ media_links|selectattr('is_verified', 'equalto', True)|list|length }}
+            </div>
+        </div>
+        
+        {% if user.is_banned %}
+        <div class="alert-warning spacing-top-sm">
+            <h4 class="alert-heading">Ban Information</h4>
+            <p class="spacing-paragraph"><strong>Banned At:</strong> {{ user.banned_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+            <p class="spacing-paragraph"><strong>Banned By:</strong> 
+                {% if user.banned_by %}
+                    {{ user.banned_by.username }}
+                {% else %}
+                    System
+                {% endif %}
+            </p>
+            <p class="spacing-paragraph"><strong>Reason:</strong> {{ user.ban_reason }}</p>
+        </div>
+        {% endif %}
+        
+        {% if user.admin_notes %}
+        <div class="alert-info spacing-top-sm">
+            <h4 class="alert-heading">Admin Notes</h4>
+            <p class="preformatted-text">{{ user.admin_notes }}</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Admin Actions -->
+    <div class="admin-actions spacing-bottom-md">
+        {% if not user.is_admin and user.id != current_user.id %}
+            {% if user.is_banned %}
+                <a href="{{ url_for('auth.unban_user', user_id=user.id) }}" 
+                    class="btn btn-primary"
+                    onclick="return confirm('Are you sure you want to unban {{ user.username }}?');">
+                    Unban User
+                </a>
+            {% else %}
+                <a href="{{ url_for('auth.ban_user', user_id=user.id) }}" 
+                    class="btn btn-warning">
+                    Ban User
+                </a>
+            {% endif %}
+            
+            <a href="{{ url_for('auth.add_admin_note', user_id=user.id) }}" 
+                class="btn btn-primary">
+                {% if user.admin_notes %}Edit{% else %}Add{% endif %} Admin Notes
+            </a>
+            
+            <a href="{{ url_for('auth.delete_user', user_id=user.id) }}" 
+                class="btn btn-secondary">
+                Delete User
+            </a>
+        {% else %}
+            <p class="text-muted-italic">
+                {% if user.id == current_user.id %}
+                    You cannot perform admin actions on yourself.
+                {% else %}
+                    You cannot perform admin actions on other administrators.
+                {% endif %}
+            </p>
+        {% endif %}
+        
+        <a href="{{ url_for('auth.manage_users') }}" class="btn btn-gray">
+            Back to User List
+        </a>
+    </div>
+    
+    <!-- User's Media Links -->
+    <h2>Media Links ({{ media_links|length }})</h2>
+    {% if media_links %}
+        {% for media_link in media_links %}
+        <div class="media-link-card">
+            <div class="media-link-header">
+                <div>
+                    <h3 class="judge-name-heading">
+                        <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}">
+                            {{ media_link.judge.full_name() }}
+                        </a>
+                    </h3>
+                    <p class="judge-court-info">
+                        {{ media_link.judge.court }} - {{ media_link.judge.city }}, {{ media_link.judge.state }}
+                    </p>
+                </div>
+                <span class="media-link-source">{{ media_link.news_source }}</span>
+            </div>
+            
+            <h4 class="media-link-headline">
+                <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer">
+                    {{ media_link.headline }}
+                </a>
+            </h4>
+            
+            <div class="media-link-date">
+                Published: {{ media_link.publication_date.strftime('%B %d, %Y') }} | 
+                Submitted: {{ media_link.created_at.strftime('%B %d, %Y') }}
+            </div>
+            
+            <div class="media-link-summary">
+                {{ media_link.summary }}
+            </div>
+            
+            {% if not media_link.is_verified %}
+            <div class="pending-verification-admin">
+                <strong>⚠️ PENDING VERIFICATION</strong>
+            </div>
+            {% else %}
+            <div class="spacing-top-sm">
+                <span class="verified-badge">✓ Verified</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-media-links">
+            <p>This user has not submitted any media links.</p>
+        </div>
+    {% endif %}
+    
+    <!-- User's Reviews -->
+    <h2 class="section-divider">Reviews ({{ reviews|length }})</h2>
+    {% if reviews %}
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-header">
+                <div>
+                    <h3 class="judge-name-heading">
+                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
+                            {{ review.judge.full_name() }}
+                        </a>
+                    </h3>
+                    <p class="judge-court-info">
+                        {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
+                    </p>
+                </div>
+                <span class="review-rating">{{ review.rating }} / 5 stars</span>
+            </div>
+            
+            <div class="review-metadata">
+                Court Date: {{ review.court_date.strftime('%B %d, %Y') }} | 
+                Submitted: {{ review.created_at.strftime('%B %d, %Y') }}
+            </div>
+            
+            {% if review.fairness_concern or review.bias_concern or review.temperament_concern %}
+            <div class="review-concerns">
+                {% if review.fairness_concern %}
+                    <span class="badge badge-fairness">Fairness Concern</span>
+                {% endif %}
+                {% if review.bias_concern %}
+                    <span class="badge badge-bias">Bias Concern</span>
+                {% endif %}
+                {% if review.temperament_concern %}
+                    <span class="badge badge-temperament">Temperament Concern</span>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="review-text">
+                {{ review.review_text }}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-reviews">
+            <p>This user has not submitted any reviews.</p>
+        </div>
+    {% endif %}
+    
+    <!-- Admin Action Log -->
+    {% if admin_logs %}
+    <h2 class="section-divider">Recent Admin Actions ({{ admin_logs|length }})</h2>
+    <div class="admin-search-form">
+        <table class="table-no-shadow">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>Admin</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in admin_logs %}
+                <tr>
+                    <td class="table-cell-nowrap">{{ log.timestamp.strftime('%b %d, %Y %I:%M %p') }}</td>
+                    <td>
+                        <span class="badge badge-gray">{{ log.action_type.replace('_', ' ').title() }}</span>
+                    </td>
+                    <td>{{ log.admin.username if log.admin else 'System' }}</td>
+                    <td class="table-cell-muted">{{ log.details or 'No details' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

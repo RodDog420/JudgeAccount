@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Review - Judge Review{% endblock %}
+
+{% block content %}
+<h1>Edit Your Review</h1>
+<p>Editing review for {{ review.judge.full_name() }}</p>
+
+<form method="POST" action="{{ url_for('auth.edit_review', review_id=review.id) }}">
+    {{ form.hidden_tag() }}
+    
+    <h3>Judge Information (Read Only)</h3>
+    
+    <div class="form-group">
+        {{ form.judge_first_name.label }}
+        {{ form.judge_first_name(readonly=true, class="form-field-readonly") }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.judge_last_name.label }}
+        {{ form.judge_last_name(readonly=true, class="form-field-readonly") }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.state.label }}
+        {{ form.state(disabled=true, class="form-field-readonly") }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.court.label }}
+        {{ form.court(disabled=true, class="form-field-readonly") }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.city.label }}
+        {{ form.city(readonly=true, class="form-field-readonly") }}
+    </div>
+    
+    <div class="checkbox-group">
+        {{ form.is_federal(disabled=true) }}
+        {{ form.is_federal.label }}
+    </div>
+    
+    <h3>Edit Your Review</h3>
+    
+    <div class="form-group">
+        {{ form.rating.label }}
+        {{ form.rating(class="form-control") }}
+        {% if form.rating.errors %}
+            {% for error in form.rating.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.court_date.label }}
+        {{ form.court_date(class="form-control") }}
+        {% if form.court_date.errors %}
+            {% for error in form.court_date.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <h4>Concerns (check all that apply)</h4>
+    
+    <div class="checkbox-group">
+        {{ form.fairness_concern() }}
+        {{ form.fairness_concern.label }}
+    </div>
+    
+    <div class="checkbox-group">
+        {{ form.bias_concern() }}
+        {{ form.bias_concern.label }}
+    </div>
+    
+    <div class="checkbox-group">
+        {{ form.temperament_concern() }}
+        {{ form.temperament_concern.label }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.review_text.label }}
+        {{ form.review_text(class="form-control") }}
+        {% if form.review_text.errors %}
+            {% for error in form.review_text.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group form-actions-flex">
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

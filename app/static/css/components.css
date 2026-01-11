@@ -1,0 +1,588 @@
+/* ==========================================================================
+   TABLE OF CONTENTS
+   ==========================================================================
+   1. Badges
+   2. Buttons
+   3. Stars & Ratings
+   4. Stats & Metrics
+   5. Alerts & Info Boxes
+   6. Verification Status
+   7. Admin Components
+   8. Flag & Moderation
+   9. Judge Page Specific
+   10. Layout Utilities
+   11. Text Utilities
+   12. Spacing Utilities
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. BADGES
+   ========================================================================== */
+
+.badge {
+    display: inline-block;
+    padding: 0.3125rem 0.75rem;
+    border-radius: 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03125rem;
+}
+.badge-federal {
+    background-color: #3498db;
+    color: white;
+}
+.badge-retired {
+    background-color: #95a5a6;
+    color: white;
+}
+.badge-concern {
+    background-color: #e74c3c;
+    color: white;
+}
+.badge-fairness {
+    background-color: #e67e22;
+    color: white;
+}
+.badge-bias {
+    background-color: #9b59b6;
+    color: white;
+}
+.badge-temperament {
+    background-color: #c2185b;
+    color: white;
+}
+.badge-active {
+    background-color: #27ae60;
+    color: white;
+}
+.badge-gray {
+    background-color: #7f8c8d;
+    color: white;
+}
+.badge-unbanned {
+    background-color: #95a5a6;
+    color: white;
+}
+.badge-you {
+    background-color: #5dade2;
+    color: white;
+}
+.badge-small {
+    font-size: 0.7rem;
+}
+
+
+/* ==========================================================================
+   2. BUTTONS
+   ========================================================================== */
+
+.btn {
+    display: inline-block;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.3125rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;  
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    line-height: 1.5;
+    vertical-align: middle;
+    text-align: center;
+    min-width: 7.5rem;
+}
+.btn-primary {
+    background-color: #27ae60;
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #229954;
+    text-decoration: none;
+}
+.btn-secondary {
+    background-color: #e91e63;
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #c2185b;
+    text-decoration: none;
+}
+.btn-gray {
+    background-color: #95a5a6;
+    color: white;
+}
+.btn-gray:hover {
+    background-color: #7f8c8d;
+    text-decoration: none;
+}
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #c0392b;
+    text-decoration: none;
+}
+.btn-warning {
+    background-color: #f39c12;
+    color: white;
+}
+.btn-warning:hover {
+    background-color: #e67e22;
+    text-decoration: none;
+}
+.btn-small {
+    font-size: 0.85rem;
+    padding: 0.375rem 0.75rem;
+    min-width: auto;
+}
+
+
+/* ==========================================================================
+   3. STARS & RATINGS
+   ========================================================================== */
+
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+}
+.star {
+    color: #f39c12;
+    font-size: 1.2rem;
+}
+.star-empty {
+    color: #ddd;
+    font-size: 1.2rem;
+}
+
+
+/* ==========================================================================
+   4. STATS & METRICS
+   ========================================================================== */
+
+.stats-container {
+    display: flex;
+    gap: 1.875rem;
+    margin: 1.25rem 0;
+}
+.stat-box {
+    text-align: center;
+    padding: 0.9375rem 1.875rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+}
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    display: block;
+}
+.stat-label {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 0.3125rem;
+}
+
+
+/* ==========================================================================
+   5. ALERTS & INFO BOXES
+   ========================================================================== */
+
+.alert-info {
+    background-color: #e3f2fd;
+    border-left: 0.25rem solid #3498db;
+    padding: 1rem;
+    border-radius: 0.3125rem;
+    margin-bottom: 1.25rem;
+}
+.alert-warning {
+    background-color: #fff3cd;
+    border-left: 0.25rem solid #ffc107;
+    padding: 1rem;
+    border-radius: 0.3125rem;
+    margin-bottom: 1.25rem;
+}
+.alert-critical {
+    background-color: #f8d7da;
+    border-left: 0.25rem solid #e74c3c;
+    padding: 1rem;
+    border-radius: 0.3125rem;
+    margin-bottom: 1.25rem;
+}
+.alert-success {
+    background-color: #d4edda;
+    border-left: 0.25rem solid #27ae60;
+    padding: 1rem;
+    border-radius: 0.3125rem;
+    margin-bottom: 1.25rem;
+}
+.alert-heading {
+    margin: 0 0 0.625rem 0;
+}
+.alert-info .alert-heading {
+    color: #2c3e50;
+}
+.alert-warning .alert-heading {
+    color: #856404;
+}
+.alert-critical .alert-heading {
+    color: #721c24;
+}
+.alert-success .alert-heading {
+    color: #155724;
+}
+.alert-text {
+    margin: 0;
+}
+.alert-info .alert-text {
+    color: #2c3e50;
+}
+.alert-warning .alert-text {
+    color: #856404;
+}
+.alert-critical .alert-text {
+    color: #721c24;
+}
+.alert-success .alert-text {
+    color: #155724;
+}
+.alert-list {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+.alert-warning .alert-list {
+    color: #856404;
+}
+.alert-critical .alert-list {
+    color: #721c24;
+}
+.alert-success .alert-list {
+    color: #155724;
+}
+.info-box {
+    padding: 1.25rem;
+    border-radius: 0.3125rem;
+    margin-bottom: 1.875rem;
+}
+.info-box-light {
+    background-color: #f0f0f0;
+}
+
+
+/* ==========================================================================
+   6. VERIFICATION STATUS
+   ========================================================================== */
+
+.pending-verification {
+    background-color: #fff3cd;
+    border-left: 0.25rem solid #ffc107;
+    padding: 0.625rem;
+    margin-top: 0.9375rem;
+    border-radius: 0.3125rem;
+}
+.pending-verification-admin {
+    background-color: #fff3cd;
+    border-left: 0.25rem solid #ffc107;
+    padding: 0.625rem;
+    margin-top: 0.9375rem;
+}
+.pending-verification strong,
+.pending-verification-admin strong {
+    color: #856404;
+}
+.verified-badge {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+
+/* ==========================================================================
+   7. ADMIN COMPONENTS
+   ========================================================================== */
+
+.admin-actions {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 0.625rem;
+}
+.admin-mode-notice {
+    color: #e74c3c;
+    font-weight: 600;
+}
+.admin-search-form {
+    background-color: white;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.875rem;
+}
+.admin-search-form-centered {
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+.form-section-title {
+    margin-top: 0;
+}
+.admin-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+    gap: 0.9375rem;
+    margin-bottom: 0.9375rem;
+}
+.admin-filter-grid .form-group {
+    margin-bottom: 0;
+}
+.admin-filter-grid-wide {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+.form-actions {
+    display: flex;
+    gap: 0.625rem;
+}
+.content-count {
+    color: #7f8c8d;
+    margin-bottom: 1.25rem;
+}
+.judge-name-heading {
+    margin: 0 0 0.5rem 0;
+}
+.judge-court-info {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin: 0.3125rem 0;
+}
+.submitter-info {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    margin: 0.3125rem 0;
+}
+.review-metadata {
+    margin-top: 0.625rem;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+.section-divider {
+    margin-top: 2.5rem;
+}
+.user-actions {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 0.625rem;
+}
+.bulk-action-bar {
+    display: flex;
+    gap: 0.625rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+.bulk-action-bar label {
+    margin: 0;
+}
+.bulk-action-bar select {
+    width: auto;
+    min-width: 12.5rem;
+}
+.bulk-action-bar input[type="text"] {
+    flex: 1;
+}
+.bulk-count {
+    color: #7f8c8d;
+    font-weight: 600;
+}
+
+
+/* ==========================================================================
+   8. FLAG & MODERATION
+   ========================================================================== */
+
+.flag-card-resolved {
+    border-left: 0.25rem solid #27ae60;
+}
+.flag-card-unresolved {
+    border-left: 0.25rem solid #e74c3c;
+}
+.flagged-content-box {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #fff3cd;
+    border-left: 0.25rem solid #ffc107;
+    border-radius: 0.3125rem;
+}
+.flagged-content-heading {
+    margin: 0 0 0.625rem 0;
+    color: #856404;
+}
+.flagged-content-text {
+    margin: 0.625rem 0 0 0;
+    color: #555;
+}
+.flagged-content-meta {
+    margin: 0.3125rem 0;
+    color: #856404;
+}
+.reporter-note-box {
+    margin: 1rem 0;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 0.3125rem;
+}
+.resolved-box {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #d4edda;
+    border-left: 0.25rem solid #27ae60;
+    border-radius: 0.3125rem;
+}
+.resolved-text {
+    color: #155724;
+}
+.flag-header-title {
+    margin: 0 0 0.5rem 0;
+}
+.flag-reporter-info {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+.inline-form {
+    display: inline;
+}
+.report-link {
+    margin-left: 1rem;
+}
+
+
+/* ==========================================================================
+   9. JUDGE PAGE SPECIFIC
+   ========================================================================== */
+
+.media-description {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+}
+.media-wait-note {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-top: 0.625rem;
+}
+.submitted-date {
+    margin-top: 0.9375rem;
+    font-size: 0.85rem;
+}
+
+
+/* ==========================================================================
+   10. LAYOUT UTILITIES
+   ========================================================================== */
+
+.flex-row {
+    display: flex;
+    gap: 0.625rem;
+}
+.flex-row-wrap {
+    display: flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+}
+.flex-grow {
+    flex: 1;
+}
+.height-100 {
+    height: 100%;
+}
+.hidden {
+    display: none;
+}
+.no-margin {
+    margin: 0;
+}
+.min-width-300 {
+    min-width: 18.75rem;
+}
+.min-width-150 {
+    min-width: 9.375rem;
+}
+.min-width-160 {
+    min-width: 10rem;
+}
+.min-width-180 {
+    min-width: 11.25rem;
+}
+.min-width-200 {
+    min-width: 12.5rem;
+}
+.width-100 {
+    width: 100%;
+}
+.width-auto {
+    width: auto;
+}
+
+
+/* ==========================================================================
+   11. TEXT UTILITIES
+   ========================================================================== */
+
+.text-muted {
+    color: #7f8c8d;
+}
+.text-muted-italic {
+    color: #7f8c8d;
+    font-style: italic;
+}
+.text-danger {
+    color: #e74c3c;
+}
+.text-danger-bold {
+    color: #e74c3c;
+    font-weight: 700;
+}
+.text-success {
+    color: #27ae60;
+}
+.text-small {
+    font-size: 0.9rem;
+}
+.text-smaller {
+    font-size: 0.85rem;
+}
+.preformatted-text {
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   12. SPACING UTILITIES
+   ========================================================================== */
+
+.spacing-bottom-sm {
+    margin-bottom: 1.25rem;
+}
+.spacing-bottom-md {
+    margin-bottom: 1.875rem;
+}
+.spacing-bottom-lg {
+    margin-bottom: 1.875rem;
+}
+.spacing-bottom-xl {
+    margin-bottom: 2.5rem;
+}
+.spacing-top-sm {
+    margin-top: 0.625rem;
+}
+.spacing-top-md {
+    margin-top: 1.25rem;
+}
+.spacing-top-lg {
+    margin-top: 2.5rem;
+}
+.spacing-paragraph {
+    margin: 0.3125rem 0;
+}

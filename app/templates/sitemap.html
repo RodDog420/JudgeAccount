@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Sitemap - Judge Account{% endblock %}
+{% block content %}
+<div class="page-container">
+    <h1>Sitemap</h1>
+    
+    <p class="sitemap-intro">Navigate JudgeAccount.com with ease. Below is a comprehensive directory of all pages and features on our platform.</p>
+
+    <section class="page-section">
+        <h2>Main Pages</h2>
+        <ul class="sitemap-list">
+            <li>
+                <a href="{{ url_for('main.index') }}">Home</a>
+                <p class="sitemap-description">Search and browse our comprehensive database of United States judges</p>
+            </li>
+            <li>
+                <a href="{{ url_for('main.submit_review') }}">Submit a Review</a>
+                <p class="sitemap-description">Share your firsthand courtroom experience with a judge</p>
+            </li>
+            <li>
+                <a href="{{ url_for('main.submit_media_link') }}">Submit Media Link</a>
+                <p class="sitemap-description">Submit newsworthy articles and reports about judicial conduct</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="page-section">
+        <h2>User Account</h2>
+        <ul class="sitemap-list">
+            <li>
+                <a href="{{ url_for('auth.register') }}">Register</a>
+                <p class="sitemap-description">Create a free account to submit reviews and media links</p>
+            </li>
+            <li>
+                <a href="{{ url_for('auth.login') }}">Login</a>
+                <p class="sitemap-description">Access your JudgeAccount.com account</p>
+            </li>
+            <li>
+                <a href="{{ url_for('auth.dashboard') }}">My Dashboard</a>
+                <p class="sitemap-description">View and manage your submitted reviews and media links</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="page-section">
+        <h2>Policies & Guidelines</h2>
+        <ul class="sitemap-list">
+            <li>
+                <a href="{{ url_for('main.guidelines') }}">Community Guidelines</a>
+                <p class="sitemap-description">Standards for content submission and user conduct on our platform</p>
+            </li>
+            <li>
+                <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>
+                <p class="sitemap-description">How we collect, use, and protect your personal information</p>
+            </li>
+            <li>
+                <a href="{{ url_for('main.terms_of_service') }}">Terms of Service</a>
+                <p class="sitemap-description">Legal terms governing your use of JudgeAccount.com</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="page-section">
+        <h2>Support & Information</h2>
+        <ul class="sitemap-list">
+            <li>
+                <a href="{{ url_for('main.contact') }}">Contact Us</a>
+                <p class="sitemap-description">Get in touch with our team for support, questions, or feedback</p>
+            </li>
+            <li>
+                <a href="{{ url_for('main.support') }}">Support Our Mission</a>
+                <p class="sitemap-description">Help sustain judicial accountability through donations and support</p>
+            </li>
+            <li>
+                <a href="{{ url_for('main.sitemap') }}">Sitemap</a>
+                <p class="sitemap-description">This page - comprehensive directory of all site pages</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="page-section">
+        <h2>Administrative (Admins Only)</h2>
+        <ul class="sitemap-list">
+            <li>
+                <a href="{{ url_for('auth.admin_dashboard') }}">Admin Dashboard</a>
+                <p class="sitemap-description">Administrative control panel and site statistics</p>
+            </li>
+            <li>
+                <a href="{{ url_for('auth.manage_users') }}">User Management</a>
+                <p class="sitemap-description">View, search, and manage user accounts</p>
+            </li>
+            <li>
+                <a href="{{ url_for('auth.moderation_queue') }}">Moderation Queue</a>
+                <p class="sitemap-description">Review and resolve flagged content</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="page-section">
+        <h2>About Our Platform</h2>
+        <div class="sitemap-about-box">
+            <h3>Our Mission</h3>
+            <p>JudgeAccount.com is dedicated to promoting judicial accountability and transparency into the character and conduct of United States judges. We serve as a critical resource for voters, litigants, attorneys, and citizens seeking verified information about judicial officers prior to elections, retention votes, and appointments.</p>
+            
+            <h3>What We Offer</h3>
+            <ul>
+                <li><strong>Comprehensive Judge Database:</strong> Search judges by name, court, location, and other criteria</li>
+                <li><strong>Verified Reviews:</strong> Read firsthand accounts from individuals who appeared before judges</li>
+                <li><strong>Media Documentation:</strong> Access verified news articles and reports about judicial conduct</li>
+                <li><strong>Transparent Moderation:</strong> Community-driven reporting with rigorous content standards</li>
+                <li><strong>Voter Resources:</strong> Information to support informed decisions in judicial elections</li>
+            </ul>
+
+            <h3>Core Values</h3>
+            <p>We operate with unwavering commitment to transparency, accountability, fairness, respect, integrity, authenticity, justice, courage, and humility. These values guide every aspect of our platform and inform our Community Guidelines.</p>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <h2>Search Engine Optimization</h2>
+        <div class="seo-info-box">
+            <h3>Keywords & Topics</h3>
+            <p>JudgeAccount.com provides comprehensive information on the following topics:</p>
+            <ul class="seo-keywords-list">
+                <li>Judicial accountability and transparency</li>
+                <li>Judge reviews and ratings</li>
+                <li>Federal and state court judges</li>
+                <li>Judicial conduct and character</li>
+                <li>Courtroom experiences and fairness</li>
+                <li>Judicial temperament and bias</li>
+                <li>Judicial elections and retention votes</li>
+                <li>Judge appointment information</li>
+                <li>Court transparency and public access</li>
+                <li>Legal system accountability</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="sitemap-footer">
+        <p>This sitemap was last updated: <strong>January 2026</strong></p>
+        <p>If you notice any broken links or missing pages, please <a href="{{ url_for('main.contact') }}">contact us</a>.</p>
+    </div>
+</div>
+{% endblock %}

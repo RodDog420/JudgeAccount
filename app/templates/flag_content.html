@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Report Content{% endblock %}
+
+{% block content %}
+<h1>Report {{ 'Review' if content_type == 'review' else 'Media Link' }}</h1>
+
+<div class="admin-search-form admin-search-form-centered">
+    <h3 class="form-section-title">Why are you reporting this?</h3>
+    
+    <div class="alert-info">
+        <h4 class="alert-heading">Reporting Guidelines</h4>
+        <p class="alert-text">
+            We maintain a respectful community dedicated to transparent judicial review. Only report content that violates our Community Guidelines. False reports may result in action against your account.
+        </p>
+        <p class="alert-text"><strong>Report content that contains:</strong></p>
+        <ul class="alert-list">
+            <li><strong>Spam</strong> - Repetitive, promotional, or irrelevant content</li>
+            <li><strong>Inappropriate</strong> - Profanity, explicit, or offensive material</li>
+            <li><strong>Harassment</strong> - Personal attacks, threats, or targeted abuse</li>
+            <li><strong>Off-Topic</strong> - Content not related to the judge or judicial proceedings</li>
+            <li><strong>Misinformation</strong> - Deliberately false or misleading information</li>
+            <li><strong>Conflict</strong> - Competing interests (personal, financial, etc) create bias</li>
+
+        </ul>
+        <p class="alert-text">
+            For complete details, please review our <a href="/guidelines" target="_blank" rel="noopener noreferrer">Community Guidelines</a>.
+        </p>
+    </div>
+    
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.flag_type.label }}
+            {{ form.flag_type(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.description.label }}
+            {{ form.description(class="form-control", rows="5") }}
+        </div>
+        
+        <div class="form-actions">
+            {{ form.submit(class="btn btn-danger") }}
+            <a href="javascript:history.back()" class="btn btn-gray">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const flagTypeSelect = document.querySelector('select[name="flag_type"]');
+    const descriptionField = document.querySelector('textarea[name="description"]');
+    const form = flagTypeSelect.closest('form');
+
+    // Function to toggle required status
+    function toggleDescriptionRequired() {
+        if (flagTypeSelect.value === 'other') {
+            descriptionField.setAttribute('required', 'required');
+        } else {
+            descriptionField.removeAttribute('required');
+        }
+    }
+
+    // Run on page load
+    toggleDescriptionRequired();
+
+    // Run when dropdown changes
+    flagTypeSelect.addEventListener('change', toggleDescriptionRequired);
+
+    // Extra validation on form submit
+    form.addEventListener('submit', function(e) {
+        if (flagTypeSelect.value === 'other' && !descriptionField.value.trim()) {
+            e.preventDefault();
+            alert('Please provide an explanation when selecting "Other" as the violation type.');
+            descriptionField.focus();
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% block title %}Submit Review - Judge Review{% endblock %}
+{% block content %}
+<h1>Submit a Judge Review</h1>
+<p>Share your experience to help others and promote judicial accountability.</p>
+
+{% if not prefilled_judge %}
+<div class="form-group info-box info-box-light">
+    <h3>Before You Begin</h3>
+    <p><strong>Did you personally appear before the judge you intend to review in a legal proceeding?</strong></p>
+    <div>
+        <label>
+            <input type="radio" name="appeared" value="yes" id="appeared-yes" checked> 
+            Yes - I appeared before this judge
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="radio" name="appeared" value="no" id="appeared-no"> 
+            No - I want to submit a media link about this judge
+        </label>
+    </div>
+</div>
+{% endif %}
+
+<form method="POST" action="{{ url_for('main.submit_review') }}">
+    {{ form.hidden_tag() }}
+    {% if prefilled_judge %}
+    <input type="hidden" name="prefilled_judge_id" value="{{ prefilled_judge.id }}">
+    {% endif %}
+    
+    <h3>Judge Information</h3>
+
+    <div class="form-group">
+        {{ form.judge_first_name.label }}
+        {% if prefilled_judge %}
+            {{ form.judge_first_name(class="form-control form-field-readonly", disabled="disabled") }}
+        {% else %}
+            {{ form.judge_first_name(class="form-control") }}
+        {% endif %}
+        {% if form.judge_first_name.errors %}
+            {% for error in form.judge_first_name.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.judge_last_name.label }}
+        {% if prefilled_judge %}
+            {{ form.judge_last_name(class="form-control form-field-readonly", disabled="disabled") }}
+        {% else %}
+            {{ form.judge_last_name(class="form-control") }}
+        {% endif %}
+        {% if form.judge_last_name.errors %}
+            {% for error in form.judge_last_name.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.state.label }}
+        {% if prefilled_judge %}
+            {{ form.state(class="form-control form-field-readonly", id="state-select", disabled="disabled") }}
+        {% else %}
+            {{ form.state(class="form-control", id="state-select") }}
+        {% endif %}
+        {% if form.state.errors %}
+            {% for error in form.state.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.court.label }}
+        {% if prefilled_judge %}
+            {{ form.court(class="form-control form-field-readonly", id="court-select", disabled="disabled") }}
+        {% else %}
+            {{ form.court(class="form-control", id="court-select") }}
+        {% endif %}
+        {% if form.court.errors %}
+            {% for error in form.court.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.city.label }}
+        {% if prefilled_judge %}
+            {{ form.city(class="form-control form-field-readonly", disabled="disabled") }}
+        {% else %}
+            {{ form.city(class="form-control") }}
+        {% endif %}
+        {% if form.city.errors %}
+            {% for error in form.city.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="checkbox-group">
+        {% if prefilled_judge %}
+            {{ form.is_federal(disabled="disabled") }}
+        {% else %}
+            {{ form.is_federal() }}
+        {% endif %}
+        {{ form.is_federal.label }}
+    </div>
+
+    <div class="checkbox-group">
+        {% if prefilled_judge %}
+            {{ form.is_retired(disabled="disabled") }}
+        {% else %}
+            {{ form.is_retired() }}
+        {% endif %}
+        {{ form.is_retired.label }}
+    </div>    
+    <h3>Your Review</h3>
+    
+    <div class="form-group">
+        {{ form.rating.label }}
+        {{ form.rating(class="form-control") }}
+        {% if form.rating.errors %}
+            {% for error in form.rating.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.court_date.label }}
+        {{ form.court_date(class="form-control") }}
+        {% if form.court_date.errors %}
+            {% for error in form.court_date.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <h4>Concerns (check all that apply)</h4>
+    
+    <div class="checkbox-group">
+        {{ form.fairness_concern() }}
+        {{ form.fairness_concern.label }}
+    </div>
+    
+    <div class="checkbox-group">
+        {{ form.bias_concern() }}
+        {{ form.bias_concern.label }}
+    </div>
+    
+    <div class="checkbox-group">
+        {{ form.temperament_concern() }}
+        {{ form.temperament_concern.label }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.review_text.label }}
+        {{ form.review_text(class="form-control", placeholder="Describe your experience with this judge...") }}
+        {% if form.review_text.errors %}
+            {% for error in form.review_text.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+
+<script>
+// Convert Python dictionary to JavaScript object
+const courtsByState = {{ courts_by_state | tojson }};
+
+// Get the state and court dropdown elements
+const stateSelect = document.getElementById('state-select');
+const courtSelect = document.getElementById('court-select');
+
+// Store the pre-selected court value (if any)
+{% if prefilled_judge %}
+const preselectedCourt = "{{ prefilled_judge.court }}";
+{% else %}
+const preselectedCourt = null;
+{% endif %}
+
+// Function to update court dropdown based on selected state
+function updateCourtOptions() {
+    const selectedState = stateSelect.value;
+    
+    // Clear current court options
+    courtSelect.innerHTML = '<option value="">Select a court...</option>';
+    
+    // If a state is selected, add its courts
+    if (selectedState && courtsByState[selectedState]) {
+        courtsByState[selectedState].forEach(function(court) {
+            const option = document.createElement('option');
+            option.value = court[0];  // The court value
+            option.text = court[1];   // The court display name
+            
+            // Pre-select the court if it matches
+            if (preselectedCourt && court[0] === preselectedCourt) {
+                option.selected = true;
+            }
+            
+            courtSelect.appendChild(option);
+        });
+        courtSelect.disabled = preselectedCourt ? true : false;  // Disable if pre-filled
+    } else {
+        courtSelect.disabled = true;
+    }
+}
+
+// Listen for state selection changes
+stateSelect.addEventListener('change', updateCourtOptions);
+
+// Initialize on page load
+updateCourtOptions();
+
+// Handle "Did you appear" redirect (only if the buttons exist)
+const appearedNoButton = document.getElementById('appeared-no');
+if (appearedNoButton) {
+    appearedNoButton.addEventListener('change', function() {
+        if (this.checked) {
+            if (confirm('You will be redirected to submit a media link instead. Continue?')) {
+                {% if prefilled_judge %}
+                window.location.href = "{{ url_for('main.submit_media_link', judge_id=prefilled_judge.id) }}";
+                {% else %}
+                window.location.href = "{{ url_for('main.submit_media_link') }}";
+                {% endif %}
+            } else {
+                document.getElementById('appeared-yes').checked = true;
+            }
+        }
+    });
+}
+</script>
+{% endblock %}
