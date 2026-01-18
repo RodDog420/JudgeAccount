@@ -70,6 +70,7 @@ footer {
     color: white;
     margin-top: 3.75rem;
     padding: 2.5rem 0 1.25rem 0;
+    width: 100%;
 }
 
 .footer-container {
@@ -527,6 +528,17 @@ footer {
     margin: 0;
 }
 
+.donation-tier-card .btn,
+.monthly-tier-card .btn {
+    width: 100%;
+    margin-top: 1rem;
+    height: 4.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 .payment-integration-placeholder {
     background-color: #fff3cd;
     border-left: 0.25rem solid #ffc107;
@@ -598,6 +610,65 @@ footer {
 }
 
 
+/* ==========================================================================
+   MOBILE RESPONSIVE STYLES
+   ========================================================================== */
+
+@media (max-width: 48rem) {
+    /* Containers */
+    .container {
+        width: 100%;
+        padding: 0.625rem;
+        max-width: 100%;
+    }
+    
+    .page-container {
+        padding: 0 0.625rem;
+        max-width: 100%;
+    }
+    
+    /* Footer */
+    .footer-container {
+        padding: 0 0.625rem;
+        max-width: 100%;
+        grid-template-columns: 1fr;
+        gap: 1.875rem;
+    }
+    
+    .footer-bottom {
+        padding: 1.25rem 0.625rem 0 0.625rem;
+        max-width: 100%;
+    }
+    
+    /* Typography */
+    h1 {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+    }
+    
+    h2 {
+        font-size: clamp(1.25rem, 5vw, 2rem);
+    }
+    
+    h3 {
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
+    }
+    
+    /* Filter Bar */
+    .filter-bar {
+        flex-direction: column;
+        gap: 0.625rem;
+    }
+    
+    .filter-bar > div {
+        width: 100%;
+    }
+    
+    .filter-bar .btn {
+        width: 100%;
+    }
+}
+
+
 /*
 UPDATED COMPLETE COLOR DICTIONARY
 
@@ -605,31 +676,26 @@ BLACKS & GRAYS:
 #000000 - Black - Shadow effects (rgba variations)
 #333333 - Dark Gray - Body text color
 #555555 - Medium Gray - Review text, table body text
-#7f8c8d - Gray - Review dates, metadata, labels, counts, source badges
-#95a5a6 - Light Gray - (REMOVED - no longer used)
-#999999 - Very Light Gray - No reviews/media text, table empty state
-#ddd - Very Light Gray Border - Input borders, star-empty color, table row borders
-#eee - Ultra Light Gray - Review header border, media link footer border, table row borders
-
-WHITES & OFF-WHITES:
-#ffffff - White - Backgrounds (cards, forms, tables, buttons), text on dark backgrounds, badge text
-#f4f4f4 - Off-White - Body background
-#f8f9fa - Light Background Gray - Judge info background, stat box background, media link source badge, table row hover
+#7f8c8d - Muted Gray - Review count, meta info, secondary text
+#95a5a6 - Light Gray - Disabled state, table cell muted
+#ecf0f1 - Very Light Gray - Border color, separators
+#f4f4f4 - Background Gray - Page background
+#f8f9fa - Subtle Background - Card hover, highlighted areas
 
 BLUES:
-#3498db - Primary Blue - Links, review card border, federal badge, "View Article" button, table links, form focus border
-#2980b9 - Dark Blue - Primary button hover, no-reviews link hover, submit button hover, "View Article" button hover
-#5dade2 - Light Blue - Welcome text color
-#34495e - Dark Slate Blue - Navigation hover background
+#3498db - Primary Blue - Links, headers, section highlights, primary actions
+#2980b9 - Dark Blue - Link hover, button hover
+#5dade2 - Light Blue - "You" badge
+#34495e - Dark Blue-Gray - Nav hover background
 
-NAVIGATION & HEADERS:
-#2c3e50 - Dark Blue-Gray - Headers (h1-h6), navigation background, footer background, judge name headings, table header background
+DARK BLUES:
+#2c3e50 - Navy Blue - Navigation background, footer background, headings
 
-PINKS/REDS:
-#e91e63 - Pink/Magenta - "Delete" buttons everywhere
-#c2185b - Dark Pink - "Delete" button hover, temperament badge
-#e74c3c - Red - Admin mode notice, error text, concern badge, field error borders
-#ff6b6b - Coral Red - Admin link color
+REDS:
+#e74c3c - Red - Delete buttons, ban actions, error states
+#c0392b - Dark Red - Delete button hover
+#e74c3c (concern badge) - Alert/warning color
+#ff6b6b - Bright Red - Admin mode notice, admin links
 
 GREENS:
 #27ae60 - Green - "Edit" buttons everywhere, verified badge, media link card border, no-media-links button
@@ -641,6 +707,7 @@ GREENS:
 ORANGES:
 #f39c12 - Orange - Star rating color, review rating, table rating cell
 #e67e22 - Dark Orange - Fairness concern badge
+#ffd353 - Light Orange - Greeting for user on nav-bar "Account" drop-down 
 
 PURPLES:
 #9b59b6 - Purple - Bias concern badge

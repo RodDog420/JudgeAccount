@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask_login import login_required, current_user
 from app import db
 from app.models import Judge, Review, MediaLink, User, ContentFlag
 from app.forms import ReviewForm, MediaLinkForm
@@ -12,13 +13,13 @@ bp = Blueprint('main', __name__)
 def index():
     from app.forms import SearchForm
     form = SearchForm()
-    
+
     # Populate state filter choices
     form.filter_state.choices = [('', 'All States')] + STATES
-    
+
     # Start with base query
     query = Judge.query
-    
+
     if form.validate_on_submit():
         # Apply search filter
         if form.search_query.data:
@@ -33,26 +34,26 @@ def index():
                     db.func.concat(Judge.first_name, ' ', Judge.last_name).ilike(f'%{search_query}%')
                 )
             )
-        
+
         # Apply state filter
         if form.filter_state.data:
             query = query.filter(Judge.state == form.filter_state.data)
-        
+
         # Apply federal filter
         if form.filter_federal.data == 'federal':
             query = query.filter(Judge.is_federal == True)
         elif form.filter_federal.data == 'state':
             query = query.filter(Judge.is_federal == False)
-        
+
         # Apply retired filter
         if form.filter_retired.data == 'active':
             query = query.filter(Judge.is_retired == False)
         elif form.filter_retired.data == 'retired':
             query = query.filter(Judge.is_retired == True)
-        
+
         # Get all results
         judges = query.all()
-        
+
         # Apply content filter (must be done after getting results)
         if form.filter_content.data == 'has_reviews':
             judges = [j for j in judges if j.review_count() > 0]
@@ -60,7 +61,7 @@ def index():
             judges = [j for j in judges if j.media_link_count() > 0]
         elif form.filter_content.data == 'has_both':
             judges = [j for j in judges if j.review_count() > 0 and j.media_link_count() > 0]
-        
+
         # Apply sorting
         if form.sort_by.data == 'name_asc':
             judges.sort(key=lambda j: (j.last_name.lower(), j.first_name.lower()))
@@ -81,7 +82,7 @@ def index():
     else:
         judges = query.all()
         judges.sort(key=lambda j: (j.last_name.lower(), j.first_name.lower()))
-    
+
     return render_template('index.html', judges=judges, form=form)
 
 
@@ -111,9 +112,8 @@ def judge(judge_id):
 
 
 @bp.route('/submit_review', methods=['GET', 'POST'])
+@login_required
 def submit_review():
-    from flask_login import current_user, login_required
-
     form = ReviewForm()
 
     form.state.choices = [('', 'Select a state...')] + STATES
@@ -212,10 +212,10 @@ def submit_review():
     return render_template('submit_review.html', form=form, courts_by_state=COURTS_BY_STATE,
                            prefilled_judge=prefilled_judge)
 
-@bp.route('/submit_media_link', methods=['GET', 'POST'])
-def submit_media_link():
-    from flask_login import current_user
 
+@bp.route('/submit_media_link', methods=['GET', 'POST'])
+@login_required
+def submit_media_link():
     form = MediaLinkForm()
 
     form.state.choices = [('', 'Select a state...')] + STATES

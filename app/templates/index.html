@@ -31,7 +31,9 @@
 </form>
 {% if judges %}
 <p class="content-count">Showing {{ judges|length }} judge(s)</p>
-<table>
+
+<!-- Desktop Table View -->
+<table class="judge-table-desktop">
     <thead>
         <tr>
             <th>Judge Name</th>
@@ -48,12 +50,6 @@
             <td>
                 <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
                     {{ judge.full_name() }}
-                    {% if judge.is_federal %}
-                        <span class="badge badge-federal">Federal</span>
-                    {% endif %}
-                    {% if judge.is_retired %}
-                        <span class="badge badge-retired">Retired</span>
-                    {% endif %}
                 </a>
             </td>
             <td>{{ judge.court }}</td>
@@ -71,6 +67,55 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Mobile Card View -->
+<div class="judge-cards-mobile">
+    {% for judge in judges %}
+    <div class="judge-card-mobile">
+        <div class="judge-card-header">
+            <h3 class="judge-card-name">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
+                    {{ judge.full_name() }}
+                </a>
+            </h3>
+            <div class="judge-card-badges">
+                {% if judge.is_federal %}
+                    <span class="badge badge-federal">Federal</span>
+                {% endif %}
+                {% if judge.is_retired %}
+                    <span class="badge badge-retired">Retired</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="judge-card-rating">
+            {% if judge.review_count() > 0 %}
+                <span class="rating-stars">★</span>
+                <span class="rating-value">{{ "%.1f"|format(judge.average_rating()) }}</span>
+                <span class="rating-reviews">({{ judge.review_count() }} reviews)</span>
+            {% else %}
+                <span class="rating-none">No ratings yet</span>
+            {% endif %}
+        </div>
+        
+        <div class="judge-card-details">
+            <div class="judge-card-row">
+                <span class="detail-label">Court:</span>
+                <span class="detail-value">{{ judge.court }}</span>
+            </div>
+            <div class="judge-card-row">
+                <span class="detail-label">Location:</span>
+                <span class="detail-value">{{ judge.city }}, {{ judge.state }}</span>
+            </div>
+            <div class="judge-card-row">
+                <span class="detail-label">Media Links:</span>
+                <span class="detail-value">{{ judge.media_link_count() }} verified</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% else %}
 <div class="no-reviews">
     <p>No judges found matching your search criteria.</p>

@@ -86,10 +86,17 @@
         </div>
     </div>
     {% endfor %}
+
+    <!-- Submit Button - Always show when media links exist -->
+    <div class="spacing-top-md">
+        <a href="{{ url_for('main.submit_media_link', judge_id=judge.id) }}" class="btn btn-primary">
+            Submit a Media Link
+        </a>
+    </div>
 {% else %}
     <div class="no-media-links">
         <p>No verified media links yet for this judge.</p>
-        <p class="media-wait-note">Media link verification typically takes up to 72 hours.<br>Submitted links will appear here once approved by our moderation team.</p>
+        <p>Media link verification typically takes up to 72 hours.<br>Submitted links will appear here once approved by our moderation team.</p>
         <a href="{{ url_for('main.submit_media_link', judge_id=judge.id) }}" class="btn btn-primary">Submit a Media Link</a>
     </div>
 {% endif %}
@@ -141,6 +148,13 @@
         </div>
     </div>
     {% endfor %}
+
+    <!-- Submit Button - Always show when reviews exist -->
+    <div class="spacing-top-md">
+        <a href="{{ url_for('main.submit_review', judge_id=judge.id) }}" class="btn btn-primary">
+            Submit a Review
+        </a>
+    </div>
 {% else %}
     <div class="no-reviews">
         <p>No reviews yet for this judge.</p>

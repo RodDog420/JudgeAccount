@@ -394,6 +394,33 @@
     color: #7f8c8d;
     font-weight: 600;
 }
+.admin-section-group {
+    background-color: #f8f9fa;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    margin-top: 2.5rem;
+}
+.admin-bulk-actions-box {
+    background-color: white;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+    margin-bottom: 1rem;
+}
+.admin-table-box {
+    background-color: white;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+}
+.admin-table-box table {
+    box-shadow: none;
+}
+.admin-table-box .content-count {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
 
 
 /* ==========================================================================
@@ -465,11 +492,6 @@
     color: #7f8c8d;
     font-size: 0.95rem;
     margin-bottom: 1.25rem;
-}
-.media-wait-note {
-    font-size: 0.9rem;
-    color: #7f8c8d;
-    margin-top: 0.625rem;
 }
 .submitted-date {
     margin-top: 0.9375rem;
@@ -585,4 +607,81 @@
 }
 .spacing-paragraph {
     margin: 0.3125rem 0;
+}
+/* ==========================================================================
+   ADMIN TABLE MOBILE RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 48rem) {
+    /* Remove min-width constraints on mobile */
+    .min-width-300,
+    .min-width-150,
+    .min-width-160,
+    .min-width-180,
+    .min-width-200 {
+        min-width: 0;
+    }
+    
+    /* Hide non-essential columns on mobile */
+    .admin-table-box table th:nth-child(3),
+    .admin-table-box table td:nth-child(3),
+    .admin-table-box table th:nth-child(5),
+    .admin-table-box table td:nth-child(5),
+    .admin-table-box table th:nth-child(6),
+    .admin-table-box table td:nth-child(6),
+    .admin-table-box table th:nth-child(7),
+    .admin-table-box table td:nth-child(7),
+    .admin-table-box table th:nth-child(8),
+    .admin-table-box table td:nth-child(8) {
+        display: none;
+    }
+    
+    /* Make admin table scrollable horizontally when showing all columns */
+    .admin-table-box.show-all-columns table th,
+    .admin-table-box.show-all-columns table td {
+        display: table-cell;
+    }
+    
+    .admin-table-box.show-all-columns {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Compact spacing for mobile */
+    .admin-table-box table th,
+    .admin-table-box table td {
+        padding: 0.625rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .admin-table-box table th:first-child,
+    .admin-table-box table td:first-child {
+        padding-left: 0.625rem;
+    }
+    
+    .admin-table-box table th:last-child,
+    .admin-table-box table td:last-child {
+        padding-right: 0.625rem;
+    }
+    
+    /* Mobile-only elements */
+    .mobile-only {
+        display: inline-block;
+    }
+    
+    .admin-table-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .admin-table-controls .content-count {
+        margin: 0;
+    }
+}
+
+/* Desktop: hide mobile-only elements */
+.mobile-only {
+    display: none;
 }
