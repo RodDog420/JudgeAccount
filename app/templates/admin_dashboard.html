@@ -104,21 +104,21 @@
         <div class="admin-actions">
             {% if not media_link.is_verified %}
                 <a href="{{ url_for('auth.admin_approve_media_link', media_link_id=media_link.id) }}" 
-                   class="btn btn-primary" 
-                   onclick="return confirm('Approve this media link and make it public?');">
-                    ✓ Approve
+                    class="btn btn-primary" 
+                    onclick="return confirm('Approve this media link and make it public?');">
+                    Approve
                 </a>
                 <a href="{{ url_for('auth.admin_reject_media_link', media_link_id=media_link.id) }}" 
-                   class="btn btn-secondary" 
-                   onclick="return confirm('Reject and delete this media link?');">
-                    ✗ Reject
+                    class="btn btn-secondary" 
+                    onclick="return confirm('Reject and delete this media link?');">
+                    Reject
                 </a>
             {% else %}
                 <span class="verified-badge">✓ Verified</span>
             {% endif %}
             <a href="{{ url_for('auth.admin_delete_media_link', media_link_id=media_link.id) }}" 
-               class="btn btn-secondary" 
-               onclick="return confirm('Admin action: Delete this media link permanently?');">
+                class="btn btn-danger" 
+                onclick="return confirm('Admin action: Delete this media link permanently?');">
                 Delete
             </a>
         </div>

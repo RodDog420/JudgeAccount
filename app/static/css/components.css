@@ -325,6 +325,7 @@
     margin-top: 1.25rem;
     display: flex;
     gap: 0.625rem;
+	flex-wrap: wrap; 
 }
 .admin-mode-notice {
     color: #e74c3c;
@@ -624,9 +625,22 @@
 .spacing-paragraph {
     margin: 0.3125rem 0;
 }
+
+
 /* ==========================================================================
    ADMIN TABLE MOBILE RESPONSIVE
    ========================================================================== */
+
+
+@media (max-width: 47.9375rem) {
+    .btn {
+        min-width: auto;
+        padding: clamp(0.5rem, 2vw, 0.625rem) clamp(0.75rem, 3vw, 1rem);
+        font-size: clamp(0.85rem, 3.5vw, 1rem);
+        flex: 0 0 auto;
+    }
+}
+
 
 @media (max-width: 48rem) {
     /* Remove min-width constraints on mobile */

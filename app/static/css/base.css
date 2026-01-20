@@ -85,7 +85,7 @@ footer {
 .footer-section h3 {
     color: #3498db;
     font-size: 1.1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-weight: 600;
 }
 
@@ -102,7 +102,7 @@ footer {
 }
 
 .footer-links li {
-    margin-bottom: 0.625rem;
+    margin-bottom: 0.25rem;
 }
 
 .footer-links a {
@@ -289,7 +289,7 @@ footer {
 }
 
 .contact-email-address {
-    font-size: 1.8rem;
+    font-size: clamp(1rem, 5vw, 1.8rem);
     margin: 0;
 }
 
@@ -811,7 +811,7 @@ footer {
 }
 
 .landing-guidelines-box a {
-    color: #27ae60;
+    color: #229954;
     font-weight: 600;
     text-decoration: underline;
 }
@@ -843,10 +843,10 @@ footer {
     /* Footer: 2 columns on phones (left: Community/Engage, right: Legal/Support) */
     /* Uses explicit grid placement to stack sections vertically within each column */
     .footer-container {
-        padding: 0 0.625rem;
+        padding: 0 clamp(1.5rem, 14vw, 4rem);
         max-width: 100%;
         grid-template-columns: repeat(2, 1fr);
-        gap: 1.875rem;
+        gap: clamp(1.25rem, 6vw, 3rem);
     }
     
     /* Explicit grid placement for 2-column phone layout */
@@ -952,7 +952,7 @@ DARK BLUES:
 REDS:
 #e74c3c - Red - Delete buttons, ban actions, error states
 #c0392b - Dark Red - Delete button hover
-#e74c3c (concern badge) - Alert/warning color
+#e74c3c - Concern badge - Alert/warning color
 #ff6b6b - Bright Red - Admin mode notice, admin links
 
 GREENS:

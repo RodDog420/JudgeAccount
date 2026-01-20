@@ -69,6 +69,8 @@
     color: #555;
     line-height: 1.8;
     font-size: 1rem;
+	overflow-wrap: break-word;
+    word-wrap: break-word; 
 }
 .no-reviews {
     text-align: center;
@@ -139,6 +141,8 @@
     line-height: 1.8;
     font-size: 1rem;
     margin-bottom: 1.25rem;
+	overflow-wrap: break-word;
+    word-wrap: break-word; 
 }
 .content-footer {
     display: flex;
