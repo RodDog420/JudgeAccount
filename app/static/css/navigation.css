@@ -9,7 +9,7 @@ nav {
 .nav-container {
     max-width: 100%;
     margin: 0 auto;
-    padding: 0.9375rem 4rem;
+    padding: 0.9375rem 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
