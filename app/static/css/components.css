@@ -109,6 +109,22 @@
     background-color: #c2185b;
     text-decoration: none;
 }
+.btn-blue {
+    background-color: #3498db;
+    color: white;
+}
+.btn-blue:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+}
+.btn-yellow {
+    background-color: #ff9705;
+    color: white;
+}
+.btn-yellow:hover {
+    background-color: #e68805;
+    text-decoration: none;
+}
 .btn-gray {
     background-color: #95a5a6;
     color: white;

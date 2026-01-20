@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}About JudgeAccount - Judicial Accountability Through Community Transparency{% endblock %}
+{% block content %}
+
+<!-- Hero Section -->
+<div class="landing-hero">
+    <h1>Judicial Accountability Through Community Transparency</h1>
+    <p class="landing-hero-tagline">A public platform dedicated to documenting judicial conduct through firsthand experiences and verified media sources.</p>
+</div>
+
+<!-- Mission Statement -->
+<div class="landing-mission-box">
+    <h2>Our Mission</h2>
+    <p>JudgeAccount exists to create an accessible, transparent platform where individuals can share truthful, firsthand accounts of their experiences with judges and document judicial conduct through verified media sources.</p>
+    <p>We believe the judicial system must be accountable to the public it serves. Through reliable information and community-driven documentation, we foster informed civic engagement and promote transparency in our courts.</p>
+    <p>Our platform serves as a critical resource for voters, litigants, attorneys, and citizens seeking verified information about judicial officers prior to hearings, trials, appearances, elections, retention votes, and appointments.</p>
+</div>
+
+<!-- How It Works -->
+<h2 class="landing-section-title">How JudgeAccount Works</h2>
+
+<div class="landing-steps-grid">
+    <div class="landing-step-card">
+        <div class="landing-step-number">1</div>
+        <h3>Read Our Community Guidelines</h3>
+        <p>Before participating, all users must read and understand our <a href="{{ url_for('main.guidelines') }}">Community Guidelines</a>. These guidelines establish our ethical framework and ensure all content meets our standards for integrity, truthfulness, and firsthand experience.</p>
+    </div>
+
+    <div class="landing-step-card">
+        <div class="landing-step-number">2</div>
+        <h3>Register & Login</h3>
+        <p>Create a free account to participate. Registration is required for submitting reviews and media links. Your account allows you to manage your submissions and ensures accountability in our community.</p>
+    </div>
+
+    <div class="landing-step-card">
+        <div class="landing-step-number">3</div>
+        <h3>Search for Judges</h3>
+        <p>Use our comprehensive judge directory to search by name, court, state, or location. Browse existing reviews and verified media links to learn about judicial conduct from multiple sources.</p>
+    </div>
+
+    <div class="landing-step-card">
+        <div class="landing-step-number">4</div>
+        <h3>Submit Your Review</h3>
+        <p><strong>Important:</strong> You may only review judges before whom you have personally appeared in a hearing. Personal appearance means you were a named party (plaintiff, defendant, petitioner, respondent) or witness in a case before the judge. This firsthand experience requirement is fundamental to our platform's integrity. Reviews must be truthful, factual accounts of your direct experience.</p>
+    </div>
+
+    <div class="landing-step-card">
+        <div class="landing-step-number">5</div>
+        <h3>Submit Media Links</h3>
+        <p>Anyone can submit verified media links from reputable news sources or official court documents. All media links undergo a verification process before appearing publicly on the site.</p>
+    </div>
+
+    <div class="landing-step-card">
+        <div class="landing-step-number">6</div>
+        <h3>Verification Process</h3>
+        <p>All submissions are reviewed before going live. Media links are verified for authenticity and source credibility. This process ensures the integrity and reliability of information on our platform.</p>
+    </div>
+</div>
+
+<!-- Why Use JudgeAccount -->
+<h2 class="landing-section-title">Why Use JudgeAccount</h2>
+
+<div class="landing-features-grid">
+    <div class="landing-feature-card">
+        <h3>Firsthand Accountability</h3>
+        <p>Unlike other platforms, we require direct personal experience. Only individuals who have appeared before a judge in a hearing may review that judge, ensuring authentic, firsthand accounts.</p>
+    </div>
+
+    <div class="landing-feature-card">
+        <h3>Verified Media Documentation</h3>
+        <p>We provide access to verified media coverage and official court documents, creating a comprehensive record of judicial conduct from reputable sources.</p>
+    </div>
+
+    <div class="landing-feature-card">
+        <h3>Community-Driven Transparency</h3>
+        <p>Our platform empowers citizens to share their experiences and document judicial behavior, fostering transparency and accountability in the justice system.</p>
+    </div>
+
+    <div class="landing-feature-card">
+        <h3>Comprehensive Moderation</h3>
+        <p>We maintain high standards through active content moderation, community flagging systems, and strict adherence to our ethical guidelines.</p>
+    </div>
+
+    <div class="landing-feature-card">
+        <h3>Privacy & Security</h3>
+        <p>Your data is protected with industry-standard security. We are GDPR and CCPA compliant, ensuring your privacy rights are respected.</p>
+    </div>
+
+    <div class="landing-feature-card">
+        <h3>Free & Accessible</h3>
+        <p>JudgeAccount is free to use for all citizens. We believe judicial accountability information should be accessible to everyone.</p>
+    </div>
+</div>
+
+<!-- Community Guidelines Emphasis -->
+<div class="landing-guidelines-box">
+    <h2>Our Commitment to Ethical Standards</h2>
+    <p>JudgeAccount operates under a strict ethical framework outlined in our <a href="{{ url_for('main.guidelines') }}">Community Guidelines</a>. Every user is expected to read, understand, and abide by these guidelines before participating on our platform.</p>
+    <p><strong>Key Principles:</strong> All reviews must be based on firsthand experience. Content must be truthful, factual, and respectful. False or misleading information violates our core values and will result in content removal and potential account suspension.</p>
+    <p>By using JudgeAccount, you agree to uphold these standards and contribute to a platform built on integrity, transparency, and accountability.</p>
+</div>
+
+<!-- Call to Action -->
+<div class="landing-cta-section">
+    <h2>Get Started Today</h2>
+    <p>Join our community in promoting judicial accountability and transparency. Search our judge directory, share your firsthand experiences, or contribute verified media documentation.</p>
+    
+    <div class="landing-cta-buttons">
+        <a href="{{ url_for('main.index') }}" class="btn btn-yellow">Search Judges</a>
+        <a href="{{ url_for('main.submit_review') }}" class="btn btn-primary">Submit Review</a>
+        <a href="{{ url_for('main.submit_media_link') }}" class="btn btn-blue">Submit Media Link</a>
+    </div>
+</div>
+
+<!-- Final Guidelines Reminder -->
+<div class="alert-info">
+    <h3 class="alert-heading">Before You Begin</h3>
+    <p class="alert-text">Please review our <a href="{{ url_for('main.guidelines') }}">Community Guidelines</a> thoroughly before submitting any content. Understanding and following these guidelines is essential to participating in our community and maintaining the integrity of our platform.</p>
+</div>
+
+{% endblock %}
+
+#ffc107 - Yellow/Gold - Pending verification border
+#856404 - Dark Yellow/Brown - Pending verification text
+
+#3498db - Primary Blue - Links, headers, section highlights, primary actions
+#2980b9 - Dark Blue - Link hover, button hover
+#5dade2 - Light Blue - "You" badge
+#34495e - Dark Blue-Gray - Nav hover background

@@ -223,7 +223,7 @@ nav {
 /* Mobile styles - up to 767px */
 @media (max-width: 47.9375rem) {
     .nav-container {
-        padding: 0.9375rem 3rem;
+        padding: 0.9375rem 1rem;
         max-width: 100%;
     }
     

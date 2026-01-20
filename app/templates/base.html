@@ -15,7 +15,7 @@
 <body>
     <nav>
         <div class="nav-container">
-            <a href="{{ url_for('main.index') }}" class="site-title">Judge Account</a>
+            <a href="{{ url_for('main.about') }}" class="site-title">JudgeAccount</a>
             
             <!-- Mobile Menu Toggle Button -->
             <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
@@ -30,6 +30,7 @@
                         Resources <span class="dropdown-arrow">▼</span>
                     </button>
                     <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('main.about') }}">About</a>
                         <a href="{{ url_for('main.index') }}">Judge Search</a>
                         <a href="{{ url_for('main.guidelines') }}">Community Guidelines</a>
                         <a href="{{ url_for('main.support') }}">Support</a>
@@ -97,15 +98,16 @@
     <footer>
         <div class="footer-container">
             <div class="footer-section">
-                <h3>About</h3>
-                <p class="footer-mission">Promoting Judicial Accountability and Transparency into the Character and Conduct of U.S. Judges.</p>
+                <h3>Community</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
+                    <li><a href="{{ url_for('main.guidelines') }}">Guidelines</a></li>
             </div>
             
             <div class="footer-section">
-                <h3>Quick Links</h3>
+                <h3>Engage</h3>
                 <ul class="footer-links">
                     <li><a href="{{ url_for('main.index') }}">Judge Index</a></li>
-                    <li><a href="{{ url_for('main.guidelines') }}">Community Guidelines</a></li>
                     <li><a href="{{ url_for('main.submit_review') }}">Submit Review</a></li>
                     <li><a href="{{ url_for('main.submit_media_link') }}">Submit Media</a></li>
                 </ul>
@@ -123,7 +125,7 @@
                 <h3>Support</h3>
                 <ul class="footer-links">
                     <li><a href="{{ url_for('main.contact') }}">Contact Us</a></li>
-                    <li><a href="{{ url_for('main.support') }}">Support Our Mission</a></li>
+                    <li><a href="{{ url_for('main.support') }}">Support Us</a></li>
                     <li><a href="{{ url_for('main.sitemap') }}">Sitemap</a></li>
                 </ul>
             </div>
