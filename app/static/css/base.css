@@ -76,7 +76,7 @@ footer {
 .footer-container {
     max-width: 75rem;
     margin: 0 auto;
-    padding: 0 1.25rem;
+    padding-left: clamp(2rem, 11vw, 11rem);
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
     gap: 2.5rem;
@@ -824,8 +824,7 @@ footer {
 /* ==========================================================================
    MOBILE RESPONSIVE STYLES (320px - 767px / Phones Only)
    ========================================================================== */
-/* NOTE: This targets ONLY phones. Tablets (768px+) inherit base desktop styles.
-   Changed from max-width: 48rem to 47.9375rem to exclude tablets from this query. */
+/* NOTE: This targets ONLY phones. Tablets (768px+) inherit base desktop styles. */
 
 @media (max-width: 47.9375rem) {
     /* Containers */
@@ -842,13 +841,6 @@ footer {
     
     /* Footer: 2 columns on phones (left: Community/Engage, right: Legal/Support) */
     /* Uses explicit grid placement to stack sections vertically within each column */
-    .footer-container {
-        padding: 0 clamp(1.5rem, 14vw, 4rem);
-        max-width: 100%;
-        grid-template-columns: repeat(2, 1fr);
-        gap: clamp(1.25rem, 6vw, 3rem);
-    }
-    
     /* Explicit grid placement for 2-column phone layout */
     .footer-section:nth-child(1) { grid-column: 1; grid-row: 1; } /* Community - Left column, top */
     .footer-section:nth-child(2) { grid-column: 1; grid-row: 2; } /* Engage - Left column, bottom */
@@ -870,7 +862,7 @@ footer {
     }
     
     h3 {
-        font-size: clamp(1.1rem, 4vw, 1.5rem);
+        font-size: clamp(1.6rem, 6vw, 1.9rem);
     }
     
     /* Filter Bar */
@@ -888,6 +880,42 @@ footer {
     }
 }
 
+/* ==========================================================================
+   SMALLEST MOBILE PHONE RESPONSIVE STYLES (320px to 374px/ Small phones Only)
+   ========================================================================== */
+@media (min-width: 20rem) and (max-width: 23.375rem) {
+    .footer-container {
+        padding: 0 clamp(1.5rem, 10vw, 4rem);
+        max-width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(1.25rem, 6vw, 3rem) clamp(2.75rem, 7vw, 4rem);
+    }
+}
+
+/* ==========================================================================
+   MEDIUM MOBILE PHONE RESPONSIVE STYLES (376px to 425px/ Medium phones Only)
+   ========================================================================== */
+@media (min-width: 20.0625rem) and (max-width: 26.5rem){
+    .footer-container {
+        padding: 0 clamp(1.5rem, 10vw, 4rem);
+        max-width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(1.25rem, 6vw, 3rem) clamp(5.5rem, 12vw, 8rem);
+    }
+}
+
+/* ==========================================================================
+   LARGE MOBILE PHONE RESPONSIVE STYLES (376px to 425px/ Large phones Only)
+   ========================================================================== */
+
+@media (min-width: 26.5625rem) and (max-width: 47.9375rem){
+    .footer-container {
+        padding: 0 clamp(2rem, 15vw, 3rem) 0 clamp(3rem, 20vw, 4rem);
+        max-width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(1.25rem, 6vw, 3rem) clamp(6.5rem, 25vw, 7.5rem);
+    }
+}
 
 /* ==========================================================================
    TABLET RESPONSIVE STYLES (768px - 1023px / Tablets Only)
@@ -898,6 +926,15 @@ footer {
 
 @media (min-width: 48rem) and (max-width: 63.9375rem) {
     /* Landing Page: 2 columns on tablets (creates 3 rows with 6 total cards) */
+	.footer-container {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding-left: 4.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    gap: 1.25rem;
+	}
+	
     .landing-steps-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -976,4 +1013,11 @@ YELLOWS:
 #856404 - Dark Yellow/Brown - Pending verification text
 #ff9705 - Orange/Yellow - .btn-yellow button background
 #e68805 - Dark Orange/Yellow - .btn-yellow:hover button hover
+
+Common Breakpoints in rem:
+320px = 20rem
+375px = 23.4375rem
+425px = 26.5625rem
+768px = 48rem
+1024px = 64rem
 */

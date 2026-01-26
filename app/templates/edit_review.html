@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Edit Your Review</h1>
-<p>Editing review for {{ review.judge.full_name() }}</p>
+<p>Editing review for <span class="user-content-name">{{ review.judge.full_name() }}</span></p>
 
 <form method="POST" action="{{ url_for('auth.edit_review', review_id=review.id) }}">
     {{ form.hidden_tag() }}
@@ -13,12 +13,12 @@
     
     <div class="form-group">
         {{ form.judge_first_name.label }}
-        {{ form.judge_first_name(readonly=true, class="form-field-readonly") }}
+        {{ form.judge_first_name(readonly=true, class="form-field-readonly user-content-name") }}
     </div>
     
     <div class="form-group">
         {{ form.judge_last_name.label }}
-        {{ form.judge_last_name(readonly=true, class="form-field-readonly") }}
+        {{ form.judge_last_name(readonly=true, class="form-field-readonly user-content-name") }}
     </div>
     
     <div class="form-group">
@@ -28,12 +28,12 @@
     
     <div class="form-group">
         {{ form.court.label }}
-        {{ form.court(disabled=true, class="form-field-readonly") }}
+        {{ form.court(disabled=true, class="form-field-readonly user-content-name") }}
     </div>
     
     <div class="form-group">
         {{ form.city.label }}
-        {{ form.city(readonly=true, class="form-field-readonly") }}
+        {{ form.city(readonly=true, class="form-field-readonly user-content-name") }}
     </div>
     
     <div class="checkbox-group">
@@ -45,7 +45,14 @@
     
     <div class="form-group">
         {{ form.rating.label }}
-        {{ form.rating(class="form-control") }}
+        <div class="rating-options">
+            {% for subfield in form.rating %}
+            <label>
+                {{ subfield }}
+                <span class="rating-number">{{ subfield.label.text }}</span>
+            </label>
+            {% endfor %}
+        </div>
         {% if form.rating.errors %}
             {% for error in form.rating.errors %}
                 <span class="error">{{ error }}</span>

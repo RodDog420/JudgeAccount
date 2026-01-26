@@ -2,9 +2,9 @@
 {% block title %}{{ judge.full_name() }} - Judge Review{% endblock %}
 {% block content %}
 <div class="judge-profile">
-    <h1>{{ judge.full_name() }}
+    <h1 class="user-content-name"><span class="judge-name-text">{{ judge.full_name() }}</span>
         {% if judge.is_federal %}
-            <span class="badge badge-federal">Federal Judge</span>
+            <span class="badge badge-federal">Federal</span>
         {% endif %}
         {% if judge.is_retired %}
             <span class="badge badge-retired">Retired</span>
@@ -14,11 +14,11 @@
     <div class="judge-info">
         <div class="judge-info-item">
             <span class="judge-info-label">Court</span>
-            <span class="judge-info-value">{{ judge.court }}</span>
+            <span class="judge-info-value user-content-name">{{ judge.court }}</span>
         </div>
         <div class="judge-info-item">
             <span class="judge-info-label">Location</span>
-            <span class="judge-info-value">{{ judge.city }}, {{ judge.state }}</span>
+            <span class="judge-info-value user-content-name">{{ judge.city }}, {{ judge.state }}</span>
         </div>
     </div>
     
@@ -49,40 +49,38 @@
     <div class="media-link-card">
         <div class="media-link-header">
             <h3 class="media-link-headline">
-                <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer">
+                <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer" class="user-content-url">
                     {{ media_link.headline }}
                 </a>
             </h3>
-            <span class="media-link-source">{{ media_link.news_source }}</span>
+            <span class="media-link-source user-content-text">{{ media_link.news_source }}</span>
         </div>
         
         <div class="media-link-date">
             Published: {{ media_link.publication_date.strftime('%B %d, %Y') }}
         </div>
         
-        <div class="media-link-summary">
+        <div class="media-link-summary user-content-text">
             {{ media_link.summary }}
         </div>
         
-        <div class="content-footer">
+<div class="content-footer">
             <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer" class="btn media-link-button">
                 Read Full Article →
             </a>
-            <div>
-                <span class="media-link-submitted">
-                    Submitted: {{ media_link.created_at.strftime('%B %d, %Y') }}
-                </span>
-                {% if current_user.is_authenticated and media_link.user_id != current_user.id %}
-                    {% if media_link.has_pending_flag %}
-                        <span class="text-muted text-smaller report-link">⚠️ Flagged - pending admin inspection</span>
-                    {% else %}
-                        <a href="{{ url_for('auth.flag_media_link', media_link_id=media_link.id) }}" 
-                            class="btn btn-danger btn-small report-link">
-                            Report
-                        </a>
-                    {% endif %}
+            {% if current_user.is_authenticated and media_link.user_id != current_user.id %}
+                {% if media_link.has_pending_flag %}
+                    <span class="text-muted text-smaller">⚠️ Flagged - pending admin inspection</span>
+                {% else %}
+                    <a href="{{ url_for('auth.flag_media_link', media_link_id=media_link.id) }}" 
+                        class="btn btn-danger xtra-shrt-btn">
+                        Report
+                    </a>
                 {% endif %}
-            </div>
+            {% endif %}
+            <span class="media-link-submitted">
+                Submitted: {{ media_link.created_at.strftime('%B %d, %Y') }}
+            </span>
         </div>
     </div>
     {% endfor %}
@@ -96,7 +94,8 @@
 {% else %}
     <div class="no-media-links">
         <p>No verified media links yet for this judge.</p>
-        <p>Media link verification typically takes up to 72 hours.<br>Submitted links will appear here once approved by our moderation team.</p>
+        <p>Media link verification typically takes up to 72 hours.</p>
+        <p>Submitted links will appear here once approved by our moderation team.</p>
         <a href="{{ url_for('main.submit_media_link', judge_id=judge.id) }}" class="btn btn-primary">Submit a Media Link</a>
     </div>
 {% endif %}
@@ -125,7 +124,7 @@
         </div>
         {% endif %}
         
-        <div class="review-text">
+        <div class="review-text user-content-text">
             {{ review.review_text }}
         </div>
         
@@ -139,7 +138,7 @@
                     <span class="text-muted text-smaller">⚠️ Flagged - pending admin inspection</span>
                 {% else %}
                     <a href="{{ url_for('auth.flag_review', review_id=review.id) }}" 
-                        class="btn btn-danger btn-small">
+                        class="btn btn-danger xtra-shrt-btn">
                         Report
                     </a>
                 {% endif %}

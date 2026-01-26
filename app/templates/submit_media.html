@@ -14,7 +14,7 @@
     <div class="form-group">
         {{ form.judge_first_name.label }}
         {% if prefilled_judge %}
-            {{ form.judge_first_name(class="form-control", disabled="disabled") }}
+            {{ form.judge_first_name(class="form-control user-content-name", disabled="disabled") }}
         {% else %}
             {{ form.judge_first_name(class="form-control") }}
         {% endif %}
@@ -28,7 +28,7 @@
     <div class="form-group">
         {{ form.judge_last_name.label }}
         {% if prefilled_judge %}
-            {{ form.judge_last_name(class="form-control", disabled="disabled") }}
+            {{ form.judge_last_name(class="form-control user-content-name", disabled="disabled") }}
         {% else %}
             {{ form.judge_last_name(class="form-control") }}
         {% endif %}
@@ -56,7 +56,7 @@
     <div class="form-group">
         {{ form.court.label }}
         {% if prefilled_judge %}
-            {{ form.court(class="form-control", id="court-select", disabled="disabled") }}
+            {{ form.court(class="form-control user-content-name", id="court-select", disabled="disabled") }}
         {% else %}
             {{ form.court(class="form-control", id="court-select") }}
         {% endif %}
@@ -70,7 +70,7 @@
     <div class="form-group">
         {{ form.city.label }}
         {% if prefilled_judge %}
-            {{ form.city(class="form-control", disabled="disabled") }}
+            {{ form.city(class="form-control user-content-name", disabled="disabled") }}
         {% else %}
             {{ form.city(class="form-control") }}
         {% endif %}

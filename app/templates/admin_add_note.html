@@ -3,15 +3,15 @@
 {% block title %}Admin Notes: {{ user.username }} - Admin{% endblock %}
 
 {% block content %}
-<h1>Admin Notes for {{ user.username }}</h1>
+<h1>Admin Notes for <span class="user-content-username">{{ user.username }}</span></h1>
 <p class="admin-mode-notice">Internal notes visible only to administrators</p>
 
 <div class="admin-search-form admin-search-form-centered">
     <h3 class="form-section-title">User Information</h3>
     
     <div class="spacing-bottom-sm">
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Username:</strong> <span class="user-content-username">{{ user.username }}</span></p>
+        <p><strong>Email:</strong> <span class="user-content-email">{{ user.email }}</span></p>
         {% if user.is_banned %}
         <p><strong>Status:</strong> <span class="badge badge-concern">BANNED</span></p>
         {% endif %}

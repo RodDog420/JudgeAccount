@@ -13,8 +13,8 @@
         <div class="form-group">
             <label for="search_query">Search Users</label>
             <input type="text" id="search_query" name="search_query" 
-                   value="{{ search_query or '' }}" 
-                   placeholder="Username or email..." class="form-control">
+                    value="{{ search_query or '' }}" 
+                    placeholder="Username or email..." class="form-control">
         </div>
         
         <div class="form-group">
@@ -62,7 +62,7 @@
             </select>
             
             <input type="text" id="bulk-reason" name="bulk_ban_reason" 
-                   placeholder="Reason for action..." class="form-control" required>
+                    placeholder="Reason for action..." class="form-control" required>
             
             <button type="submit" class="btn btn-danger" 
                     onclick="return confirm('Are you sure you want to perform this bulk action on selected users?');">
@@ -83,7 +83,7 @@
         </div>
 
         {% if user_data %}
-        <table>
+        <table class="admin-user-table-desktop">
             <thead>
                 <tr>
                     <th class="table-col-narrow">
@@ -94,8 +94,8 @@
                     <th>Status</th>
                     <th>Joined</th>
                     <th>Reviews</th>
-                    <th>Verified Media</th>
-                    <th>Last Activity</th>
+                    <th>Media</th>
+                    <th>Last</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -105,28 +105,30 @@
                     <td>
                         {% if not data.user.is_admin and data.user.id != current_user.id %}
                         <input type="checkbox" name="user_ids[]" value="{{ data.user.id }}" 
-                               class="user-checkbox" form="bulk-action-form">
+                                class="user-checkbox" form="bulk-action-form">
                         {% endif %}
                     </td>
-                    <td>
+                    <td class="user-content-username">
                         <a href="{{ url_for('auth.view_user_activity', user_id=data.user.id) }}">
                             {{ data.user.username }}
                         </a>
                     </td>
-                    <td class="table-cell-muted">{{ data.user.email }}</td>
+                    <td class="table-cell-muted user-content-email">{{ data.user.email }}</td>
                     <td>
                         {% if data.user.is_banned %}
-                            <span class="badge badge-concern">BANNED</span>
+                            <span class="badge badge-concern badge-small">BANNED</span>
                         {% else %}
-                            <span class="badge badge-active">ACTIVE</span>
+                            <span class="badge badge-active badge-small">ACTIVE</span>
                         {% endif %}
                     </td>
-                    <td class="table-cell-muted">{{ data.user.created_at.strftime('%b %d, %Y') }}</td>
+                    <td class="table-cell-muted table-cell-date-wrapped">
+                        {{ data.user.created_at.strftime('%b %d,') }}<br>{{ data.user.created_at.strftime('%Y') }}
+                    </td>
                     <td class="table-cell-center">{{ data.review_count }}</td>
                     <td class="table-cell-center">{{ data.verified_media_count }}</td>
-                    <td class="table-cell-muted">
+                    <td class="table-cell-muted table-cell-date-wrapped">
                         {% if data.user.last_active %}
-                            {{ data.user.last_active.strftime('%b %d, %Y') }}
+                            {{ data.user.last_active.strftime('%b %d,') }}<br>{{ data.user.last_active.strftime('%Y') }}
                         {% else %}
                             Never
                         {% endif %}
@@ -141,6 +143,77 @@
                 {% endfor %}
             </tbody>
         </table>
+        
+        <!-- Mobile Card View -->
+        <div class="admin-user-cards-mobile">
+            {% for data in user_data %}
+            <div class="admin-user-card-mobile">
+                <!-- Checkbox for bulk selection -->
+                {% if not data.user.is_admin and data.user.id != current_user.id %}
+                <div class="admin-user-card-checkbox">
+                    <input type="checkbox" name="user_ids[]" value="{{ data.user.id }}" 
+                            class="user-checkbox" form="bulk-action-form" id="mobile-check-{{ data.user.id }}">
+                    <label for="mobile-check-{{ data.user.id }}">Select for bulk action</label>
+                </div>
+                {% endif %}
+                
+                <!-- Card Header -->
+                <div class="admin-user-card-header">
+                    <h3 class="admin-user-card-name">
+                        <a href="{{ url_for('auth.view_user_activity', user_id=data.user.id) }}" class="user-content-username">
+                            {{ data.user.username }}
+                        </a>
+                    </h3>
+                    <div class="admin-user-card-badges">
+                        {% if data.user.is_banned %}
+                            <span class="badge badge-concern badge-small">BANNED</span>
+                        {% else %}
+                            <span class="badge badge-active badge-small">ACTIVE</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Card Details -->
+                <div class="admin-user-card-details">
+                    <div class="admin-user-card-row admin-user-card-row-email">
+                        <span class="admin-user-card-label">Email:</span>
+                        <span class="admin-user-card-value user-content-email">{{ data.user.email }}</span>
+                    </div>
+                    <div class="admin-user-card-row">
+                        <span class="admin-user-card-label">Joined:</span>
+                        <span class="admin-user-card-value">{{ data.user.created_at.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <div class="admin-user-card-row">
+                        <span class="admin-user-card-label">Reviews:</span>
+                        <span class="admin-user-card-value">{{ data.review_count }}</span>
+                    </div>
+                    <div class="admin-user-card-row">
+                        <span class="admin-user-card-label">Media:</span>
+                        <span class="admin-user-card-value">{{ data.verified_media_count }}</span>
+                    </div>
+                    <div class="admin-user-card-row">
+                        <span class="admin-user-card-label">Last Active:</span>
+                        <span class="admin-user-card-value">
+                            {% if data.user.last_active %}
+                                {{ data.user.last_active.strftime('%b %d, %Y') }}
+                            {% else %}
+                                Never
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Card Actions -->
+                <div class="admin-user-card-actions">
+                    <a href="{{ url_for('auth.view_user_activity', user_id=data.user.id) }}" 
+                        class="btn btn-primary btn-small">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
         {% else %}
         <div class="no-reviews">
             <p>No users found matching your criteria.</p>

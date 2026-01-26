@@ -24,20 +24,20 @@
             <div>
                 <h3 class="flag-header-title">
                     {% if flag.review_id %}
-                        Review by {{ flag.review.user.username if flag.review and flag.review.user else 'Deleted User' }}
+                        Review by <span class="user-content-username">{{ flag.review.user.username if flag.review and flag.review.user else 'Deleted User' }}</span>
                     {% else %}
-                        Media Link by {{ flag.media_link.user.username if flag.media_link and flag.media_link.user else 'Deleted User' }}
+                        Media Link by <span class="user-content-username">{{ flag.media_link.user.username if flag.media_link and flag.media_link.user else 'Deleted User' }}</span>
                     {% endif %}
                 </h3>
                 <p class="flag-reporter-info">
-                    Reported by: <strong>{{ flag.flagger.username }}</strong> on {{ flag.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                    Reported by: <strong class="user-content-username">{{ flag.flagger.username }}</strong> on {{ flag.created_at.strftime('%B %d, %Y at %I:%M %p') }}
                 </p>
             </div>
             <span class="badge badge-concern">{{ flag.flag_type.replace('_', ' ').title() }}</span>
         </div>
         
         {% if flag.description %}
-        <div class="reporter-note-box">
+        <div class="reporter-note-box user-content-text">
             <strong>Reporter's Note:</strong> {{ flag.description }}
         </div>
         {% endif %}
@@ -45,14 +45,14 @@
         <div class="flagged-content-box">
             <h4 class="flagged-content-heading">Flagged Content:</h4>
             {% if flag.review_id and flag.review %}
-                <p class="flagged-content-meta"><strong>Judge:</strong> {{ flag.review.judge.full_name() if flag.review.judge else 'Deleted Judge' }}</p>
+                <p class="flagged-content-meta"><strong>Judge:</strong> <span class="user-content-name">{{ flag.review.judge.full_name() if flag.review.judge else 'Deleted Judge' }}</span></p>
                 <p class="flagged-content-meta"><strong>Rating:</strong> {{ flag.review.rating }}/5</p>
-                <p class="flagged-content-text">{{ flag.review.review_text }}</p>
+                <p class="flagged-content-text user-content-text">{{ flag.review.review_text }}</p>
             {% elif flag.media_link_id and flag.media_link %}
-                <p class="flagged-content-meta"><strong>Judge:</strong> {{ flag.media_link.judge.full_name() if flag.media_link.judge else 'Deleted Judge' }}</p>
-                <p class="flagged-content-meta"><strong>Headline:</strong> {{ flag.media_link.headline }}</p>
-                <p class="flagged-content-meta"><strong>Source:</strong> {{ flag.media_link.news_source }}</p>
-                <p class="flagged-content-text">{{ flag.media_link.summary }}</p>
+                <p class="flagged-content-meta"><strong>Judge:</strong> <span class="user-content-name">{{ flag.media_link.judge.full_name() if flag.media_link.judge else 'Deleted Judge' }}</span></p>
+                <p class="flagged-content-meta"><strong>Headline:</strong> <span class="user-content-text">{{ flag.media_link.headline }}</span></p>
+                <p class="flagged-content-meta"><strong>Source:</strong> <span class="user-content-text">{{ flag.media_link.news_source }}</span></p>
+                <p class="flagged-content-text user-content-text">{{ flag.media_link.summary }}</p>
             {% else %}
                 <p class="flagged-content-meta"><em>Content has been deleted</em></p>
             {% endif %}
@@ -61,7 +61,7 @@
         {% if flag.is_resolved %}
             <div class="resolved-box">
                 <strong class="resolved-text">Resolved:</strong>
-                <span class="resolved-text">{{ flag.resolution_action.replace('_', ' ').title() }} by {{ flag.resolved_by.username if flag.resolved_by else 'System' }} on {{ flag.resolved_at.strftime('%B %d, %Y') }}</span>
+                <span class="resolved-text">{{ flag.resolution_action.replace('_', ' ').title() }} by <span class="user-content-username">{{ flag.resolved_by.username if flag.resolved_by else 'System' }}</span> on {{ flag.resolved_at.strftime('%B %d, %Y') }}</span>
             </div>
         {% else %}
             <div class="admin-actions spacing-top-sm">

@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="user-profile-admin">
-    <h1>User Profile: {{ user.username }}
+    <h1>User Profile: <span class="username-display user-content-username">{{ user.username }}</span>
         {% if user.is_admin %}
             <span class="badge badge-federal">ADMINISTRATOR</span>
         {% endif %}
@@ -19,10 +19,10 @@
         
         <div class="admin-filter-grid admin-filter-grid-wide">
             <div>
-                <strong>Username:</strong> {{ user.username }}
+                <strong>Username:</strong> <span class="username-display user-content-username">{{ user.username }}</span>
             </div>
             <div>
-                <strong>Email:</strong> {{ user.email }}
+                <strong>Email:</strong> <span class="user-content-email">{{ user.email }}</span>
             </div>
             <div>
                 <strong>Joined:</strong> {{ user.created_at.strftime('%B %d, %Y at %I:%M %p') }}
@@ -60,19 +60,19 @@
             <p class="spacing-paragraph"><strong>Banned At:</strong> {{ user.banned_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
             <p class="spacing-paragraph"><strong>Banned By:</strong> 
                 {% if user.banned_by %}
-                    {{ user.banned_by.username }}
+                    <span class="user-content-username">{{ user.banned_by.username }}</span>
                 {% else %}
                     System
                 {% endif %}
             </p>
-            <p class="spacing-paragraph"><strong>Reason:</strong> {{ user.ban_reason }}</p>
+            <p class="spacing-paragraph"><strong>Reason:</strong> <span class="user-content-admin">{{ user.ban_reason }}</span></p>
         </div>
         {% endif %}
         
         {% if user.admin_notes %}
         <div class="alert-info spacing-top-sm">
             <h4 class="alert-heading">Admin Notes</h4>
-            <p class="preformatted-text">{{ user.admin_notes }}</p>
+            <p class="preformatted-text user-content-admin">{{ user.admin_notes }}</p>
         </div>
         {% endif %}
     </div>
@@ -88,18 +88,18 @@
                 </a>
             {% else %}
                 <a href="{{ url_for('auth.ban_user', user_id=user.id) }}" 
-                    class="btn btn-warning">
+                    class="btn btn-warning shrt-btn">
                     Ban User
                 </a>
             {% endif %}
             
             <a href="{{ url_for('auth.add_admin_note', user_id=user.id) }}" 
-                class="btn btn-primary">
+                class="btn btn-primary lrg-btn">
                 {% if user.admin_notes %}Edit{% else %}Add{% endif %} Admin Notes
             </a>
             
             <a href="{{ url_for('auth.delete_user', user_id=user.id) }}" 
-                class="btn btn-secondary">
+                class="btn btn-secondary shrt-btn">
                 Delete User
             </a>
         {% else %}
@@ -112,7 +112,7 @@
             </p>
         {% endif %}
         
-        <a href="{{ url_for('auth.manage_users') }}" class="btn btn-gray">
+        <a href="{{ url_for('auth.manage_users') }}" class="btn btn-gray lrg-btn ">
             Back to User List
         </a>
     </div>
@@ -125,19 +125,19 @@
             <div class="media-link-header">
                 <div>
                     <h3 class="judge-name-heading">
-                        <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}">
+                        <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}" class="user-content-name">
                             {{ media_link.judge.full_name() }}
                         </a>
                     </h3>
-                    <p class="judge-court-info">
+                    <p class="judge-court-info user-content-name">
                         {{ media_link.judge.court }} - {{ media_link.judge.city }}, {{ media_link.judge.state }}
                     </p>
                 </div>
-                <span class="media-link-source">{{ media_link.news_source }}</span>
+                <span class="media-link-source user-content-text">{{ media_link.news_source }}</span>
             </div>
             
             <h4 class="media-link-headline">
-                <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer">
+                <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer" class="user-content-url">
                     {{ media_link.headline }}
                 </a>
             </h4>
@@ -147,7 +147,7 @@
                 Submitted: {{ media_link.created_at.strftime('%B %d, %Y') }}
             </div>
             
-            <div class="media-link-summary">
+            <div class="media-link-summary user-content-text">
                 {{ media_link.summary }}
             </div>
             
@@ -176,11 +176,11 @@
             <div class="review-header">
                 <div>
                     <h3 class="judge-name-heading">
-                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
+                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}" class="user-content-name">
                             {{ review.judge.full_name() }}
                         </a>
                     </h3>
-                    <p class="judge-court-info">
+                    <p class="judge-court-info user-content-name">
                         {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
                     </p>
                 </div>
@@ -206,7 +206,7 @@
             </div>
             {% endif %}
             
-            <div class="review-text">
+            <div class="review-text user-content-text">
                 {{ review.review_text }}
             </div>
         </div>
@@ -237,8 +237,8 @@
                     <td>
                         <span class="badge badge-gray">{{ log.action_type.replace('_', ' ').title() }}</span>
                     </td>
-                    <td>{{ log.admin.username if log.admin else 'System' }}</td>
-                    <td class="table-cell-muted">{{ log.details or 'No details' }}</td>
+                    <td class="user-content-username">{{ log.admin.username if log.admin else 'System' }}</td>
+                    <td class="table-cell-muted user-content-admin">{{ log.details or 'No details' }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

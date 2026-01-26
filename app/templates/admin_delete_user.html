@@ -3,44 +3,31 @@
 {% block title %}Delete User: {{ user.username }} - Admin{% endblock %}
 
 {% block content %}
-<h1>Delete User: {{ user.username }}</h1>
-<p class="admin-mode-notice">🚨 CRITICAL: This action is PERMANENT and cannot be undone</p>
+<h1>Delete User: <span class="user-content-username">{{ user.username }}</span></h1>
+<p class="admin-mode-notice">⚠️ DANGER: This action is PERMANENT and IRREVERSIBLE</p>
 
 <div class="admin-search-form admin-search-form-centered">
     <h3 class="form-section-title">User Information</h3>
     
     <div class="spacing-bottom-sm">
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Reviews:</strong> {{ review_count }}</p>
-        <p><strong>Media Links:</strong> {{ media_count }}</p>
+        <p><strong>Username:</strong> <span class="user-content-username">{{ user.username }}</span></p>
+        <p><strong>Email:</strong> <span class="user-content-email">{{ user.email }}</span></p>
+        <p><strong>Reviews:</strong> {{ user.get_review_count() }}</p>
+        <p><strong>Media Links:</strong> {{ user.get_media_link_count() }}</p>
         <p><strong>Joined:</strong> {{ user.created_at.strftime('%B %d, %Y') }}</p>
-        {% if user.is_banned %}
-        <p><strong>Status:</strong> <span class="badge badge-concern">CURRENTLY BANNED</span></p>
-        {% endif %}
     </div>
     
-    <div class="alert-critical">
-        <h4 class="alert-heading">⚠️ CRITICAL WARNING</h4>
+    <div class="alert-warning">
+        <h4 class="alert-heading">⚠️ Critical Warning - Permanent Deletion</h4>
+        <p class="alert-text"><strong>This action CANNOT be undone. When you delete this user:</strong></p>
         <ul class="alert-list">
-            <li><strong>ALL USER DATA WILL BE PERMANENTLY DELETED</strong></li>
-            <li>{{ review_count }} review(s) will be deleted from judge profiles</li>
-            <li>{{ media_count }} media link(s) will be deleted from judge profiles</li>
-            <li>This user will be added to the ban list to prevent re-registration</li>
-            <li><strong>THIS ACTION CANNOT BE UNDONE</strong></li>
-            <li>The deletion will be logged in the admin activity log</li>
+            <li>The user account will be <strong>permanently deleted</strong> from the database</li>
+            <li>All reviews and media links will remain but show as "deleted user"</li>
+            <li>The user will be able to create a new account with the same email/username</li>
+            <li>All admin notes and historical records associated with this user will be lost</li>
+            <li>This action will be logged in the admin activity log</li>
         </ul>
-    </div>
-    
-    <div class="alert-success">
-        <h4 class="alert-heading">💡 Alternative: Ban Instead of Delete</h4>
-        <p class="alert-text">
-            Consider <strong>banning</strong> the user instead of deleting them. Banning prevents access while preserving 
-            their contributions to the site. You can always delete later if needed.
-        </p>
-        <a href="{{ url_for('auth.ban_user', user_id=user.id) }}" class="btn btn-primary spacing-top-sm">
-            Ban User Instead
-        </a>
+        <p class="alert-text spacing-top-sm"><strong>Alternative:</strong> Consider banning the user instead. Bans are reversible and preserve user history.</p>
     </div>
     
     <form method="POST" action="{{ url_for('auth.delete_user', user_id=user.id) }}">
@@ -49,26 +36,28 @@
         <div class="form-group">
             <label for="delete_reason">Reason for Deletion *</label>
             <textarea id="delete_reason" name="delete_reason" class="form-control" rows="5" required
-                    placeholder="Explain why this user is being permanently deleted..."></textarea>
+                        placeholder="Explain why this user account is being permanently deleted..."></textarea>
             <span class="form-help-text">
                 This reason will be logged for administrative records.
             </span>
         </div>
         
-        <div class="checkbox-group">
-            <input type="checkbox" id="confirm_delete" name="confirm_delete" required>
-            <label for="confirm_delete" class="text-danger-bold">
-                I understand this will PERMANENTLY DELETE all of {{ user.username }}'s data and this action CANNOT BE UNDONE
-            </label>
+        <div class="form-group">
+            <label for="confirm_username">Type the username to confirm: <strong class="user-content-username">{{ user.username }}</strong></label>
+            <input type="text" id="confirm_username" name="confirm_username" class="form-control" required
+                    placeholder="Type username exactly to confirm deletion">
+            <span class="form-help-text">
+                You must type the username exactly as shown above to proceed with deletion.
+            </span>
         </div>
         
         <div class="form-actions">
-            <button type="submit" class="btn btn-secondary"
-                    onclick="return confirm('FINAL WARNING: Are you ABSOLUTELY CERTAIN you want to permanently delete {{ user.username }} and all their content? This cannot be undone.');">
-                🗑️ Permanently Delete User
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('FINAL WARNING: Are you ABSOLUTELY CERTAIN you want to permanently delete {{ user.username }}? This CANNOT be undone!');">
+                ⚠️ PERMANENTLY DELETE USER
             </button>
-            <a href="{{ url_for('auth.view_user_activity', user_id=user.id) }}" class="btn btn-primary">
-                Cancel - Go Back
+            <a href="{{ url_for('auth.view_user_activity', user_id=user.id) }}" class="btn btn-gray">
+                Cancel
             </a>
         </div>
     </form>

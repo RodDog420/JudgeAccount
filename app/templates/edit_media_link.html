@@ -11,12 +11,12 @@
     
     <div class="form-group">
         {{ form.judge_first_name.label }}
-        {{ form.judge_first_name(class="form-control", disabled=true) }}
+        {{ form.judge_first_name(class="form-control user-content-name", disabled=true) }}
     </div>
     
     <div class="form-group">
         {{ form.judge_last_name.label }}
-        {{ form.judge_last_name(class="form-control", disabled=true) }}
+        {{ form.judge_last_name(class="form-control user-content-name", disabled=true) }}
     </div>
     
     <div class="form-group">
@@ -26,12 +26,12 @@
     
     <div class="form-group">
         {{ form.court.label }}
-        {{ form.court(class="form-control", id="court-select", disabled=true) }}
+        {{ form.court(class="form-control user-content-name", id="court-select", disabled=true) }}
     </div>
     
     <div class="form-group">
         {{ form.city.label }}
-        {{ form.city(class="form-control", disabled=true) }}
+        {{ form.city(class="form-control user-content-name", disabled=true) }}
     </div>
     
     <div class="checkbox-group">
@@ -43,7 +43,7 @@
     
     <div class="form-group">
         {{ form.headline.label }}
-        {{ form.headline(class="form-control", placeholder="Enter the article or report headline...") }}
+        {{ form.headline(class="form-control") }}
         {% if form.headline.errors %}
             {% for error in form.headline.errors %}
                 <span class="error">{{ error }}</span>
@@ -53,7 +53,7 @@
     
     <div class="form-group">
         {{ form.news_source.label }}
-        {{ form.news_source(class="form-control", placeholder="e.g., New York Times, Court Records, AP News") }}
+        {{ form.news_source(class="form-control") }}
         {% if form.news_source.errors %}
             {% for error in form.news_source.errors %}
                 <span class="error">{{ error }}</span>
@@ -63,7 +63,7 @@
     
     <div class="form-group">
         {{ form.url.label }}
-        {{ form.url(class="form-control", placeholder="https://...") }}
+        {{ form.url(class="form-control") }}
         {% if form.url.errors %}
             {% for error in form.url.errors %}
                 <span class="error">{{ error }}</span>
@@ -83,7 +83,7 @@
     
     <div class="form-group">
         {{ form.summary.label }}
-        {{ form.summary(class="form-control", placeholder="Provide a brief summary of what this article/report discusses about the judge...") }}
+        {{ form.summary(class="form-control") }}
         {% if form.summary.errors %}
             {% for error in form.summary.errors %}
                 <span class="error">{{ error }}</span>

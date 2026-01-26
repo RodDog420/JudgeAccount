@@ -47,13 +47,13 @@
     <tbody>
         {% for judge in judges %}
         <tr>
-            <td>
+            <td class="user-content-name">
                 <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
                     {{ judge.full_name() }}
                 </a>
             </td>
-            <td>{{ judge.court }}</td>
-            <td>{{ judge.city }}, {{ judge.state }}</td>
+            <td class="user-content-name">{{ judge.court }}</td>
+            <td class="user-content-name">{{ judge.city }}, {{ judge.state }}</td>
             <td class="rating-cell">
                 {% if judge.review_count() > 0 %}
                     {{ "%.1f"|format(judge.average_rating()) }} / 5.0
@@ -74,7 +74,7 @@
     <div class="judge-card-mobile">
         <div class="judge-card-header">
             <h3 class="judge-card-name">
-                <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}" class="user-content-name">
                     {{ judge.full_name() }}
                 </a>
             </h3>
@@ -101,11 +101,11 @@
         <div class="judge-card-details">
             <div class="judge-card-row">
                 <span class="detail-label">Court:</span>
-                <span class="detail-value">{{ judge.court }}</span>
+                <span class="detail-value user-content-name">{{ judge.court }}</span>
             </div>
             <div class="judge-card-row">
                 <span class="detail-label">Location:</span>
-                <span class="detail-value">{{ judge.city }}, {{ judge.state }}</span>
+                <span class="detail-value user-content-name">{{ judge.city }}, {{ judge.state }}</span>
             </div>
             <div class="judge-card-row">
                 <span class="detail-label">Media Links:</span>

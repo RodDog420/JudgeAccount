@@ -141,6 +141,10 @@ def edit_review(review_id):
         form.judge_first_name.data = review.judge.first_name
         form.judge_last_name.data = review.judge.last_name
         form.state.data = review.judge.state
+
+        if review.judge.state in COURTS_BY_STATE:
+            form.court.choices = COURTS_BY_STATE[review.judge.state]
+
         form.court.data = review.judge.court
         form.city.data = review.judge.city
         form.is_federal.data = review.judge.is_federal

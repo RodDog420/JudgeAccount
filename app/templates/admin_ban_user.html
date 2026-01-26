@@ -3,15 +3,15 @@
 {% block title %}Ban User: {{ user.username }} - Admin{% endblock %}
 
 {% block content %}
-<h1>Ban User: {{ user.username }}</h1>
+<h1>Ban User: <span class="user-content-username">{{ user.username }}</span></h1>
 <p class="admin-mode-notice">⚠️ Warning: This action will prevent the user from accessing the site and re-registering</p>
 
 <div class="admin-search-form admin-search-form-centered">
     <h3 class="form-section-title">User Information</h3>
     
     <div class="spacing-bottom-sm">
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Username:</strong> <span class="user-content-username">{{ user.username }}</span></p>
+        <p><strong>Email:</strong> <span class="user-content-email">{{ user.email }}</span></p>
         <p><strong>Reviews:</strong> {{ user.get_review_count() }}</p>
         <p><strong>Media Links:</strong> {{ user.get_media_link_count() }}</p>
         <p><strong>Joined:</strong> {{ user.created_at.strftime('%B %d, %Y') }}</p>

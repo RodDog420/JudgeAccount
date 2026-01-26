@@ -70,7 +70,7 @@
                             Account <span class="dropdown-arrow">▼</span>
                         </button>
                         <div class="nav-dropdown-menu">
-                            <span class="dropdown-greeting">Welcome, {{ current_user.username|truncate(15, True, '...') }}</span>
+                            <span class="dropdown-greeting user-content-username">Welcome, {{ current_user.username|truncate(15, True, '...') }}</span>
                             <a href="{{ url_for('auth.dashboard') }}">My Dashboard</a>
                             <a href="{{ url_for('auth.logout') }}">Logout</a>
                         </div>
@@ -132,7 +132,7 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2026 Judge Account. All rights reserved.</p>
+            <p>&copy; 2026 JudgeAccount. All rights reserved.</p>
         </div>
     </footer>
 

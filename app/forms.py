@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, BooleanField, SelectField, DateField, SubmitField, URLField
+from wtforms import StringField, TextAreaField, IntegerField, BooleanField, SelectField, DateField, SubmitField, URLField, RadioField
 from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Optional, URL
 
 
@@ -42,10 +42,13 @@ class ReviewForm(FlaskForm):
     court = SelectField('Court', choices=[], validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired(), Length(min=1, max=100)])
     
-    is_federal = BooleanField('Federal Judge')
-    is_retired = BooleanField('Retired Judge')
-    
-    rating = IntegerField('Rating (1-5)', validators=[DataRequired(), NumberRange(min=1, max=5)])
+    is_federal = BooleanField('Federal')
+    is_retired = BooleanField('Retired')
+
+    rating = RadioField('Rating',
+                        choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')],
+                        coerce=int,
+                        validators=[DataRequired()])
     
     fairness_concern = BooleanField('Fairness Concern')
     bias_concern = BooleanField('Bias Concern')

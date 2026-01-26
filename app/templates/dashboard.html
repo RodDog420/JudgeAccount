@@ -14,32 +14,31 @@
         <div class="media-link-header">
             <div>
                 <h3 class="judge-name-heading">
-                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}">
-                        {{ media_link.judge.full_name() }}
-                    </a>
-                    {% if media_link.judge.is_federal %}
+                    <span class="judge-name-text">
+                        <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}" class="user-content-name">{{ media_link.judge.full_name() }}</a>
+                    </span>    {% if media_link.judge.is_federal %}
                         <span class="badge badge-federal">Federal</span>
                     {% endif %}
                 </h3>
-                <p class="judge-court-info">
+                <p class="judge-court-info user-content-name">
                     {{ media_link.judge.court }} - {{ media_link.judge.city }}, {{ media_link.judge.state }}
                 </p>
             </div>
-            <span class="media-link-source">{{ media_link.news_source }}</span>
+            <span class="media-link-source user-content-text">{{ media_link.news_source }}</span>
         </div>
         
         <h4 class="media-link-headline">
-            <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer">
+            <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer" class="user-content-url">
                 {{ media_link.headline }}
             </a>
         </h4>
         
         <div class="media-link-date">
-            Published: {{ media_link.publication_date.strftime('%B %d, %Y') }} | 
-            Submitted: {{ media_link.created_at.strftime('%B %d, %Y') }}
+            <span class="date-item">Published: {{ media_link.publication_date.strftime('%B %d, %Y') }}</span>
+            <span class="date-item">Submitted: {{ media_link.created_at.strftime('%B %d, %Y') }}</span>
         </div>
         
-        <div class="media-link-summary">
+        <div class="media-link-summary user-content-text">
             {{ media_link.summary }}
         </div>
         
@@ -55,7 +54,7 @@
             </a>
             <a href="{{ url_for('auth.edit_media_link', media_link_id=media_link.id) }}" class="btn btn-primary">Edit</a>
             <a href="{{ url_for('auth.delete_media_link', media_link_id=media_link.id) }}" class="btn btn-secondary" 
-               onclick="return confirm('Are you sure you want to delete this media link?');">Delete</a>
+                onclick="return confirm('Are you sure you want to delete this media link?');">Delete</a>
         </div>
     </div>
     {% endfor %}
@@ -76,14 +75,14 @@
         <div class="review-header">
             <div>
                 <h3 class="judge-name-heading">
-                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
-                        {{ review.judge.full_name() }}
-                    </a>
-                    {% if review.judge.is_federal %}
+                    <span class="judge-name-text">
+                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}" class="user-content-name">{{ review.judge.full_name() }}</a>
+                    </span>
+                        {% if review.judge.is_federal %}
                         <span class="badge badge-federal">Federal</span>
                     {% endif %}
                 </h3>
-                <p class="judge-court-info">
+                <p class="judge-court-info user-content-name">
                     {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
                 </p>
             </div>
@@ -91,8 +90,8 @@
         </div>
         
         <div class="review-metadata">
-            Court Date: {{ review.court_date.strftime('%B %d, %Y') }} | 
-            Submitted: {{ review.created_at.strftime('%B %d, %Y') }}
+            <span class="date-item">Court Date: {{ review.court_date.strftime('%B %d, %Y') }}</span> 
+            <span class="date-item">Submitted: {{ review.created_at.strftime('%B %d, %Y') }}</span>
         </div>
         
         {% if review.fairness_concern or review.bias_concern or review.temperament_concern %}
@@ -109,7 +108,7 @@
         </div>
         {% endif %}
         
-        <div class="review-text">
+        <div class="review-text user-content-text">
             {{ review.review_text }}
         </div>
         

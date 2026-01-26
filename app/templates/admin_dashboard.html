@@ -59,29 +59,31 @@
         <div class="media-link-header">
             <div>
                 <h3 class="judge-name-heading">
-                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}">
-                        {{ media_link.judge.full_name() }}
-                    </a>
+                    <span class="judge-name-text">
+                        <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}" class="user-content-name">
+                            {{ media_link.judge.full_name() }}
+                        </a>
+                    </span>
                     {% if media_link.judge.is_federal %}
                         <span class="badge badge-federal">Federal</span>
                     {% endif %}
                 </h3>
-                <p class="judge-court-info">
+                <p class="judge-court-info user-content-name">
                     {{ media_link.judge.court }} - {{ media_link.judge.city }}, {{ media_link.judge.state }}
                 </p>
                 <p class="submitter-info">
                     {% if media_link.author %}
-                        Submitted by: <strong>{{ media_link.author.username }}</strong>
+                        Submitted by: <strong class="user-content-username">{{ media_link.author.username }}</strong>
                     {% else %}
                         Submitted by: <em>Anonymous</em>
                     {% endif %}
                 </p>
             </div>
-            <span class="media-link-source">{{ media_link.news_source }}</span>
+            <span class="media-link-source user-content-text">{{ media_link.news_source }}</span>
         </div>
         
         <h4 class="media-link-headline">
-            <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer">
+            <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer" class="user-content-url">
                 {{ media_link.headline }}
             </a>
         </h4>
@@ -91,7 +93,7 @@
             Submitted: {{ media_link.created_at.strftime('%B %d, %Y at %I:%M %p') }}
         </div>
         
-        <div class="media-link-summary">
+        <div class="media-link-summary user-content-text">
             {{ media_link.summary }}
         </div>
         
@@ -141,19 +143,21 @@
         <div class="review-header">
             <div>
                 <h3 class="judge-name-heading">
-                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
-                        {{ review.judge.full_name() }}
-                    </a>
+                    <span class="judge-name-text">
+                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}" class="user-content-name">
+                            {{ review.judge.full_name() }}
+                        </a>
+                    </span>
                     {% if review.judge.is_federal %}
                         <span class="badge badge-federal">Federal</span>
                     {% endif %}
                 </h3>
-                <p class="judge-court-info">
+                <p class="judge-court-info user-content-name">
                     {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
                 </p>
                 <p class="submitter-info">
                     {% if review.author %}
-                        Submitted by: <strong>{{ review.author.username }}</strong>
+                        Submitted by: <strong class="user-content-username">{{ review.author.username }}</strong>
                     {% else %}
                         Submitted by: <em>Anonymous (before user system)</em>
                     {% endif %}
@@ -181,14 +185,14 @@
         </div>
         {% endif %}
         
-        <div class="review-text">
+        <div class="review-text user-content-text">
             {{ review.review_text }}
         </div>
         
         <div class="admin-actions">
             <a href="{{ url_for('auth.admin_delete_review', review_id=review.id) }}" 
-               class="btn btn-secondary" 
-               onclick="return confirm('Admin action: Delete this review permanently?');">
+                class="btn btn-secondary" 
+                onclick="return confirm('Admin action: Delete this review permanently?');">
                 Delete Review (Admin)
             </a>
         </div>

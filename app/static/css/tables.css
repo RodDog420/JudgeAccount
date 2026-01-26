@@ -11,11 +11,13 @@ thead {
     color: white;
 }
 th {
-    text-align: left;
+    text-align: center;
     padding: 1rem;
     font-weight: 600;
     font-size: 0.95rem;
     border-bottom: 0.125rem solid #2980b9;
+	word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 tbody tr {
     border-bottom: 0.0625rem solid #ecf0f1;
@@ -31,16 +33,21 @@ td {
     padding: 1rem;
     color: #555;
     font-size: 0.95rem;
+	word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 td a {
     color: #3498db;
     text-decoration: none;
     font-weight: 500;
+	word-break: break-word;
+    overflow-wrap: anywhere;
 }
 td a:hover {
     text-decoration: underline;
     color: #2980b9;
 }
+
 .rating-cell {
     color: #f39c12;
     font-weight: 600;
@@ -59,7 +66,57 @@ td a:hover {
     color: #95a5a6;
     font-size: 0.9rem;
 }
+.table-cell-date-wrapped {
+    white-space: normal;
+    line-height: 1.3;
+}
+/* Username column - constrain width and force wrapping */
+.admin-user-table-desktop td:nth-child(2),
+.admin-user-table-desktop th:nth-child(2) {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    max-width: 12rem;
+    min-width: 8rem;
+}
 
+/* Email column - aggressive breaking for long email addresses */
+.admin-user-table-desktop td:nth-child(3),
+.admin-user-table-desktop th:nth-child(3) {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    max-width: 15rem;
+    min-width: 10rem;
+}
+
+/* Date columns - allow wrapping for date formatting */
+.table-cell-date-wrapped {
+    white-space: normal;
+    line-height: 1.3;
+}
+.judge-table-desktop td:nth-child(1) a,
+.judge-table-desktop th:nth-child(1) {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Court/Position column - handle long court names */
+.judge-table-desktop td:nth-child(2),
+.judge-table-desktop th:nth-child(2) {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 18rem;
+}
+
+
+/* Tablet/Laptop view (768px-1439px) - 7 columns visible */
+@media (min-width: 48rem) and (max-width: 89.9375rem) {
+    /* Username becomes column 2 in 7-column layout */
+    .admin-user-table-desktop td:nth-child(2),
+    .admin-user-table-desktop th:nth-child(2) {
+        max-width: 10rem;
+        min-width: 7rem;
+    }
+}
 /* Mobile-First Defaults: Cards visible, table hidden */
 .judge-cards-mobile {
     display: block;
@@ -100,7 +157,7 @@ td a:hover {
     
 	.judge-card-name {
         margin: 0 0 clamp(0.5rem, 1vw, 1.2rem) 0;
-        font-size: clamp(1.1rem, 10vw, 2rem);
+        font-size: clamp(1.1rem, 8vw, 1.8rem);
     }
     
     .judge-card-name a {
@@ -117,6 +174,7 @@ td a:hover {
         display: flex;
         gap: clamp(0.5rem, 3vw, 1rem);
         flex-wrap: wrap;
+		margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
     }
     
     .judge-card-rating {
@@ -179,5 +237,226 @@ td a:hover {
         color: #7f8c8d;
         font-size: clamp(0.9rem, 5vw, 1.15rem);
         text-align: right;
+    }
+}
+
+
+/* ==========================================================================
+   ADMIN USER TABLE & CARDS - RESPONSIVE
+   ========================================================================== */
+
+/* Mobile-First Defaults: Cards visible, table hidden */
+.admin-user-cards-mobile {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+}
+
+.admin-user-table-desktop {
+    display: none;
+}
+
+/* Tablet & Desktop: Show table at 768px+, hide cards */
+@media (min-width: 48rem) {
+    .admin-user-table-desktop {
+        display: table;
+    }
+    
+    .admin-user-cards-mobile {
+        display: none;
+    }
+}
+
+/* Tablet & Small Laptop (768px-1439px): Hide Email & Actions columns */
+@media (min-width: 48rem) and (max-width: 89.9375rem) {
+    /* Hide Email column (3rd column) */
+    .admin-user-table-desktop th:nth-child(3),
+    .admin-user-table-desktop td:nth-child(3) {
+        display: none;
+    }
+    
+    /* Hide Actions column (9th column) */
+    .admin-user-table-desktop th:nth-child(9),
+    .admin-user-table-desktop td:nth-child(9) {
+        display: none;
+    }
+
+    /* Username column (2nd column) - force word breaking */
+    .admin-user-table-desktop td:nth-child(2),
+    .admin-user-table-desktop th:nth-child(2) {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        max-width: 10rem;
+        min-width: 6rem;
+    }
+    
+    .admin-user-table-desktop td:nth-child(2) a {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        display: block;
+    }
+}
+
+/* Mobile: Admin User Cards (320px-767px) */
+@media (max-width: 47.9375rem) {
+    
+    /* Mobile Bulk Action Panel - Stack Vertically */
+    .bulk-action-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .bulk-action-bar label {
+        margin-bottom: 0.25rem;
+    }
+    
+    .bulk-action-bar select,
+    .bulk-action-bar input[type="text"],
+    .bulk-action-bar button {
+        width: 100%;
+    }
+    
+    .bulk-count {
+        text-align: center;
+        padding: 0.5rem;
+        background-color: #f8f9fa;
+        border-radius: 0.3125rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Admin User Card Styling */
+    .admin-user-card-mobile {
+        background-color: white;
+        border-radius: 0.5rem;
+        padding: clamp(0.75rem, 3vw, 1.25rem) clamp(1rem, 4vw, 1.5rem);
+        margin-bottom: clamp(1rem, 4vw, 1.5rem);
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+        width: 100%;
+        border-left: 0.25rem solid #3498db;
+    }
+    
+    .admin-user-card-header {
+        margin-bottom: clamp(0.75rem, 4vw, 1rem);
+        padding-bottom: 0.75rem;
+        border-bottom: 0.0625rem solid #ecf0f1;
+    }
+    
+    .admin-user-card-name {
+        margin: 0 0 0.5rem 0;
+        font-size: clamp(1.1rem, 5vw, 1.3rem);
+        font-weight: 600;
+    }
+    
+    .admin-user-card-name a {
+		color: #3498db;
+		text-decoration: none;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+}
+    
+    .admin-user-card-name a:hover {
+        text-decoration: underline;
+    }
+    
+    .admin-user-card-badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .admin-user-card-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .admin-user-card-row {
+        display: flex;
+        justify-content: space-between;
+        gap: clamp(0.75rem, 6vw, 2rem);
+        padding: clamp(0.4rem, 3vw, 0.6rem) 0;
+        border-bottom: 0.0625rem solid #ecf0f1;
+    }
+    
+    .admin-user-card-row:last-child {
+        border-bottom: none;
+    }
+    
+    .admin-user-card-label {
+        font-weight: 600;
+        color: #555;
+        font-size: clamp(0.85rem, 4vw, 0.95rem);
+    }
+    
+    .admin-user-card-value {
+        color: #7f8c8d;
+        font-size: clamp(0.85rem, 4vw, 0.95rem);
+        text-align: right;
+    }
+   
+	.admin-user-card-row-email {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.25rem;
+}
+
+	.admin-user-card-row-email .admin-user-card-value {
+		text-align: left;
+		word-break: break-all;
+		overflow-wrap: anywhere;
+		width: 100%;
+}
+
+    .admin-user-card-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        padding-top: 0.75rem;
+        border-top: 0.0625rem solid #ecf0f1;
+    }
+    
+    .admin-user-card-actions .btn {
+        flex: 1 1 auto;
+        min-width: 5rem;
+    }
+    
+    .admin-user-card-checkbox {
+        padding: 0.75rem;
+        background-color: #f8f9fa;
+        border-radius: 0.3125rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .admin-user-card-checkbox label {
+        margin: 0;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+}
+
+/* Desktop (1440px+): Full 8-column table with optimized column widths */
+@media (min-width: 90rem) {
+    /* Username column - balanced constraints */
+    .admin-user-table-desktop td:nth-child(2),
+    .admin-user-table-desktop th:nth-child(2) {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        max-width: 12rem;
+        min-width: 8rem;
+    }
+    
+    /* Email column - aggressive breaking for long addresses */
+    .admin-user-table-desktop td:nth-child(3),
+    .admin-user-table-desktop th:nth-child(3) {
+        word-break: break-all;
+        overflow-wrap: anywhere;
+        max-width: 15rem;
+        min-width: 10rem;
     }
 }

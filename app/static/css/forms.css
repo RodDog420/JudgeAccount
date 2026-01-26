@@ -128,3 +128,98 @@ input[type="submit"]:hover {
     margin-bottom: 0.9375rem;
     flex-wrap: wrap;
 }
+
+/* Star Rating Radio Buttons - Base/Mobile First (320px+) */
+.rating-options {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 1rem 0.25rem;
+    flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.rating-options label {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.rating-options input[type="radio"] {
+    appearance: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 2px solid #3498db;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.rating-options input[type="radio"]:hover {
+    background-color: #e3f2fd;
+    transform: scale(1.1);
+}
+
+.rating-options input[type="radio"]:checked {
+    background-color: #3498db;
+    border-color: #2980b9;
+}
+
+.rating-options .rating-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 700;
+    color: #2c3e50;
+    pointer-events: none;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.rating-options input[type="radio"]:checked ~ .rating-number {
+    color: white;
+}
+
+/* Tablet (768px+) */
+@media (min-width: 48rem) {
+    .rating-options {
+        gap: 1rem;
+    }
+    
+    .rating-options input[type="radio"] {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .rating-options .rating-number {
+        font-size: 1.25rem;
+    }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 64rem) {
+    .rating-options {
+        gap: 1.25rem;
+    }
+    
+    .rating-options input[type="radio"] {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+    
+    .rating-options .rating-number {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 47.9375rem) {
+    button[type="submit"], 
+    input[type="submit"] {
+        min-width: auto;
+        padding: clamp(0.5rem, 2vw, 0.625rem) clamp(0.75rem, 3vw, 1rem);
+        font-size: clamp(0.85rem, 3.5vw, 1rem);
+        flex: 0 0 auto;
+    }
+}
