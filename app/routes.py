@@ -338,7 +338,11 @@ def support():
     return render_template('support.html')
 
 @bp.route('/')
-@bp.route('/about')
 def about():
     """About/Landing page explaining the platform"""
     return render_template('about.html')
+
+@bp.route('/about')
+def about():
+    """Redirect old about URL to canonical homepage"""
+    return redirect(url_for("main.home"), code=301)

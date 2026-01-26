@@ -70,29 +70,7 @@ td a:hover {
     white-space: normal;
     line-height: 1.3;
 }
-/* Username column - constrain width and force wrapping */
-.admin-user-table-desktop td:nth-child(2),
-.admin-user-table-desktop th:nth-child(2) {
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    max-width: 12rem;
-    min-width: 8rem;
-}
 
-/* Email column - aggressive breaking for long email addresses */
-.admin-user-table-desktop td:nth-child(3),
-.admin-user-table-desktop th:nth-child(3) {
-    word-break: break-all;
-    overflow-wrap: anywhere;
-    max-width: 15rem;
-    min-width: 10rem;
-}
-
-/* Date columns - allow wrapping for date formatting */
-.table-cell-date-wrapped {
-    white-space: normal;
-    line-height: 1.3;
-}
 .judge-table-desktop td:nth-child(1) a,
 .judge-table-desktop th:nth-child(1) {
     word-wrap: break-word;
@@ -237,6 +215,46 @@ td a:hover {
         color: #7f8c8d;
         font-size: clamp(0.9rem, 5vw, 1.15rem);
         text-align: right;
+    }
+	/* Generic table-to-card conversion using data-labels for BANNED USERS TABLE*/
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop),
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) thead,
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tbody,
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) th,
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) td,
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tr {
+        display: block;
+    }
+    
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tbody tr {
+        margin-bottom: 1.25rem;
+        border: 0.0625rem solid #ddd;
+        border-radius: 0.5rem;
+        padding: 0.9375rem;
+    }
+    
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tbody td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+    
+    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0.9375rem;
+        width: 45%;
+        padding-right: 0.625rem;
+        font-weight: 600;
+        text-align: left;
+        color: #2c3e50;
     }
 }
 

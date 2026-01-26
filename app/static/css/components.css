@@ -177,6 +177,8 @@
     width: 13rem;
 	min-width: unset;
 }
+.full-btn { /* No effect on desktop - button behaves normally */
+}
 /* ==========================================================================
    3. STARS & RATINGS
    ========================================================================== */
@@ -775,6 +777,11 @@
 
 /* Mobile: Phones & Small Tablets (320px-767px) */
 @media (max-width: 47.9375rem) {
+	/* Full-width button class - only affects buttons where explicitly applied */
+    .full-btn {
+        width: 100%;
+        min-width: auto;
+    }
     
     /* Admin table controls - stack and center on mobile */
     .admin-table-controls {

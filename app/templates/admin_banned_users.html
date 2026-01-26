@@ -8,15 +8,15 @@
 
 <div class="form-actions spacing-bottom-sm">
     {% if show_unbanned %}
-        <a href="{{ url_for('auth.view_banned_users') }}" class="btn btn-primary">
+        <a href="{{ url_for('auth.view_banned_users') }}" class="btn btn-primary full-btn">
             Show Active Bans Only
         </a>
     {% else %}
-        <a href="{{ url_for('auth.view_banned_users', show_unbanned='true') }}" class="btn btn-primary">
+        <a href="{{ url_for('auth.view_banned_users', show_unbanned='true') }}" class="btn btn-primary full-btn">
             Show All (Including Unbanned)
         </a>
     {% endif %}
-    <a href="{{ url_for('auth.manage_users') }}" class="btn btn-gray">
+    <a href="{{ url_for('auth.manage_users') }}" class="btn btn-gray full-btn">
         Back to User Management
     </a>
 </div>
@@ -42,23 +42,23 @@
         <tbody>
             {% for banned in banned_users %}
             <tr {% if banned.is_unbanned %}class="table-row-muted"{% endif %}>
-                <td class="user-content-username">
+                <td data-label="Username" class="user-content-username">
                     {{ banned.username }}
                     {% if banned.is_unbanned %}
                         <span class="badge badge-unbanned badge-small">UNBANNED</span>
                     {% endif %}
                 </td>
-                <td class="table-cell-muted user-content-email">{{ banned.email }}</td>
-                <td class="table-cell-muted">
+                <td data-label="Email" class="table-cell-muted user-content-email">{{ banned.email }}</td>
+                <td data-label="Banned Date" class="table-cell-muted">
                     {{ banned.banned_at.strftime('%b %d, %Y') }}
                 </td>
-                <td class="text-small user-content-username">
+                <td data-label="Banned By" class="text-small user-content-username">
                     {{ banned.banned_by.username if banned.banned_by else 'System' }}
                 </td>
-                <td class="text-small user-content-admin">
+                <td data-label="Reason" class="text-small user-content-admin">
                     {{ banned.ban_reason[:100] }}{% if banned.ban_reason|length > 100 %}...{% endif %}
                 </td>
-                <td>
+                <td data-label="Status">
                     {% if banned.is_unbanned %}
                         <span class="badge badge-active">UNBANNED</span>
                         <div class="text-smaller text-muted spacing-top-sm">
@@ -68,7 +68,7 @@
                         <span class="badge badge-concern">BANNED</span>
                     {% endif %}
                 </td>
-                <td>
+                <td data-label="Actions">
                     {% if banned.user_id %}
                         <a href="{{ url_for('auth.view_user_activity', user_id=banned.user_id) }}" 
                             class="btn btn-primary btn-small">
