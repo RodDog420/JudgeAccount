@@ -3,8 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Judge Review{% endblock %}</title>
+    <title>{% block title %}JudgeAccount{% endblock %}</title>
     
+    {% block meta_description %}
+    <meta name="description" content="A public platform dedicated to documenting judicial conduct through firsthand experiences and verified media sources.">
+    {% endblock %}
+
+    {% block robots %}
+    <meta name="robots" content="index, follow">
+    {% endblock %}
+
+    {% block canonical %}
+    <link rel="canonical" href="https://judgeaccount.com/">
+    {% endblock %}
+
+    {% block open_graph %}{% endblock %}
+    {% block structured_data %}{% endblock %}
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">

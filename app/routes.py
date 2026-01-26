@@ -8,7 +8,7 @@ from app.court_data import STATES, COURTS_BY_STATE
 bp = Blueprint('main', __name__)
 
 
-@bp.route('/')
+
 @bp.route('/index', methods=['GET', 'POST'])
 def index():
     from app.forms import SearchForm
@@ -338,11 +338,11 @@ def support():
     return render_template('support.html')
 
 @bp.route('/')
-def about():
+def home():
     """About/Landing page explaining the platform"""
     return render_template('about.html')
 
 @bp.route('/about')
 def about():
     """Redirect old about URL to canonical homepage"""
-    return redirect(url_for("main.home"), code=301)
+    return redirect(url_for("main.about"), code=301)
