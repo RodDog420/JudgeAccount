@@ -94,6 +94,8 @@ To create an accessible, transparent platform where individuals can:
 ## Project Structure
 
 ```
+## Project Structure
+```
 judge-review/
 ├── app/
 │   ├── __init__.py           # Application factory
@@ -114,20 +116,29 @@ judge-review/
 │       ├── base.html         # Base template with navigation and footer
 │       ├── index.html        # Homepage with search functionality
 │       ├── judge.html        # Individual judge page with reviews and media
-│       ├── submit_review.html
-│       ├── submit_media.html
+│       ├── about.html        # About page
+│       ├── contact.html      # Contact form
 │       ├── dashboard.html    # User dashboard
-│       ├── moderation_queue.html
 │       ├── guidelines.html   # Community guidelines
+│       ├── login.html        # User login
+│       ├── register.html     # User registration
 │       ├── privacy_policy.html
 │       ├── terms_of_service.html
-│       ├── contact.html
-│       ├── sitemap.html
-│       ├── support.html
-│       └── admin/            # Admin-only templates
-│           ├── admin_dashboard.html
-│           ├── admin_users.html
-│           └── ...
+│       ├── sitemap.html      # Site navigation overview
+│       ├── support.html      # Support and donations
+│       ├── submit_review.html
+│       ├── submit_media.html
+│       ├── edit_review.html
+│       ├── edit_media_link.html
+│       ├── flag_content.html
+│       ├── moderation_queue.html
+│       ├── admin_dashboard.html
+│       ├── admin_users.html
+│       ├── admin_user_detail.html
+│       ├── admin_add_note.html
+│       ├── admin_ban_user.html
+│       ├── admin_banned_users.html
+│       └── admin_delete_user.html
 ├── migrations/               # Database migration files
 ├── instance/                 # Instance-specific files (not in Git)
 │   └── judge_review.db      # SQLite database (development only)
@@ -139,6 +150,7 @@ judge-review/
 ├── build.sh                 # Render build script
 ├── DEPLOYMENT.md            # Deployment documentation
 └── judge_review.py          # Application entry point
+```
 ```
 
 ---
