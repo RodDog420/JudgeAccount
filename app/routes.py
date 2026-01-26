@@ -337,7 +337,7 @@ def sitemap():
 def support():
     return render_template('support.html')
 
-
+@bp.route('/')
 @bp.route('/about')
 def about():
     """About/Landing page explaining the platform"""
