@@ -1,6 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Submit Media Link - Judge Review{% endblock %}
+{% set private_page = True %}
+
+{% block title %}Submit Media Link - JudgeAccount{% endblock %}
+
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block content %}
+
 <h1>Submit a Media Link</h1>
 <p>Share news articles, court records, or documented reports about a judge.</p>
 <form method="POST" action="{{ url_for('main.submit_media_link') }}">

@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
 {% block title %}Admin Dashboard - Judge Review{% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block content %}
+
 <h1>Admin Dashboard</h1>
 <p class="admin-mode-notice">Admin Mode - You can moderate all content</p>
 

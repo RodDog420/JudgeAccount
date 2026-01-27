@@ -1,8 +1,15 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
 {% block title %}Delete User: {{ user.username }} - Admin{% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block content %}
+
+
 <h1>Delete User: <span class="user-content-username">{{ user.username }}</span></h1>
 <p class="admin-mode-notice">⚠️ DANGER: This action is PERMANENT and IRREVERSIBLE</p>
 

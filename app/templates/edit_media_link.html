@@ -1,6 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Edit Media Link - Judge Review{% endblock %}
+{% set private_page = True %}
+
+{% block title %}Edit Media Link - JudgeAccount{% endblock %}
+
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block content %}
+
 <h1>Edit Media Link</h1>
 <p>Update your media link submission. Changes will require re-verification.</p>
 

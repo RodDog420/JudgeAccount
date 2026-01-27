@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
 {% block title %}User: {{ user.username }} - Admin{% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block content %}
+
 <div class="user-profile-admin">
     <h1>User Profile: <span class="username-display user-content-username">{{ user.username }}</span>
         {% if user.is_admin %}

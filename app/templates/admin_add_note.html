@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
 {% block title %}Admin Notes: {{ user.username }} - Admin{% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block content %}
+
 <h1>Admin Notes for <span class="user-content-username">{{ user.username }}</span></h1>
 <p class="admin-mode-notice">Internal notes visible only to administrators</p>
 

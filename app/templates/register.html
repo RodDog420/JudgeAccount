@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = False %}
 
-{% block title %}Register - Judge Review{% endblock %}
+{% block title %}Register - JudgeAccount{% endblock %}
+
+{% block meta_description %}
+<meta name="description" content="Create a JudgeAccount account to submit reviews, track judges, and engage with the community.">
+{% endblock %}
 
 {% block content %}
+
 <h1>Register</h1>
 
 <form method="POST" action="{{ url_for('auth.register') }}">

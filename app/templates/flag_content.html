@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
-{% block title %}Report Content{% endblock %}
+{% block title %}Report Content - JudgeAccount{% endblock %}
+
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
 
 {% block content %}
+
 <h1>Report {{ 'Review' if content_type == 'review' else 'Media Link' }}</h1>
 
 <div class="admin-search-form admin-search-form-centered">

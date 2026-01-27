@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
 {% block title %}Moderation Queue - Admin{% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block content %}
+
 <h1>Flagged Content</h1>
 <p class="admin-mode-notice">Admin Mode - Review and resolve flagged content</p>
 

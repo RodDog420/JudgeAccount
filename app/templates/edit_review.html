@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
-{% block title %}Edit Review - Judge Review{% endblock %}
+{% block title %}Edit Review - JudgeAccount{% endblock %}
+
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
 
 {% block content %}
+
 <h1>Edit Your Review</h1>
 <p>Editing review for <span class="user-content-name">{{ review.judge.full_name() }}</span></p>
 

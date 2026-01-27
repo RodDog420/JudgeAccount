@@ -1,6 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Judge Directory - Judge Review{% endblock %}
+{% set private_page = False %}
+
+{% block title %}Judge Directory - JudgeAccount{% endblock %}
+
+{% block meta_description %}
+<meta name="description" content="Explore the JudgeAccount directory to find verified judges and view community-submitted reviews and records.">
+{% endblock %}
+
 {% block content %}
+
 <h1>Judge Index</h1>
 <form method="POST" action="{{ url_for('main.index') }}" class="spacing-bottom-xl">
     {{ form.hidden_tag() }}

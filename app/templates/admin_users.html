@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
-{% block title %}Manage Users - Judge Review{% endblock %}
+{% block title %}Manage Users - JudgeAccount{% endblock %}
+
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
 
 {% block content %}
+
 <h1>Manage Users</h1>
 
 <!-- Search/Filter Form -->

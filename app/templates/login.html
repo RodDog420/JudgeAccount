@@ -1,6 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Log In - Judge Review{% endblock %}
+{% set private_page = False %}
+
+{% block title %}Log In - JudgeAccount{% endblock %}
+
+{% block meta_description %}
+<meta name="description" content="Log in to your JudgeAccount account to submit reviews, manage media, and access your dashboard.">
+{% endblock %}
+
 {% block content %}
+
 <h1>Log In</h1>
 <form method="POST" action="{{ url_for('auth.login') }}">
     {{ form.hidden_tag() }}

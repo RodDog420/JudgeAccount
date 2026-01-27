@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% set private_page = True %}
 
 {% block title %}Banned Users - Admin{% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block content %}
+
 <h1>Banned Users</h1>
 <p class="admin-mode-notice">List of all users who have been banned from the site</p>
 

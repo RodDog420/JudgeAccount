@@ -1,6 +1,14 @@
 {% extends "base.html" %}
-{% block title %}{{ judge.full_name() }} - Judge Review{% endblock %}
+{% set private_page = False %}
+
+{% block title %}{{ judge.full_name() }} - JudgeAccount{% endblock %}
+
+{% block meta_description %}
+<meta name="description" content="View JudgeAccount’s profile and community-submitted information for {{ judge.full_name() }}.">
+{% endblock %}
+
 {% block content %}
+
 <div class="judge-profile">
     <h1 class="user-content-name"><span class="judge-name-text">{{ judge.full_name() }}</span>
         {% if judge.is_federal %}

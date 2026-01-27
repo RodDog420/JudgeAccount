@@ -3,23 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Page title -->
     <title>{% block title %}JudgeAccount{% endblock %}</title>
-    
+
+    <!-- Meta description -->
     {% block meta_description %}
     <meta name="description" content="A public platform dedicated to documenting judicial conduct through firsthand experiences and verified media sources.">
     {% endblock %}
 
+    <!-- Robots -->
     {% block robots %}
+    {% if private_page %}
+    <meta name="robots" content="noindex, nofollow">
+    {% else %}
     <meta name="robots" content="index, follow">
+    {% endif %}
     {% endblock %}
 
+    <!-- Canonical URL -->
     {% block canonical %}
-    <link rel="canonical" href="https://judgeaccount.com/">
+    {% if not private_page %}
+    <link rel="canonical" href="{{ request.url_root[:-1] }}{{ request.path }}">
+    {% endif %}
     {% endblock %}
 
-    {% block open_graph %}{% endblock %}
-    {% block structured_data %}{% endblock %}
+    <!-- Open Graph -->
+    {% block open_graph %}
+    {% if not private_page %}
+    <meta property="og:title" content="{% if self.title() %}{{ self.title() }}{% else %}JudgeAccount{% endif %}">
+    <meta property="og:description" content="{% block og_description %}A public platform dedicated to documenting judicial conduct through firsthand experiences and verified media sources.{% endblock %}">
+    <meta property="og:url" content="{{ request.url_root[:-1] }}{{ request.path }}">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{{ url_for('static', filename='logos/og_logo.png', _external=True) }}">
+    {% endif %}
+    {% endblock %}
 
+    <!-- Structured Data (WebSite schema) -->
+    {% block structured_data %}
+    {% if not private_page %}
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "JudgeAccount",
+    "url": "{{ request.url_root[:-1] }}",
+    "description": "A public platform dedicated to documenting judicial conduct through firsthand experiences and verified media sources."
+    }
+    </script>
+    {% endif %}
+    {% endblock %}
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='logos/favicon_io/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='logos/favicon_io/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='logos/favicon_io/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='logos/favicon_io/site.webmanifest') }}">
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
@@ -27,6 +68,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
 </head>
+
+
 <body>
     <nav>
         <div class="nav-container">
@@ -45,7 +88,7 @@
                         Resources <span class="dropdown-arrow">▼</span>
                     </button>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ url_for('main.about') }}">About</a>
+                        <a href="{{ url_for('main.home') }}">About</a>
                         <a href="{{ url_for('main.index') }}">Judge Search</a>
                         <a href="{{ url_for('main.guidelines') }}">Community Guidelines</a>
                         <a href="{{ url_for('main.support') }}">Support</a>

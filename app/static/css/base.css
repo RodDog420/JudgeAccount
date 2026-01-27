@@ -629,6 +629,7 @@ footer {
     font-size: clamp(1.75rem, 7vw, 3rem);
     margin: 0 0 clamp(1rem, 4vw, 1.5rem) 0;
     line-height: 1.2;
+	padding: 0 8vw
 }
 
 .landing-hero h2 {
@@ -636,6 +637,7 @@ footer {
     font-size: clamp(1.3rem, 5vw, 2.3rem);
     margin: 0 0 clamp(1rem, 4vw, 1.5rem) 0;
     line-height: 1.2;
+	padding: 0 8vw
 }
 
 .landing-hero-tagline {
@@ -644,6 +646,7 @@ footer {
     margin: 0;
     line-height: 1.6;
 	text-align: left;
+	padding: 0 5vw 0 8vw
 }
 
 /* Mission Statement Box */
@@ -882,7 +885,7 @@ footer {
 }
 
 /* ==========================================================================
-   SMALLEST MOBILE PHONE RESPONSIVE STYLES (320px to 374px/ Small phones Only)
+   SMALLEST MOBILE PHONE RESPONSIVE STYLES          SMALL
    ========================================================================== */
 @media (min-width: 20rem) and (max-width: 23.375rem) {
     .footer-container {
@@ -894,27 +897,27 @@ footer {
 }
 
 /* ==========================================================================
-   MEDIUM MOBILE PHONE RESPONSIVE STYLES (376px to 425px/ Medium phones Only)
+   MEDIUM MOBILE PHONE RESPONSIVE STYLES            MEDIUM
    ========================================================================== */
 @media (min-width: 20.0625rem) and (max-width: 26.5rem){
     .footer-container {
-        padding: 0 clamp(1.5rem, 10vw, 4rem);
+		padding: 0 13vw 0 18vw;
         max-width: 100%;
         grid-template-columns: repeat(2, 1fr);
-        gap: clamp(1.25rem, 6vw, 3rem) clamp(5.5rem, 12vw, 8rem);
+        gap: clamp(1.25rem, 6vw, 3rem) clamp(1.25rem, 13vw, 3rem);
     }
 }
 
 /* ==========================================================================
-   LARGE MOBILE PHONE RESPONSIVE STYLES (376px to 425px/ Large phones Only)
+   LARGE MOBILE PHONE RESPONSIVE STYLES              LARGE
    ========================================================================== */
 
 @media (min-width: 26.5625rem) and (max-width: 47.9375rem){
     .footer-container {
-        padding: 0 clamp(2rem, 15vw, 3rem) 0 clamp(3rem, 20vw, 4rem);
+        padding: 0 13vw 0 20vw;
         max-width: 100%;
         grid-template-columns: repeat(2, 1fr);
-        gap: clamp(1.25rem, 6vw, 3rem) clamp(6.5rem, 25vw, 7.5rem);
+        gap: 6vw 18vw
     }
 }
 
