@@ -39,6 +39,16 @@
     {% endif %}
     {% endblock %}
 
+    <!-- Twitter Card -->
+    {% block twitter_card %}
+    {% if not private_page %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% if self.title() %}{{ self.title() }}{% else %}JudgeAccount{% endif %}">
+    <meta name="twitter:description" content="{% block twitter_description %}A public platform dedicated to documenting judicial conduct through firsthand experiences and verified media sources.{% endblock %}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='logos/og_logo.png', _external=True) }}">
+    {% endif %}
+    {% endblock %
+
     <!-- Structured Data (WebSite schema) -->
     {% block structured_data %}
     {% if not private_page %}
