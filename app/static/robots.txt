@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /login
+Disallow: /register
+Disallow: /logout
+Disallow: /edit_review/
+Disallow: /edit_media_link/
+Disallow: /delete_review/
+Disallow: /delete_media_link/
+Disallow: /flag/
+
+Sitemap: https://judgeaccount.com/sitemap.xml

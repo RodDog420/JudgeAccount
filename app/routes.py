@@ -346,3 +346,44 @@ def home():
 def about():
     """Redirect old about URL to canonical homepage"""
     return redirect(url_for("main.about"), code=301)
+
+
+@bp.route('/robots.txt')
+def robots():
+    from flask import send_from_directory
+    return send_from_directory('static', 'robots.txt', mimetype='text/plain')
+
+
+@bp.route('/sitemap.xml')
+def sitemap_xml():
+    from flask import Response
+    from datetime import datetime
+
+    # Get all judges for individual pages
+    judges = Judge.query.all()
+
+    # Static pages
+    pages = [
+        {'loc': url_for('main.about', _external=True), 'priority': '1.0', 'changefreq': 'monthly'},
+        {'loc': url_for('main.index', _external=True), 'priority': '0.9', 'changefreq': 'daily'},
+        {'loc': url_for('main.guidelines', _external=True), 'priority': '0.8', 'changefreq': 'monthly'},
+        {'loc': url_for('main.submit_review', _external=True), 'priority': '0.9', 'changefreq': 'monthly'},
+        {'loc': url_for('main.submit_media_link', _external=True), 'priority': '0.9', 'changefreq': 'monthly'},
+        {'loc': url_for('main.privacy_policy', _external=True), 'priority': '0.3', 'changefreq': 'yearly'},
+        {'loc': url_for('main.terms_of_service', _external=True), 'priority': '0.3', 'changefreq': 'yearly'},
+        {'loc': url_for('main.contact', _external=True), 'priority': '0.5', 'changefreq': 'monthly'},
+        {'loc': url_for('main.sitemap', _external=True), 'priority': '0.4', 'changefreq': 'monthly'},
+        {'loc': url_for('main.support', _external=True), 'priority': '0.6', 'changefreq': 'monthly'},
+    ]
+
+    # Add judge pages
+    for judge in judges:
+        pages.append({
+            'loc': url_for('main.judge', judge_id=judge.id, _external=True),
+            'priority': '0.7',
+            'changefreq': 'weekly'
+        })
+
+    sitemap_xml = render_template('sitemap.xml', pages=pages, today=datetime.now())
+    response = Response(sitemap_xml, mimetype='application/xml')
+    return response
