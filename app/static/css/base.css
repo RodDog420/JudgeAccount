@@ -230,6 +230,27 @@ footer {
     margin: 0.3125rem 0;
 }
 
+.return-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.5rem 0;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.return-link:hover {
+    text-decoration: underline;
+}
+
+.page-section > p:last-of-type a {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #3498db;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
 
 /* ==========================================================================
    LEGAL DOCUMENTS - UNIQUE STYLES
