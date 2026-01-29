@@ -1,14 +1,26 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /dashboard
+
+# Authentication
 Disallow: /login
 Disallow: /register
 Disallow: /logout
+
+# User dashboard and actions
+Disallow: /dashboard
 Disallow: /edit_review/
-Disallow: /edit_media_link/
 Disallow: /delete_review/
+Disallow: /edit_media_link/
 Disallow: /delete_media_link/
+
+# Submit pages (login required)
+Disallow: /submit_review
+Disallow: /submit_media_link
+
+# Flagging
 Disallow: /flag/
+
+# Admin (blocks all /admin/* routes)
+Disallow: /admin
 
 Sitemap: https://judgeaccount.com/sitemap.xml

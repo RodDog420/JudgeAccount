@@ -252,6 +252,10 @@ footer {
     font-weight: 600;
 }
 
+/* Adjust anchor link landing position to account for fixed header */
+#table-of-contents {
+    scroll-margin-top: 6rem;
+}
 /* ==========================================================================
    LEGAL DOCUMENTS - UNIQUE STYLES
    ========================================================================== */
