@@ -8,7 +8,6 @@ from app.court_data import STATES, COURTS_BY_STATE
 bp = Blueprint('main', __name__)
 
 
-
 @bp.route('/index', methods=['GET', 'POST'])
 def index():
     from app.forms import SearchForm
@@ -19,6 +18,9 @@ def index():
 
     # Start with base query
     query = Judge.query
+
+    # Track active filters for display
+    active_filters = []
 
     if form.validate_on_submit():
         # Apply search filter
@@ -34,22 +36,28 @@ def index():
                     db.func.concat(Judge.first_name, ' ', Judge.last_name).ilike(f'%{search_query}%')
                 )
             )
+            active_filters.append(('search', f'Search: "{search_query}"'))
 
         # Apply state filter
         if form.filter_state.data:
             query = query.filter(Judge.state == form.filter_state.data)
+            active_filters.append(('state', f'State: {form.filter_state.data}'))
 
         # Apply federal filter
         if form.filter_federal.data == 'federal':
             query = query.filter(Judge.is_federal == True)
+            active_filters.append(('federal', 'Federal Judges'))
         elif form.filter_federal.data == 'state':
             query = query.filter(Judge.is_federal == False)
+            active_filters.append(('federal', 'State Judges'))
 
         # Apply retired filter
         if form.filter_retired.data == 'active':
             query = query.filter(Judge.is_retired == False)
+            active_filters.append(('retired', 'Active Only'))
         elif form.filter_retired.data == 'retired':
             query = query.filter(Judge.is_retired == True)
+            active_filters.append(('retired', 'Retired Only'))
 
         # Get all results
         judges = query.all()
@@ -57,10 +65,13 @@ def index():
         # Apply content filter (must be done after getting results)
         if form.filter_content.data == 'has_reviews':
             judges = [j for j in judges if j.review_count() > 0]
+            active_filters.append(('content', 'Has Reviews'))
         elif form.filter_content.data == 'has_media':
             judges = [j for j in judges if j.media_link_count() > 0]
+            active_filters.append(('content', 'Has Media'))
         elif form.filter_content.data == 'has_both':
             judges = [j for j in judges if j.review_count() > 0 and j.media_link_count() > 0]
+            active_filters.append(('content', 'Has Reviews & Media'))
 
         # Apply sorting
         if form.sort_by.data == 'name_asc':
@@ -83,7 +94,7 @@ def index():
         judges = query.all()
         judges.sort(key=lambda j: (j.last_name.lower(), j.first_name.lower()))
 
-    return render_template('index.html', judges=judges, form=form)
+    return render_template('index.html', judges=judges, form=form, active_filters=active_filters)
 
 
 @bp.route('/judge/<int:judge_id>')

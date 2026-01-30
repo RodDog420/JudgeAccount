@@ -35,8 +35,24 @@
         <div>
             {{ form.search_submit(class="btn btn-primary width-auto no-margin height-100") }}
         </div>
+        <div>
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary width-auto no-margin height-100">Clear Filters</a>
+        </div>
     </div>
 </form>
+
+{% if active_filters %}
+<div class="active-filters">
+    <span class="active-filters-label">Active Filters:</span>
+    {% for filter_type, filter_label in active_filters %}
+    <span class="filter-tag">
+        {{ filter_label }}
+    </span>
+    {% endfor %}
+    <a href="{{ url_for('main.index') }}" class="btn btn-secondary btn-small">Clear All</a>
+</div>
+{% endif %}
+
 {% if judges %}
 <p class="content-count">Showing {{ judges|length }} judge(s)</p>
 
