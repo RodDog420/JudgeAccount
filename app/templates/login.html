@@ -41,8 +41,8 @@
     <div class="form-group">
         {{ form.submit(class="btn btn-primary") }}
     </div>
+    <p class="spacing-top-md">
+        Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>
+    </p>
 </form>
-<p class="spacing-top-md">
-    Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>
-</p>
 {% endblock %}

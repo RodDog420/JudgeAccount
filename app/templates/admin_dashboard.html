@@ -1,59 +1,87 @@
 {% extends "base.html" %}
-{% set private_page = True %}
 
 {% block title %}Admin Dashboard - Judge Review{% endblock %}
 
-{% block robots %}
-<meta name="robots" content="noindex, nofollow">
-{% endblock %}
-
 {% block content %}
+<h1 class="admin-dash-page-title">Admin Dashboard</h1>
+<!-- <p class="admin-mode-notice">Admin Mode - You can moderate all content</p> -->
 
-<h1>Admin Dashboard</h1>
-<p class="admin-mode-notice">Admin Mode - You can moderate all content</p>
+<div id="admin-dash-filter-container"
+        class="admin-dash-filter-wrapper">
+    <button id="admin-dash-filter-toggle"
+            class="admin-dash-filter-toggle-btn"
+            aria-label="Toggle Filters">
+        <span>🔍</span>
+    </button>
 
-<form method="POST" action="{{ url_for('auth.admin_dashboard') }}" class="admin-search-form">
-    {{ form.hidden_tag() }}
-    
-    <h3 class="form-section-title">Search & Filter Content</h3>
-    
-    <div class="admin-filter-grid">
-        <div class="form-group">
-            {{ form.search_judge.label }}
-            {{ form.search_judge(placeholder="e.g., John Smith") }}
+    <form method="POST"
+            action="{{ url_for('auth.admin_dashboard') }}"
+            class="admin-search-form admin-dash-filter-form"
+            id="admin-dash-filter-form">
+        {{ form.hidden_tag() }}
+
+        <h3 class="form-section-title">Search & Filter Content</h3>
+
+        <div class="admin-filter-grid">
+            <div class="form-group">
+                {{ form.search_judge.label }}
+                {{ form.search_judge(placeholder="e.g., John Smith") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.search_content.label }}
+                {{ form.search_content(placeholder="Search text/summary") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.filter_username.label }}
+                {{ form.filter_username(placeholder="e.g., Juan Doe") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.filter_rating.label }}
+                {{ form.filter_rating() }}
+            </div>
+
+            <div class="form-group">
+                {{ form.filter_concerns.label }}
+                {{ form.filter_concerns() }}
+            </div>
+
+            <div class="form-group">
+                {{ form.sort_by.label }}
+                {{ form.sort_by() }}
+            </div>
         </div>
-        
-        <div class="form-group">
-            {{ form.search_content.label }}
-            {{ form.search_content(placeholder="Search text/summary") }}
+
+        <div class="form-actions">
+            <div class="filter-btn-wrapper">
+                <button type="submit"
+                        class="btn btn-primary full-btn">
+                    Search<br class="mobile-line-break"> Filters
+                </button>
+            </div>
+            <div class="filter-btn-wrapper">
+                <a href="{{ url_for('auth.admin_dashboard') }}"
+                        class="btn btn-secondary full-btn">
+                    Clear<br class="mobile-line-break"> Filters
+                </a>
+            </div>
+            <div class="filter-btn-wrapper">
+                <button type="button"
+                        id="admin-dash-filter-close"
+                        class="btn full-btn admin-dash-close-btn">
+                    Close<br class="mobile-line-break"> Panel
+                </button>
+            </div>
         </div>
-        
-        <div class="form-group">
-            {{ form.filter_username.label }}
-            {{ form.filter_username(placeholder="e.g., Juan Doe") }}
-        </div>
-        
-        <div class="form-group">
-            {{ form.filter_rating.label }}
-            {{ form.filter_rating() }}
-        </div>
-        
-        <div class="form-group">
-            {{ form.filter_concerns.label }}
-            {{ form.filter_concerns() }}
-        </div>
-        
-        <div class="form-group">
-            {{ form.sort_by.label }}
-            {{ form.sort_by() }}
-        </div>
+    </form>
+
+    <div id="admin-dash-filter-overlay"
+            class="admin-dash-filter-overlay">
+        <span class="admin-dash-overlay-text">🔍 Click to expand <span class="admin-dash-overlay-highlight">Filter &amp; Search</span></span>
     </div>
-    
-    <div class="form-actions">
-        {{ form.admin_submit(class="btn btn-primary") }}
-        <a href="{{ url_for('auth.admin_dashboard') }}" class="btn btn-secondary">Clear All Filters</a>
-    </div>
-</form>
+</div>
 
 <!-- Media Links Section -->
 <h2>Media Links</h2>
@@ -64,71 +92,157 @@
     <div class="media-link-card">
         <div class="media-link-header">
             <div>
-                <h3 class="judge-name-heading">
-                    <span class="judge-name-text">
-                        <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}" class="user-content-name">
-                            {{ media_link.judge.full_name() }}
-                        </a>
-                    </span>
+                {% set badge_count = (1 if media_link.judge.is_federal else 0) + (1 if media_link.judge.is_retired else 0) %}
+                {% if badge_count == 2 %}
+                <h3 class="judge-name-heading admin-card-judge-header-multi">
+                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}">
+                        {{ media_link.judge.full_name() }}
+                    </a>
+                    <div class="admin-card-judge-badges">
+                        {% if media_link.judge.is_federal %}
+                            <span class="badge badge-federal">Federal</span>
+                        {% endif %}
+                        {% if media_link.judge.is_retired %}
+                            <span class="badge badge-retired">Retired</span>
+                        {% endif %}
+                    </div>
+                </h3>
+                {% elif badge_count == 1 %}
+                <h3 class="judge-name-heading admin-card-judge-header-single">
+                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}">
+                        {{ media_link.judge.full_name() }}
+                    </a>
                     {% if media_link.judge.is_federal %}
                         <span class="badge badge-federal">Federal</span>
                     {% endif %}
+                    {% if media_link.judge.is_retired %}
+                        <span class="badge badge-retired">Retired</span>
+                    {% endif %}
                 </h3>
-                <p class="judge-court-info user-content-name">
+                {% else %}
+                <h3 class="judge-name-heading">
+                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}">
+                        {{ media_link.judge.full_name() }}
+                    </a>
+                </h3>
+                {% endif %}
+                <p class="judge-court-info">
                     {{ media_link.judge.court }} - {{ media_link.judge.city }}, {{ media_link.judge.state }}
                 </p>
-                <p class="submitter-info">
-                    {% if media_link.author %}
-                        Submitted by: <strong class="user-content-username">{{ media_link.author.username }}</strong>
-                    {% else %}
-                        Submitted by: <em>Anonymous</em>
-                    {% endif %}
-                </p>
             </div>
-            <span class="media-link-source user-content-text">{{ media_link.news_source }}</span>
+        </div>
+
+        <!-- Media Info Grid -->
+        <div class="media-link-info-grid">
+            <span class="media-link-source">{{ media_link.news_source }}</span>
+            <p class="submitter-info">
+                {% if media_link.user %}
+                    <span class="submitter-no-wrap">
+                        Submitted by&nbsp;<strong class="submitter-name">{{ media_link.user.username }}</strong>
+                    </span>
+                    <span class="submitter-space">&nbsp;</span>
+                    <span class="submitter-no-wrap">
+                        <span class="submitter-on-label">Submitted </span>on {{ media_link.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                    </span>
+                {% else %}
+                    Submitted by <em>Anonymous</em>
+                    <span class="submitter-space">&nbsp;</span>
+                    <span class="submitter-no-wrap">
+                        <span class="submitter-on-label">Submitted </span>on {{ media_link.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                    </span>
+                {% endif %}
+            </p>
+            <h4 class="media-link-headline">
+                <a href="{{ media_link.url }}"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    {{ media_link.headline }}
+                </a>
+            </h4>
+            <div class="media-link-date">
+                Originally Published on {{ media_link.publication_date.strftime('%b %d, %Y') }}
+            </div>
         </div>
         
-        <h4 class="media-link-headline">
-            <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer" class="user-content-url">
-                {{ media_link.headline }}
-            </a>
-        </h4>
-        
-        <div class="media-link-date">
-            Published: {{ media_link.publication_date.strftime('%B %d, %Y') }} | 
-            Submitted: {{ media_link.created_at.strftime('%B %d, %Y at %I:%M %p') }}
-        </div>
-        
-        <div class="media-link-summary user-content-text">
+        <div class="media-link-summary">
             {{ media_link.summary }}
         </div>
         
         {% if not media_link.is_verified %}
         <div class="pending-verification-admin">
-            <strong>⚠️ PENDING VERIFICATION</strong>
+            <strong>PENDING VERIFICATION</strong>
         </div>
         {% endif %}
         
-        <div class="admin-actions">
+        <div class="admin-actions admin-actions-dashboard">
             {% if not media_link.is_verified %}
-                <a href="{{ url_for('auth.admin_approve_media_link', media_link_id=media_link.id) }}" 
-                    class="btn btn-primary" 
-                    onclick="return confirm('Approve this media link and make it public?');">
+                <button type="button" class="btn btn-primary"
+                    onclick="openModal('approve-media-{{ media_link.id }}')">
                     Approve
-                </a>
-                <a href="{{ url_for('auth.admin_reject_media_link', media_link_id=media_link.id) }}" 
-                    class="btn btn-secondary" 
-                    onclick="return confirm('Reject and delete this media link?');">
+                </button>
+                <button type="button" class="btn btn-warning"
+                    onclick="openModal('reject-media-{{ media_link.id }}')">
                     Reject
-                </a>
+                </button>
             {% else %}
-                <span class="verified-badge">✓ Verified</span>
+                <div class="verified-placeholder">Verified</div>
+                <div style="flex: 0 0 calc(33.33% - 0.33rem);"></div>
             {% endif %}
-            <a href="{{ url_for('auth.admin_delete_media_link', media_link_id=media_link.id) }}" 
-                class="btn btn-danger" 
-                onclick="return confirm('Admin action: Delete this media link permanently?');">
+            <button type="button" class="btn btn-secondary"
+                onclick="openModal('delete-media-{{ media_link.id }}')">
                 Delete
-            </a>
+            </button>
+        </div>
+
+        <!-- Approve Modal -->
+        <div id="approve-media-{{ media_link.id }}" class="modal-overlay">
+            <div class="modal-box">
+                <h3 class="modal-title">Approve Media Link</h3>
+                <p class="modal-body">This will make the media link publicly visible. Optionally include a message to the submitter.</p>
+                <form method="POST" action="{{ url_for('auth.admin_approve_media_link', media_link_id=media_link.id) }}">
+                    {{ form.hidden_tag() }}
+                    <label class="modal-message-label" for="approve-msg-{{ media_link.id }}">Message to submitter (optional)</label>
+                    <textarea id="approve-msg-{{ media_link.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your submission has been approved and is now live."></textarea>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-gray btn-small" onclick="closeModal('approve-media-{{ media_link.id }}')">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-small">Confirm Approve</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Reject Modal -->
+        <div id="reject-media-{{ media_link.id }}" class="modal-overlay">
+            <div class="modal-box">
+                <h3 class="modal-title">Reject Media Link</h3>
+                <p class="modal-body">This will permanently delete the media link. Optionally include a message to the submitter.</p>
+                <form method="POST" action="{{ url_for('auth.admin_reject_media_link', media_link_id=media_link.id) }}">
+                    {{ form.hidden_tag() }}
+                    <label class="modal-message-label" for="reject-msg-{{ media_link.id }}">Message to submitter (optional)</label>
+                    <textarea id="reject-msg-{{ media_link.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. This submission did not meet our content guidelines."></textarea>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-gray btn-small" onclick="closeModal('reject-media-{{ media_link.id }}')">Cancel</button>
+                        <button type="submit" class="btn btn-warning btn-small">Confirm Reject</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Media Modal -->
+        <div id="delete-media-{{ media_link.id }}" class="modal-overlay">
+            <div class="modal-box">
+                <h3 class="modal-title">Delete Media Link</h3>
+                <p class="modal-body">This will permanently delete the media link. Optionally include a message to the submitter.</p>
+                <form method="POST" action="{{ url_for('auth.admin_delete_media_link', media_link_id=media_link.id) }}">
+                    {{ form.hidden_tag() }}
+                    <label class="modal-message-label" for="delete-media-msg-{{ media_link.id }}">Message to submitter (optional)</label>
+                    <textarea id="delete-media-msg-{{ media_link.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your submission was removed for violating our content policy."></textarea>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-gray btn-small" onclick="closeModal('delete-media-{{ media_link.id }}')">Cancel</button>
+                        <button type="submit" class="btn btn-secondary btn-small">Confirm Delete</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     {% endfor %}
@@ -146,35 +260,72 @@
     
     {% for review in reviews %}
     <div class="review-card">
+
+        <!-- Judge Identity Section -->
         <div class="review-header">
-            <div>
-                <h3 class="judge-name-heading">
-                    <span class="judge-name-text">
-                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}" class="user-content-name">
-                            {{ review.judge.full_name() }}
-                        </a>
-                    </span>
+            {% set badge_count = (1 if review.judge.is_federal else 0) + (1 if review.judge.is_retired else 0) %}
+            {% if badge_count == 2 %}
+                <h3 class="judge-name-heading admin-card-judge-header-multi">
+                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
+                        {{ review.judge.full_name() }}
+                    </a>
+                    <div class="admin-card-judge-badges">
+                        {% if review.judge.is_federal %}
+                            <span class="badge badge-federal">Federal</span>
+                        {% endif %}
+                        {% if review.judge.is_retired %}
+                            <span class="badge badge-retired">Retired</span>
+                        {% endif %}
+                    </div>
+                </h3>
+            {% elif badge_count == 1 %}
+                <h3 class="judge-name-heading admin-card-judge-header-single">
+                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
+                        {{ review.judge.full_name() }}
+                    </a>
                     {% if review.judge.is_federal %}
                         <span class="badge badge-federal">Federal</span>
                     {% endif %}
-                </h3>
-                <p class="judge-court-info user-content-name">
-                    {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
-                </p>
-                <p class="submitter-info">
-                    {% if review.author %}
-                        Submitted by: <strong class="user-content-username">{{ review.author.username }}</strong>
-                    {% else %}
-                        Submitted by: <em>Anonymous (before user system)</em>
+                    {% if review.judge.is_retired %}
+                        <span class="badge badge-retired">Retired</span>
                     {% endif %}
-                </p>
-            </div>
-            <span class="review-rating">{{ review.rating }} / 5 stars</span>
+                </h3>
+            {% else %}
+                <h3 class="judge-name-heading">
+                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
+                        {{ review.judge.full_name() }}
+                    </a>
+                </h3>
+            {% endif %}
+            <p class="judge-court-info">
+                {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
+            </p>
         </div>
-        
-        <div class="review-metadata">
-            Court Date: {{ review.court_date.strftime('%B %d, %Y') }} | 
-            Submitted: {{ review.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+
+        <!-- Review Info Grid -->
+        <div class="review-info-grid">
+            <span class="review-rating">{{ review.rating }} / 5 &#9733;</span>
+            <p class="submitter-info">
+                {% if review.user %}
+                    <span class="submitter-no-wrap">
+                        Submitted by&nbsp;<strong class="submitter-name">{{ review.user.username }}</strong>
+                    </span>
+                    <span class="submitter-space">&nbsp;</span>
+                    <span class="submitter-no-wrap">
+                        <span class="submitter-on-label">Submitted </span>on {{ review.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                    </span>
+                {% else %}
+                    Submitted by <em>Anonymous (before user system)</em>
+                    <span class="submitter-space">&nbsp;</span>
+                    <span class="submitter-no-wrap">
+                        <span class="submitter-on-label">Submitted </span>on {{ review.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                    </span>
+                {% endif %}
+            </p>
+            <div class="review-metadata">
+                Court Date: {{ review.court_date.strftime('%b %d, %Y') }}
+            </div>
+            <div class="review-grid-empty"></div>
         </div>
         
         {% if review.fairness_concern or review.bias_concern or review.temperament_concern %}
@@ -191,16 +342,32 @@
         </div>
         {% endif %}
         
-        <div class="review-text user-content-text">
+        <div class="review-text">
             {{ review.review_text }}
         </div>
         
-        <div class="admin-actions">
-            <a href="{{ url_for('auth.admin_delete_review', review_id=review.id) }}" 
-                class="btn btn-secondary" 
-                onclick="return confirm('Admin action: Delete this review permanently?');">
-                Delete Review (Admin)
-            </a>
+        <div class="admin-actions admin-actions-dashboard">
+            <button type="button" class="btn btn-secondary"
+                onclick="openModal('delete-review-{{ review.id }}')">
+                Delete
+            </button>
+        </div>
+
+        <!-- Delete Review Modal -->
+        <div id="delete-review-{{ review.id }}" class="modal-overlay">
+            <div class="modal-box">
+                <h3 class="modal-title">Delete Review</h3>
+                <p class="modal-body">This will permanently delete the review. Optionally include a message to the submitter.</p>
+                <form method="POST" action="{{ url_for('auth.admin_delete_review', review_id=review.id) }}">
+                    {{ form.hidden_tag() }}
+                    <label class="modal-message-label" for="delete-review-msg-{{ review.id }}">Message to submitter (optional)</label>
+                    <textarea id="delete-review-msg-{{ review.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your review was removed for violating our content policy."></textarea>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-gray btn-small" onclick="closeModal('delete-review-{{ review.id }}')">Cancel</button>
+                        <button type="submit" class="btn btn-secondary btn-small">Confirm Delete</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     {% endfor %}
@@ -210,4 +377,87 @@
         <p>No reviews match your search criteria.</p>
     </div>
 {% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterWrapper = document.getElementById('admin-dash-filter-container');
+    const filterForm = document.getElementById('admin-dash-filter-form');
+    const toggleBtn = document.getElementById('admin-dash-filter-toggle');
+    const overlay = document.getElementById('admin-dash-filter-overlay');
+    const closeBtn = document.getElementById('admin-dash-filter-close');
+
+    if (!filterWrapper || !filterForm || !toggleBtn || !overlay) return;
+
+    // Page load: start expanded, overlay hidden, toggle button hidden
+    filterForm.classList.add('expanded');
+    toggleBtn.classList.add('active');
+    filterWrapper.classList.add('filter-open');
+
+    // Scroll: if expanded, collapse and show overlay
+    // Commented out per UX decision — auto-collapse on scroll disrupts workflow
+    // Uncomment to restore auto-collapse behavior
+    /*
+    window.addEventListener('scroll', function() {
+        if (filterForm.classList.contains('expanded')) {
+            filterForm.classList.remove('expanded');
+            filterForm.classList.add('collapsed');
+            toggleBtn.classList.remove('active');
+            overlay.classList.add('show');
+            filterWrapper.classList.remove('filter-open');
+        }
+    });
+    */
+
+    // Toggle function
+    function toggleFilter() {
+        if (filterForm.classList.contains('expanded')) {
+            filterForm.classList.remove('expanded');
+            filterForm.classList.add('collapsed');
+            toggleBtn.classList.remove('active');
+            overlay.classList.add('show');
+            filterWrapper.classList.remove('filter-open');
+        } else {
+            filterForm.classList.remove('collapsed');
+            filterForm.classList.add('expanded');
+            toggleBtn.classList.add('active');
+            overlay.classList.remove('show');
+            filterWrapper.classList.add('filter-open');
+        }
+    }
+
+    // Toggle button click
+    toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleFilter();
+    });
+
+    // Overlay click
+    overlay.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleFilter();
+    });
+
+    // Close Filter Panel button click
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleFilter();
+        });
+    }
+});
+</script>
+
+<script>
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+    }
+});
+</script>
 {% endblock %}

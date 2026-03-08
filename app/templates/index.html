@@ -9,37 +9,68 @@
 
 {% block content %}
 
-<h1>Judge Index</h1>
-<form method="POST" action="{{ url_for('main.index') }}" class="spacing-bottom-xl">
-    {{ form.hidden_tag() }}
-    
-    <div class="filter-bar">
-        <div class="flex-grow min-width-300">
-            {{ form.search_query(placeholder="Search by judge name, court, or location...", class="width-100") }}
+<h1 class="index-page-title">Judge Index</h1>
+<div id="index-filter-container" class="index-filter-wrapper">
+    <button id="index-filter-toggle"
+            class="index-filter-toggle-btn"
+            aria-label="Toggle Filters">
+        <span>🔍</span>
+    </button>
+
+    <form method="POST"
+            action="{{ url_for('main.index') }}"
+            class="spacing-bottom-xl index-filter-form"
+            id="index-filter-form">
+        {{ form.hidden_tag() }}
+        
+        <div class="index-filter-grid">
+            <div>
+                {{ form.search_query(placeholder="Search by judge name, court, or location...", class="width-100") }}
+            </div>
+            <div>
+                {{ form.filter_state(class="width-100") }}
+            </div>
+            <div>
+                {{ form.filter_federal(class="width-100") }}
+            </div>
+            <div>
+                {{ form.filter_retired(class="width-100") }}
+            </div>
+            <div>
+                {{ form.filter_content(class="width-100") }}
+            </div>
+            <div>
+                {{ form.sort_by(class="width-100") }}
+            </div>
+            
+            <div class="filter-actions">  
+                <div class="filter-btn-wrapper">
+                    <button type="submit"
+                            class="btn btn-primary full-btn">
+                        Apply<br class="mobile-line-break"> Filters
+                    </button>
+                </div>
+                <div class="filter-btn-wrapper">
+                    <a href="{{ url_for('main.index') }}"
+                            class="btn btn-secondary full-btn">
+                        Clear<br class="mobile-line-break"> Filters
+                    </a>
+                </div>
+                <div class="filter-btn-wrapper">
+                    <button type="button"
+                            id="index-filter-close"
+                            class="btn full-btn index-close-btn">
+                        Close<br class="mobile-line-break"> Panel
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="min-width-150">
-            {{ form.filter_state(class="width-100") }}
-        </div>
-        <div class="min-width-180">
-            {{ form.filter_federal(class="width-100") }}
-        </div>
-        <div class="min-width-160">
-            {{ form.filter_retired(class="width-100") }}
-        </div>
-        <div class="min-width-180">
-            {{ form.filter_content(class="width-100") }}
-        </div>
-        <div class="min-width-200">
-            {{ form.sort_by(class="width-100") }}
-        </div>
-        <div>
-            {{ form.search_submit(class="btn btn-primary width-auto no-margin height-100") }}
-        </div>
-        <div>
-            <a href="{{ url_for('main.index') }}" class="btn btn-secondary width-auto no-margin height-100">Clear Filters</a>
-        </div>
+    </form>
+
+    <div id="index-filter-overlay" class="index-filter-overlay">
+        <span class="index-overlay-text">🔍 Click to expand <span class="index-overlay-highlight">Filter &amp; Search</span></span>
     </div>
-</form>
+</div>
 
 {% if active_filters %}
 <div class="active-filters">
@@ -49,13 +80,12 @@
         {{ filter_label }}
     </span>
     {% endfor %}
-    <a href="{{ url_for('main.index') }}" class="btn btn-secondary btn-small">Clear All</a>
+    <a href="{{ url_for('main.index') }}" class="btn btn-secondary full-btn">Clear Filters</a>
 </div>
 {% endif %}
 
 {% if judges %}
-<p class="content-count">Showing {{ judges|length }} judge(s)</p>
-
+<p class="content-count">Showing {{ judges|length }} judge{% if judges|length != 1 %}s{% endif %}</p>
 <!-- Desktop Table View -->
 <table class="judge-table-desktop">
     <thead>
@@ -63,9 +93,10 @@
             <th>Judge Name</th>
             <th>Court</th>
             <th>Location</th>
-            <th>Average Rating</th>
+            <th>Rating</th>
             <th>Reviews</th>
-            <th>Verified Links</th>
+            <th>Links</th>
+            <th>View</th>
         </tr>
     </thead>
     <tbody>
@@ -82,11 +113,17 @@
                 {% if judge.review_count() > 0 %}
                     {{ "%.1f"|format(judge.average_rating()) }} / 5.0
                 {% else %}
-                    No ratings yet
+                    N/A
                 {% endif %}
             </td>
-            <td class="review-count">{{ judge.review_count() }} reviews</td>
-            <td class="review-count">{{ judge.media_link_count() }} links</td>
+            <td class="review-count">{{ judge.review_count() }}<!-- review{% if judge.review_count() != 1 %}s{% endif %}--></td>
+            {% set judge_verified_links = judge.media_links|selectattr('is_verified', 'equalto', True)|list %}
+            <td class="review-count">{{ judge_verified_links|length }}<!-- link{% if judge_verified_links|length != 1 %}s{% endif %}--></td>
+            <td>  <a href="{{ url_for('main.judge', judge_id=judge.id) }}" 
+                    class="btn btn-primary btn-small">
+                    View
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -98,10 +135,10 @@
     <div class="judge-card-mobile">
         <div class="judge-card-header">
             <h3 class="judge-card-name">
-                <a href="{{ url_for('main.judge', judge_id=judge.id) }}" class="user-content-name">
-                    {{ judge.full_name() }}
-                </a>
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}" class="user-content-name">{{ judge.full_name() }}</a>
             </h3>
+            
+            {% if judge.is_federal or judge.is_retired %}
             <div class="judge-card-badges">
                 {% if judge.is_federal %}
                     <span class="badge badge-federal">Federal</span>
@@ -110,13 +147,13 @@
                     <span class="badge badge-retired">Retired</span>
                 {% endif %}
             </div>
+            {% endif %}
         </div>
-        
         <div class="judge-card-rating">
             {% if judge.review_count() > 0 %}
                 <span class="rating-stars">★</span>
                 <span class="rating-value">{{ "%.1f"|format(judge.average_rating()) }}</span>
-                <span class="rating-reviews">({{ judge.review_count() }} reviews)</span>
+                <span class="rating-reviews">Rating from {{ judge.review_count() }} review{% if judge.review_count() != 1 %}s{% endif %}</span>
             {% else %}
                 <span class="rating-none">No ratings yet</span>
             {% endif %}
@@ -133,7 +170,8 @@
             </div>
             <div class="judge-card-row">
                 <span class="detail-label">Media Links:</span>
-                <span class="detail-value">{{ judge.media_link_count() }} verified</span>
+                {% set judge_verified_links = judge.media_links|selectattr('is_verified', 'equalto', True)|list %}
+                <span class="detail-value">{{ judge_verified_links|length }} verified link{% if judge_verified_links|length != 1 %}s{% endif %}</span>
             </div>
         </div>
     </div>
@@ -146,4 +184,73 @@
     <a href="{{ url_for('main.index') }}" class="btn btn-primary">Clear Filters & View All</a>
 </div>
 {% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterWrapper = document.getElementById('index-filter-container');
+    const filterForm = document.getElementById('index-filter-form');
+    const toggleBtn = document.getElementById('index-filter-toggle');
+    const overlay = document.getElementById('index-filter-overlay');
+    const closeBtn = document.getElementById('index-filter-close');
+
+    if (!filterWrapper || !filterForm || !toggleBtn || !overlay) return;
+
+    // Page load: start expanded, overlay hidden, toggle button hidden
+    filterForm.classList.add('expanded');
+    toggleBtn.classList.add('active');
+    filterWrapper.classList.add('filter-open');
+
+    // Scroll: if expanded, collapse and show overlay
+    // Commented out per UX decision — auto-collapse on scroll disrupts workflow
+    // Uncomment to restore auto-collapse behavior
+    /*
+    window.addEventListener('scroll', function() {
+        if (filterForm.classList.contains('expanded')) {
+            filterForm.classList.remove('expanded');
+            filterForm.classList.add('collapsed');
+            toggleBtn.classList.remove('active');
+            overlay.classList.add('show');
+            filterWrapper.classList.remove('filter-open');
+        }
+    });
+    */
+
+    // Toggle function
+    function toggleFilter() {
+        if (filterForm.classList.contains('expanded')) {
+            filterForm.classList.remove('expanded');
+            filterForm.classList.add('collapsed');
+            toggleBtn.classList.remove('active');
+            overlay.classList.add('show');
+            filterWrapper.classList.remove('filter-open');
+        } else {
+            filterForm.classList.remove('collapsed');
+            filterForm.classList.add('expanded');
+            toggleBtn.classList.add('active');
+            overlay.classList.remove('show');
+            filterWrapper.classList.add('filter-open');
+        }
+    }
+
+    // Toggle button click
+    toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleFilter();
+    });
+
+    // Overlay click
+    overlay.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleFilter();
+    });
+
+    // Close Filter Panel button click
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleFilter();
+        });
+    }
+});
+</script>
 {% endblock %}

@@ -9,6 +9,8 @@
 
 {% block content %}
 
+{% set verified_links = judge.media_links|selectattr('is_verified', 'equalto', True)|list %}
+
 <div class="judge-profile">
     <h1 class="user-content-name"><span class="judge-name-text">{{ judge.full_name() }}</span>
         {% if judge.is_federal %}
@@ -30,18 +32,18 @@
         </div>
     </div>
     
-    <div class="stats-container">
+    <div class="judge-stats-container">
         <div class="stat-box">
             <span class="stat-number">{{ "%.1f"|format(judge.average_rating()) if judge.review_count() > 0 else "N/A" }}</span>
             <span class="stat-label">Average Rating</span>
         </div>
         <div class="stat-box">
             <span class="stat-number">{{ judge.review_count() }}</span>
-            <span class="stat-label">Total Reviews</span>
+            <span class="stat-label">Total Review{% if judge.review_count() != 1 %}s{% endif %}</span>
         </div>
         <div class="stat-box">
             <span class="stat-number">{{ verified_links|length }}</span>
-            <span class="stat-label">Verified Media Links</span>
+            <span class="stat-label">Verified Media Link{% if verified_links|length != 1 %}s{% endif %}</span>
         </div>
     </div>
 </div>
@@ -51,7 +53,7 @@
 <p class="media-description">
     Documented news articles, court records, and reports about this judge.
 </p>
-{% set verified_links = judge.media_links|selectattr('is_verified', 'equalto', True)|list %}
+
 {% if verified_links %}
     {% for media_link in verified_links %}
     <div class="media-link-card">
@@ -72,9 +74,13 @@
             {{ media_link.summary }}
         </div>
         
-<div class="content-footer">
+        <span class="media-link-submitted">
+            Submitted: {{ media_link.created_at.strftime('%B %d, %Y') }}
+        </span>
+        
+        <div class="content-footer">
             <a href="{{ media_link.url }}" target="_blank" rel="noopener noreferrer" class="btn media-link-button">
-                Read Full Article →
+                Open Link
             </a>
             {% if current_user.is_authenticated and media_link.user_id != current_user.id %}
                 {% if media_link.has_pending_flag %}
@@ -86,9 +92,6 @@
                     </a>
                 {% endif %}
             {% endif %}
-            <span class="media-link-submitted">
-                Submitted: {{ media_link.created_at.strftime('%B %d, %Y') }}
-            </span>
         </div>
     </div>
     {% endfor %}
@@ -114,7 +117,7 @@
     {% for review in reviews %}
     <div class="review-card">
         <div class="review-header">
-            <span class="review-rating">{{ review.rating }} / 5 stars</span>
+            <span class="review-rating">{{ review.rating }} / 5 ★</span>
             <span class="review-date">Court Date: {{ review.court_date.strftime('%B %d, %Y') }}</span>
         </div>
         

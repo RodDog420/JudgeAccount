@@ -14,32 +14,63 @@
 
 <div class="form-actions spacing-bottom-sm">
     {% if show_resolved %}
-        <a href="{{ url_for('auth.moderation_queue') }}" class="btn btn-primary">Show Unresolved Only</a>
+        <a href="{{ url_for('auth.moderation_queue') }}" class="btn btn-primary">Show Open Flags Only</a>
     {% else %}
-        <a href="{{ url_for('auth.moderation_queue', show_resolved='true') }}" class="btn btn-primary">Show All (Including Resolved)</a>
+        <a href="{{ url_for('auth.moderation_queue', show_resolved='true') }}" class="btn btn-primary">Show Open and Closed</a>
     {% endif %}
-    <a href="{{ url_for('auth.admin_dashboard') }}" class="btn btn-gray">Back to Admin</a>
+    <a href="{{ url_for('auth.admin_dashboard') }}" class="btn btn-gray">Back to Admin Dashboard</a>
 </div>
 
 {% if flags %}
     <p class="content-count">{{ flags|length }} flag(s)</p>
     
     {% for flag in flags %}
+    {# Set user variable for profile link - MUST be before header #}
+    {% if flag.review_id and flag.review and flag.review.user %}
+        {% set flag_user = flag.review.user %}
+    {% elif flag.media_link_id and flag.media_link and flag.media_link.user %}
+        {% set flag_user = flag.media_link.user %}
+    {% else %}
+        {% set flag_user = None %}
+    {% endif %}
+    
     <div class="review-card {% if flag.is_resolved %}flag-card-resolved{% else %}flag-card-unresolved{% endif %}">
         <div class="review-header">
             <div>
                 <h3 class="flag-header-title">
                     {% if flag.review_id %}
-                        Review by <span class="user-content-username">{{ flag.review.user.username if flag.review and flag.review.user else 'Deleted User' }}</span>
+                        Review by 
+                        {% if flag.review and flag.review.user %}
+                            <a href="{{ url_for('auth.view_user_activity', user_id=flag.review.user.id) }}" class="user-content-username">
+                                {{ flag.review.user.username }}
+                            </a>
+                        {% else %}
+                            <span class="user-content-username">Deleted User</span>
+                        {% endif %}
                     {% else %}
-                        Media Link by <span class="user-content-username">{{ flag.media_link.user.username if flag.media_link and flag.media_link.user else 'Deleted User' }}</span>
+                        Media Link by 
+                        {% if flag.media_link and flag.media_link.user %}
+                            <a href="{{ url_for('auth.view_user_activity', user_id=flag.media_link.user.id) }}" class="user-content-username">
+                                {{ flag.media_link.user.username }}
+                            </a>
+                        {% else %}
+                            <span class="user-content-username">Deleted User</span>
+                        {% endif %}
                     {% endif %}
                 </h3>
                 <p class="flag-reporter-info">
                     Reported by: <strong class="user-content-username">{{ flag.flagger.username }}</strong> on {{ flag.created_at.strftime('%B %d, %Y at %I:%M %p') }}
                 </p>
             </div>
+        </div>
+        
+        <div class="flag-badge-row">
             <span class="badge badge-concern">{{ flag.flag_type.replace('_', ' ').title() }}</span>
+            {% if flag_user %}
+            <a href="{{ url_for('auth.view_user_activity', user_id=flag_user.id) }}" class="btn btn-primary btn-blue">
+                View Profile
+            </a>
+            {% endif %}
         </div>
         
         {% if flag.description %}
@@ -70,33 +101,99 @@
                 <span class="resolved-text">{{ flag.resolution_action.replace('_', ' ').title() }} by <span class="user-content-username">{{ flag.resolved_by.username if flag.resolved_by else 'System' }}</span> on {{ flag.resolved_at.strftime('%B %d, %Y') }}</span>
             </div>
         {% else %}
-            <div class="admin-actions spacing-top-sm">
-                <a href="{{ url_for('auth.dismiss_flag', flag_id=flag.id) }}" 
-                    class="btn btn-primary"
-                    onclick="return confirm('Dismiss this flag? (Content will remain)');">
-                    Dismiss Flag
-                </a>
-                
-                <button type="button" class="btn btn-secondary" 
-                        onclick="if(confirm('Delete this content permanently?')) { document.getElementById('delete-form-{{ flag.id }}').submit(); }">
-                    Delete Content
+            <div class="admin-actions admin-actions-flags spacing-top-sm">
+                <button type="button" class="btn btn-primary"
+                        onclick="openModal('dismiss-modal-{{ flag.id }}')">
+                    Dismiss<br> Flag
                 </button>
-                <form id="delete-form-{{ flag.id }}" method="POST" action="{{ url_for('auth.flag_action', flag_id=flag.id) }}" class="hidden">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <input type="hidden" name="action" value="delete_content">
-                </form>
-                
-                {% if (flag.review_id and flag.review and flag.review.user) or (flag.media_link_id and flag.media_link and flag.media_link.user) %}
-                <button type="button" class="btn btn-warning"
-                        onclick="if(confirm('Ban this user for violating guidelines?')) { document.getElementById('ban-form-{{ flag.id }}').submit(); }">
-                    Ban User
+                <button type="button" class="btn btn-secondary"
+                        onclick="openModal('delete-modal-{{ flag.id }}')">
+                    Delete <br>Content
                 </button>
-                <form id="ban-form-{{ flag.id }}" method="POST" action="{{ url_for('auth.flag_action', flag_id=flag.id) }}" class="hidden">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <input type="hidden" name="action" value="ban_user">
-                </form>
+                {% if flag_user %}
+                    {% if flag_user.is_banned %}
+                        <button type="button" class="btn btn-gray"
+                                onclick="openModal('unban-modal-{{ flag.id }}')">
+                            Unban<br>User
+                        </button>
+                    {% else %}
+                        <button type="button" class="btn btn-admin-ban-user"
+                                onclick="openModal('ban-modal-{{ flag.id }}')">
+                            Ban<br> User
+                        </button>
+                    {% endif %}
                 {% endif %}
             </div>
+
+            <!-- Dismiss Modal -->
+            <div id="dismiss-modal-{{ flag.id }}" class="modal-overlay">
+                <div class="modal-box">
+                    <h3 class="modal-title">Dismiss Flag</h3>
+                    <p class="modal-body">The flag will be dismissed and the content will remain visible.</p>
+                    <form method="POST" action="{{ url_for('auth.dismiss_flag', flag_id=flag.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-gray btn-small" onclick="closeModal('dismiss-modal-{{ flag.id }}')">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-small">Confirm Dismiss</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Delete Content Modal -->
+            <div id="delete-modal-{{ flag.id }}" class="modal-overlay">
+                <div class="modal-box">
+                    <h3 class="modal-title">Delete Flagged Content</h3>
+                    <p class="modal-body">This will permanently delete the content. Optionally include a message to the submitter.</p>
+                    <form method="POST" action="{{ url_for('auth.flag_action', flag_id=flag.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="action" value="delete_content">
+                        <label class="modal-message-label" for="delete-msg-{{ flag.id }}">Message to submitter (optional)</label>
+                        <textarea id="delete-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your submission was removed for violating our content policy."></textarea>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-gray btn-small" onclick="closeModal('delete-modal-{{ flag.id }}')">Cancel</button>
+                            <button type="submit" class="btn btn-secondary btn-small">Confirm Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Ban User Modal -->
+            {% if (flag.review_id and flag.review and flag.review.user) or (flag.media_link_id and flag.media_link and flag.media_link.user) %}
+            <div id="ban-modal-{{ flag.id }}" class="modal-overlay">
+                <div class="modal-box">
+                    <h3 class="modal-title">Ban User</h3>
+                    <p class="modal-body">This will suspend the user's account. Optionally include a message to the user.</p>
+                    <form method="POST" action="{{ url_for('auth.flag_action', flag_id=flag.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="action" value="ban_user">
+                        <label class="modal-message-label" for="ban-msg-{{ flag.id }}">Message to user (optional)</label>
+                        <textarea id="ban-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been suspended for violating our community guidelines."></textarea>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-gray btn-small" onclick="closeModal('ban-modal-{{ flag.id }}')">Cancel</button>
+                            <button type="submit" class="btn btn-warning btn-small">Confirm Ban</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Unban User Modal -->
+            <div id="unban-modal-{{ flag.id }}" class="modal-overlay">
+                <div class="modal-box">
+                    <h3 class="modal-title">Unban User</h3>
+                    <p class="modal-body">This will restore the user's account access. Optionally include a message to the user.</p>
+                    <form method="POST" action="{{ url_for('auth.unban_from_flag', flag_id=flag.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <label class="modal-message-label" for="unban-msg-{{ flag.id }}">Message to user (optional)</label>
+                        <textarea id="unban-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been restored. Please review our community guidelines."></textarea>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-gray btn-small" onclick="closeModal('unban-modal-{{ flag.id }}')">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-small">Confirm Unban</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
         {% endif %}
     </div>
     {% endfor %}
@@ -106,4 +203,17 @@
     </div>
 {% endif %}
 
+<script>
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+    }
+});
+</script>
 {% endblock %}

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from urllib.parse import urlparse
 from functools import wraps
@@ -311,12 +311,12 @@ def admin_dashboard():
     return render_template('admin_dashboard.html', reviews=all_reviews, media_links=all_media_links, form=form)
 
 
-@bp.route('/admin/delete_review/<int:review_id>')
+@bp.route('/admin/delete_review/<int:review_id>', methods=['POST'])
 @admin_required
 def admin_delete_review(review_id):
     review = Review.query.get_or_404(review_id)
+    admin_message = request.form.get('admin_message', '').strip() or None
 
-    # NEW: Log the deletion
     AdminLog.log_action(
         admin_user=current_user,
         action_type='delete_review',
@@ -325,6 +325,13 @@ def admin_delete_review(review_id):
         details=f'Deleted review {review_id} for judge {review.judge.full_name()}'
     )
 
+    if review.user:
+        try:
+            from app.email_utils import send_user_content_action_notification
+            send_user_content_action_notification(review.user, review, review.judge, 'deleted', admin_message)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send delete review notification: {str(e)}")
+
     db.session.delete(review)
     db.session.commit()
 
@@ -332,12 +339,12 @@ def admin_delete_review(review_id):
     return redirect(url_for('auth.admin_dashboard'))
 
 
-@bp.route('/admin/delete_media_link/<int:media_link_id>')
+@bp.route('/admin/delete_media_link/<int:media_link_id>', methods=['POST'])
 @admin_required
 def admin_delete_media_link(media_link_id):
     media_link = MediaLink.query.get_or_404(media_link_id)
+    admin_message = request.form.get('admin_message', '').strip() or None
 
-    # NEW: Log the deletion
     AdminLog.log_action(
         admin_user=current_user,
         action_type='delete_media_link',
@@ -346,6 +353,14 @@ def admin_delete_media_link(media_link_id):
         details=f'Deleted media link {media_link_id} for judge {media_link.judge.full_name()}'
     )
 
+    if media_link.user:
+        try:
+            from app.email_utils import send_user_content_action_notification
+            send_user_content_action_notification(media_link.user, media_link, media_link.judge, 'deleted',
+                                                  admin_message)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send delete media link notification: {str(e)}")
+
     db.session.delete(media_link)
     db.session.commit()
 
@@ -353,14 +368,14 @@ def admin_delete_media_link(media_link_id):
     return redirect(url_for('auth.admin_dashboard'))
 
 
-@bp.route('/admin/approve_media_link/<int:media_link_id>')
+@bp.route('/admin/approve_media_link/<int:media_link_id>', methods=['POST'])
 @admin_required
 def admin_approve_media_link(media_link_id):
     media_link = MediaLink.query.get_or_404(media_link_id)
+    admin_message = request.form.get('admin_message', '').strip() or None
     media_link.is_verified = True
     db.session.commit()
 
-    # NEW: Log the approval
     AdminLog.log_action(
         admin_user=current_user,
         action_type='approve_media_link',
@@ -369,16 +384,24 @@ def admin_approve_media_link(media_link_id):
         details=f'Approved media link {media_link_id} for judge {media_link.judge.full_name()}'
     )
 
+    if media_link.user:
+        try:
+            from app.email_utils import send_user_content_action_notification
+            send_user_content_action_notification(media_link.user, media_link, media_link.judge, 'approved',
+                                                  admin_message)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send approve notification: {str(e)}")
+
     flash('Media link approved and is now visible to the public.')
     return redirect(url_for('auth.admin_dashboard'))
 
 
-@bp.route('/admin/reject_media_link/<int:media_link_id>')
+@bp.route('/admin/reject_media_link/<int:media_link_id>', methods=['POST'])
 @admin_required
 def admin_reject_media_link(media_link_id):
     media_link = MediaLink.query.get_or_404(media_link_id)
+    admin_message = request.form.get('admin_message', '').strip() or None
 
-    # NEW: Log the rejection
     AdminLog.log_action(
         admin_user=current_user,
         action_type='reject_media_link',
@@ -386,6 +409,14 @@ def admin_reject_media_link(media_link_id):
         target_user=media_link.user if media_link.user else None,
         details=f'Rejected and deleted media link {media_link_id} for judge {media_link.judge.full_name()}'
     )
+
+    if media_link.user:
+        try:
+            from app.email_utils import send_user_content_action_notification
+            send_user_content_action_notification(media_link.user, media_link, media_link.judge, 'rejected',
+                                                  admin_message)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send reject notification: {str(e)}")
 
     db.session.delete(media_link)
     db.session.commit()
@@ -395,7 +426,7 @@ def admin_reject_media_link(media_link_id):
 
 
 # ============================================================================
-# NEW: USER MANAGEMENT ROUTES
+#  USER MANAGEMENT ROUTES
 # ============================================================================
 
 @bp.route('/admin/users')
@@ -493,6 +524,7 @@ def ban_user(user_id):
             return redirect(url_for('auth.manage_users'))
 
         ban_reason = request.form.get('ban_reason', 'No reason provided')
+        admin_message = request.form.get('admin_message', '').strip() or None
         user.ban(current_user, ban_reason)
 
         AdminLog.log_action(
@@ -502,6 +534,12 @@ def ban_user(user_id):
             details=f'Banned user {user.username} ({user.email}). Reason: {ban_reason}'
         )
 
+        try:
+            from app.email_utils import send_user_account_notification
+            send_user_account_notification(user, 'banned', admin_message)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send ban notification: {str(e)}")
+
         flash(f'User {user.username} has been banned.')
         return redirect(url_for('auth.view_user_activity', user_id=user.id))
 
@@ -509,7 +547,7 @@ def ban_user(user_id):
     return render_template('admin_ban_user.html', user=user)
 
 
-@bp.route('/admin/user/<int:user_id>/unban')
+@bp.route('/admin/user/<int:user_id>/unban', methods=['GET', 'POST'])
 @admin_required
 def unban_user(user_id):
     """Unban a user"""
@@ -527,6 +565,14 @@ def unban_user(user_id):
         target_user=user,
         details=f'Unbanned user {user.username} ({user.email})'
     )
+
+    admin_message = request.form.get('admin_message', '').strip() or None
+
+    try:
+        from app.email_utils import send_user_account_notification
+        send_user_account_notification(user, 'unbanned', admin_message)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send unban notification: {str(e)}")
 
     flash(f'User {user.username} has been unbanned.')
     return redirect(url_for('auth.view_user_activity', user_id=user.id))
@@ -706,6 +752,14 @@ def flag_review(review_id):
         db.session.add(flag)
         db.session.commit()
 
+        # Send admin notification for flagged content
+        try:
+            from app.email_utils import send_admin_flag_notification
+            judge = Judge.query.get_or_404(review.judge_id)
+            send_admin_flag_notification(flag, review, judge)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send flag notification: {str(e)}")
+
         flash('Thank you for your report. Our moderation team will review it.')
         return redirect(url_for('main.judge', judge_id=review.judge_id))
 
@@ -744,6 +798,14 @@ def flag_media_link(media_link_id):
         db.session.add(flag)
         db.session.commit()
 
+        # Send admin notification for flagged content
+        try:
+            from app.email_utils import send_admin_flag_notification
+            judge = Judge.query.get_or_404(media_link.judge_id)
+            send_admin_flag_notification(flag, media_link, judge)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send flag notification: {str(e)}")
+
         flash('Thank you for your report. Our moderation team will review it.')
         return redirect(url_for('main.judge', judge_id=media_link.judge_id))
 
@@ -764,7 +826,7 @@ def moderation_queue():
     return render_template('moderation_queue.html', flags=flags, show_resolved=show_resolved)
 
 
-@bp.route('/admin/flag/<int:flag_id>/dismiss')
+@bp.route('/admin/flag/<int:flag_id>/dismiss', methods=['GET', 'POST'])
 @admin_required
 def dismiss_flag(flag_id):
     """Dismiss a flag as not violating rules"""
@@ -792,18 +854,35 @@ def flag_action(flag_id):
     """Take action on flagged content"""
     flag = ContentFlag.query.get_or_404(flag_id)
     action = request.form.get('action')
+    admin_message = request.form.get('admin_message', '').strip() or None
 
     if action == 'delete_content':
         if flag.review_id:
             review = Review.query.get(flag.review_id)
-            db.session.delete(review)
-            flag.resolution_action = 'content_deleted'
-            AdminLog.log_action(current_user, 'delete_review', target_review=review)
+            if review:
+                if review.user:
+                    try:
+                        from app.email_utils import send_user_content_action_notification
+                        send_user_content_action_notification(review.user, review, review.judge, 'deleted',
+                                                              admin_message)
+                    except Exception as e:
+                        current_app.logger.error(f"Failed to send delete notification: {str(e)}")
+                db.session.delete(review)
+                flag.resolution_action = 'content_deleted'
+                AdminLog.log_action(current_user, 'delete_review', target_review=review)
         elif flag.media_link_id:
             media_link = MediaLink.query.get(flag.media_link_id)
-            db.session.delete(media_link)
-            flag.resolution_action = 'content_deleted'
-            AdminLog.log_action(current_user, 'delete_media_link', target_media_link=media_link)
+            if media_link:
+                if media_link.user:
+                    try:
+                        from app.email_utils import send_user_content_action_notification
+                        send_user_content_action_notification(media_link.user, media_link, media_link.judge, 'deleted',
+                                                              admin_message)
+                    except Exception as e:
+                        current_app.logger.error(f"Failed to send delete notification: {str(e)}")
+                db.session.delete(media_link)
+                flag.resolution_action = 'content_deleted'
+                AdminLog.log_action(current_user, 'delete_media_link', target_media_link=media_link)
 
         flag.is_resolved = True
         flag.resolved_by_id = current_user.id
@@ -824,6 +903,355 @@ def flag_action(flag_id):
             flag.resolved_at = db.func.now()
             flag.resolution_action = 'user_banned'
             db.session.commit()
+            try:
+                from app.email_utils import send_user_account_notification
+                send_user_account_notification(user, 'banned', admin_message)
+            except Exception as e:
+                current_app.logger.error(f"Failed to send ban notification: {str(e)}")
             flash(f'User {user.username} banned.')
 
     return redirect(url_for('auth.moderation_queue'))
+
+
+@bp.route('/admin/flag/<int:flag_id>/unban', methods=['POST'])
+@admin_required
+def unban_from_flag(flag_id):
+    """Unban a user from the moderation queue"""
+    flag = ContentFlag.query.get_or_404(flag_id)
+    admin_message = request.form.get('admin_message', '').strip() or None
+
+    # Get the user from the flag
+    if flag.review_id:
+        review = Review.query.get(flag.review_id)
+        user = review.user if review else None
+    elif flag.media_link_id:
+        media_link = MediaLink.query.get(flag.media_link_id)
+        user = media_link.user if media_link else None
+    else:
+        user = None
+
+    if not user:
+        flash('User not found.')
+        return redirect(url_for('auth.moderation_queue'))
+
+    if not user.is_banned:
+        flash(f'User {user.username} is not currently banned.')
+        return redirect(url_for('auth.moderation_queue'))
+
+    # Unban the user
+    user.unban()
+
+    # Log the admin action
+    AdminLog.log_action(
+        admin_user=current_user,
+        action_type='unban_user',
+        target_user=user,
+        details=f'Unbanned {user.username} from flag {flag.id} ({flag.flag_type})'
+    )
+
+    # Send notification email
+    try:
+        from app.email_utils import send_user_account_notification
+        send_user_account_notification(user, 'unbanned', admin_message)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send unban notification: {str(e)}")
+
+    flash(f'User {user.username} has been unbanned.')
+    return redirect(url_for('auth.moderation_queue'))
+
+
+# ============================================================================
+# ADMIN STATISTICS FUNCTIONALITY
+# ============================================================================
+@bp.route('/admin/statistics')
+@admin_required
+def admin_statistics():
+    """Comprehensive admin statistics dashboard"""
+    from datetime import datetime, timedelta
+    from sqlalchemy import func, and_
+
+    # Get date range parameters (default to last 8 weeks)
+    start_date_str = request.args.get('start_date')
+    end_date_str = request.args.get('end_date')
+
+    if start_date_str and end_date_str:
+        try:
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+        except:
+            start_date = datetime.now() - timedelta(weeks=8)
+            end_date = datetime.now()
+    else:
+        start_date = datetime.now() - timedelta(weeks=8)
+        end_date = datetime.now()
+
+    # Get adjustable list size parameters
+    top_n = int(request.args.get('top_n', 10))
+
+    # ========== SUMMARY STATS ==========
+    total_users = User.query.filter_by(is_banned=False).count()
+    total_reviews = Review.query.count()
+    total_media_links = MediaLink.query.count()
+    pending_verifications = MediaLink.query.filter_by(is_verified=False).count()
+
+    # Overall average rating
+    avg_rating_result = db.session.query(func.avg(Review.rating)).scalar()
+    overall_avg_rating = round(avg_rating_result, 2) if avg_rating_result else 0
+
+    # Total concern flags
+    total_concerns = Review.query.filter(
+        db.or_(
+            Review.fairness_concern == True,
+            Review.bias_concern == True,
+            Review.temperament_concern == True
+        )
+    ).count()
+
+    # ========== GROWTH METRICS ==========
+    # Reviews in date range
+    reviews_in_range = Review.query.filter(
+        Review.created_at >= start_date,
+        Review.created_at <= end_date
+    ).count()
+
+    # Media links in date range
+    media_in_range = MediaLink.query.filter(
+        MediaLink.created_at >= start_date,
+        MediaLink.created_at <= end_date
+    ).count()
+
+    # New users in date range
+    users_in_range = User.query.filter(
+        User.created_at >= start_date,
+        User.created_at <= end_date
+    ).count()
+
+    # Judges who received first review in range
+    new_reviewed_judges = db.session.query(Judge.id).join(Review).group_by(Judge.id).having(
+        func.min(Review.created_at) >= start_date,
+        func.min(Review.created_at) <= end_date
+    ).count()
+
+    # Active contributors in date range
+    active_contributors = db.session.query(func.count(func.distinct(Review.user_id))).filter(
+        Review.created_at >= start_date,
+        Review.created_at <= end_date
+    ).scalar() or 0
+
+    # Verifications completed in range
+    verifications_in_range = MediaLink.query.filter(
+        MediaLink.is_verified == True,
+        MediaLink.created_at >= start_date,
+        MediaLink.created_at <= end_date
+    ).count()
+
+    # ========== TOP LISTS ==========
+    # Most reviewed judges
+    most_reviewed = db.session.query(
+        Judge,
+        func.count(Review.id).label('review_count')
+    ).join(Review).group_by(Judge.id).order_by(
+        func.count(Review.id).desc()
+    ).limit(top_n).all()
+
+    # Most documented judges (by verified media links)
+    most_documented = db.session.query(
+        Judge,
+        func.count(MediaLink.id).label('media_count')
+    ).join(MediaLink).filter(
+        MediaLink.is_verified == True
+    ).group_by(Judge.id).order_by(
+        func.count(MediaLink.id).desc()
+    ).limit(top_n).all()
+
+    # Highest rated judges (min 3 reviews)
+    highest_rated = db.session.query(
+        Judge,
+        func.avg(Review.rating).label('avg_rating'),
+        func.count(Review.id).label('review_count')
+    ).join(Review).group_by(Judge.id).having(
+        func.count(Review.id) >= 3
+    ).order_by(func.avg(Review.rating).desc()).limit(top_n).all()
+
+    # Lowest rated judges (min 3 reviews)
+    lowest_rated = db.session.query(
+        Judge,
+        func.avg(Review.rating).label('avg_rating'),
+        func.count(Review.id).label('review_count')
+    ).join(Review).group_by(Judge.id).having(
+        func.count(Review.id) >= 3
+    ).order_by(func.avg(Review.rating).asc()).limit(top_n).all()
+
+    # Most concerning judges
+    most_concerning = db.session.query(
+        Judge,
+        func.count(Review.id).label('concern_count')
+    ).join(Review).filter(
+        db.or_(
+            Review.fairness_concern == True,
+            Review.bias_concern == True,
+            Review.temperament_concern == True
+        )
+    ).group_by(Judge.id).order_by(
+        func.count(Review.id).desc()
+    ).limit(top_n).all()
+
+    # Most active users
+    most_active_users = db.session.query(
+        User,
+        func.count(Review.id).label('review_count')
+    ).join(Review).group_by(User.id).order_by(
+        func.count(Review.id).desc()
+    ).limit(top_n).all()
+
+    # Most flagged content
+    most_flagged = ContentFlag.query.filter_by(
+        is_resolved=False
+    ).order_by(ContentFlag.created_at.desc()).limit(top_n).all()
+
+    # ========== GEOGRAPHIC DISTRIBUTION ==========
+    judges_by_state = db.session.query(
+        Judge.state,
+        func.count(Judge.id).label('judge_count'),
+        func.count(Review.id).label('review_count'),
+        func.count(MediaLink.id).label('media_count')
+    ).outerjoin(Review).outerjoin(MediaLink).group_by(
+        Judge.state
+    ).order_by(Judge.state).all()
+
+    # ========== RATING DISTRIBUTION ==========
+    rating_dist = db.session.query(
+        Review.rating,
+        func.count(Review.id).label('count')
+    ).group_by(Review.rating).order_by(Review.rating).all()
+
+    rating_distribution = {i: 0 for i in range(1, 6)}
+    for rating, count in rating_dist:
+        rating_distribution[rating] = count
+
+    # ========== CONCERN TYPE BREAKDOWN ==========
+    fairness_count = Review.query.filter_by(fairness_concern=True).count()
+    bias_count = Review.query.filter_by(bias_concern=True).count()
+    temperament_count = Review.query.filter_by(temperament_concern=True).count()
+
+    concern_breakdown = {
+        'fairness': fairness_count,
+        'bias': bias_count,
+        'temperament': temperament_count
+    }
+
+    # Reviews with any concern
+    reviews_with_concerns = Review.query.filter(
+        db.or_(
+            Review.fairness_concern == True,
+            Review.bias_concern == True,
+            Review.temperament_concern == True
+        )
+    ).count()
+
+    # Multiple concerns (reviews with 2+ concern types)
+    multiple_concerns = Review.query.filter(
+        db.or_(
+            db.and_(Review.fairness_concern == True, Review.bias_concern == True),
+            db.and_(Review.fairness_concern == True, Review.temperament_concern == True),
+            db.and_(Review.bias_concern == True, Review.temperament_concern == True)
+        )
+    ).count()
+
+    # ========== TEMPORAL TRENDS (Last 12 months) ==========
+    twelve_months_ago = datetime.now() - timedelta(days=365)
+
+    # Reviews per month
+    reviews_by_month = db.session.query(
+        func.strftime('%Y-%m', Review.created_at).label('month'),
+        func.count(Review.id).label('count')
+    ).filter(Review.created_at >= twelve_months_ago).group_by('month').all()
+
+    # Media links per month
+    media_by_month = db.session.query(
+        func.strftime('%Y-%m', MediaLink.created_at).label('month'),
+        func.count(MediaLink.id).label('count')
+    ).filter(MediaLink.created_at >= twelve_months_ago).group_by('month').all()
+
+    # ========== FEDERAL VS STATE COMPARISON ==========
+    federal_count = Judge.query.filter_by(is_federal=True).count()
+    state_count = Judge.query.filter_by(is_federal=False).count()
+
+    federal_avg_rating = db.session.query(
+        func.avg(Review.rating)
+    ).join(Judge).filter(Judge.is_federal == True).scalar()
+
+    state_avg_rating = db.session.query(
+        func.avg(Review.rating)
+    ).join(Judge).filter(Judge.is_federal == False).scalar()
+
+    federal_review_count = db.session.query(
+        func.count(Review.id)
+    ).join(Judge).filter(Judge.is_federal == True).scalar()
+
+    state_review_count = db.session.query(
+        func.count(Review.id)
+    ).join(Judge).filter(Judge.is_federal == False).scalar()
+
+    # ========== RETIRED VS ACTIVE COMPARISON ==========
+    retired_count = Judge.query.filter_by(is_retired=True).count()
+    active_count = Judge.query.filter_by(is_retired=False).count()
+
+    retired_avg_rating = db.session.query(
+        func.avg(Review.rating)
+    ).join(Judge).filter(Judge.is_retired == True).scalar()
+
+    active_avg_rating = db.session.query(
+        func.avg(Review.rating)
+    ).join(Judge).filter(Judge.is_retired == False).scalar()
+
+    return render_template(
+        'admin_statistics.html',
+        # Summary stats
+        total_users=total_users,
+        total_reviews=total_reviews,
+        total_media_links=total_media_links,
+        pending_verifications=pending_verifications,
+        overall_avg_rating=overall_avg_rating,
+        total_concerns=total_concerns,
+        # Growth metrics
+        start_date=start_date,
+        end_date=end_date,
+        reviews_in_range=reviews_in_range,
+        media_in_range=media_in_range,
+        users_in_range=users_in_range,
+        # Top lists
+        top_n=top_n,
+        most_reviewed=most_reviewed,
+        most_documented=most_documented,
+        highest_rated=highest_rated,
+        lowest_rated=lowest_rated,
+        most_concerning=most_concerning,
+        most_active_users=most_active_users,
+        most_flagged=most_flagged,
+        # Geographic
+        judges_by_state=judges_by_state,
+        # Rating distribution
+        rating_distribution=rating_distribution,
+        # Concern breakdown
+        concern_breakdown=concern_breakdown,
+        # Temporal trends
+        reviews_by_month=reviews_by_month,
+        media_by_month=media_by_month,
+        # Comparisons
+        federal_count=federal_count,
+        state_count=state_count,
+        federal_avg_rating=round(federal_avg_rating, 2) if federal_avg_rating else 0,
+        state_avg_rating=round(state_avg_rating, 2) if state_avg_rating else 0,
+        federal_review_count=federal_review_count or 0,
+        state_review_count=state_review_count or 0,
+        retired_count=retired_count,
+        active_count=active_count,
+        retired_avg_rating=round(retired_avg_rating, 2) if retired_avg_rating else 0,
+        active_avg_rating=round(active_avg_rating, 2) if active_avg_rating else 0,
+        new_reviewed_judges=new_reviewed_judges,
+        reviews_with_concerns=reviews_with_concerns,
+        active_contributors=active_contributors,
+        verifications_in_range=verifications_in_range,
+        multiple_concerns=multiple_concerns
+    )

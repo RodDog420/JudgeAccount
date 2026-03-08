@@ -25,6 +25,7 @@ body {
     margin: 0 auto;
     padding: 1.25rem;
     flex: 1;
+
 }
 h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0.9375rem;
@@ -58,6 +59,12 @@ a:hover {
     margin-bottom: 1.25rem;
     border-radius: 0.3125rem;
     font-weight: 500;
+}
+
+.flash-message.error {
+    background-color: #f8d7da;
+    border: 0.0625rem solid #f5c6cb;
+    color: #721c24;
 }
 
 
@@ -670,7 +677,8 @@ footer {
     color: #ecf0f1;
     margin: 0;
     line-height: 1.6;
-	text-align: left;
+	text-align: justify;
+	hyphens: auto;
 	padding: 0 5vw 0 8vw
 }
 
@@ -914,10 +922,10 @@ footer {
    ========================================================================== */
 @media (min-width: 20rem) and (max-width: 23.375rem) {
     .footer-container {
-        padding: 0 clamp(1.5rem, 10vw, 4rem);
+        padding: 0 10vw 0 14vw;;
         max-width: 100%;
         grid-template-columns: repeat(2, 1fr);
-        gap: clamp(1.25rem, 6vw, 3rem) clamp(2.75rem, 7vw, 4rem);
+        gap: 6vw 11vw;
     }
 }
 
@@ -929,7 +937,7 @@ footer {
 		padding: 0 13vw 0 18vw;
         max-width: 100%;
         grid-template-columns: repeat(2, 1fr);
-        gap: clamp(1.25rem, 6vw, 3rem) clamp(1.25rem, 13vw, 3rem);
+        gap: clamp(1.25rem, 6vw, 3rem) clamp(1.25rem, 13vw, 2.5rem);
     }
 }
 
@@ -942,7 +950,7 @@ footer {
         padding: 0 13vw 0 20vw;
         max-width: 100%;
         grid-template-columns: repeat(2, 1fr);
-        gap: 6vw 18vw
+        gap: 6vw 15vw
     }
 }
 
@@ -1001,7 +1009,8 @@ BLACKS & GRAYS:
 #333333 - Dark Gray - Body text color
 #555555 - Medium Gray - Review text, table body text
 #7f8c8d - Muted Gray - Review count, meta info, secondary text
-#95a5a6 - Light Gray - Disabled state, table cell muted
+#95a5a6 - Lighter Gray - Disabled state, table cell muted
+#B5C0C1 - Lighter gray still - Mobile filter toggle pin background for Admin Stats 
 #ecf0f1 - Very Light Gray - Border color, separators
 #f4f4f4 - Background Gray - Page background
 #f8f9fa - Subtle Background - Card hover, highlighted areas
@@ -1016,10 +1025,16 @@ DARK BLUES:
 #2c3e50 - Navy Blue - Navigation background, footer background, headings
 
 REDS:
-#e74c3c - Red - Delete buttons, ban actions, error states
-#c0392b - Dark Red - Delete button hover
-#e74c3c - Concern badge - Alert/warning color
+#FF705A - Btn-secondary
+#e74c3c - Btn-secondary Hover; "Report"/btn-danger; Concern badge - Alert/warning color
+#c0392b - Dark Red - "Report"/btn-danger hover; Btn Admin Ban User
+#89281E - Btn Admin Ban User Hover
 #ff6b6b - Bright Red - Admin mode notice, admin links
+#f8d7da - Light Red Background - Error flash message background
+#f5c6cb - Red Border - Error flash message border
+#721c24 - Dark Red Text - Error flash message text
+#e91e63 - Btn Not in use
+#c2185b - Btn Not in use Hover
 
 GREENS:
 #27ae60 - Green - "Edit" buttons everywhere, verified badge, media link card border, no-media-links button
@@ -1049,4 +1064,13 @@ Common Breakpoints in rem:
 425px = 26.5625rem
 768px = 48rem
 1024px = 64rem
+
+--- Defensive text wrapping - production standard 
+		overflow-wrap: break-word;  
+		max-width: 100%; 
+		min-width: 0;
+
+overflow-wrap: break-word;  - Breaks long words ONLY when necessary 
+max-width: 100%;            - Hard limit - never exceed container 
+min-width: 0;               - Allow flex/grid shrinking */
 */

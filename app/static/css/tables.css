@@ -5,9 +5,11 @@ table {
     box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
     border-radius: 0.5rem;
     overflow: hidden;
+	overflow-wrap: break-word;
+	max-width: 100%;
 }
 thead {
-    background-color: #3498db;
+    background-color: #0047AB;
     color: white;
 }
 th {
@@ -16,8 +18,8 @@ th {
     font-weight: 600;
     font-size: 0.95rem;
     border-bottom: 0.125rem solid #2980b9;
-	word-wrap: break-word;
-    overflow-wrap: break-word;
+	overflow-wrap: break-word; 
+	max-width: 100%;
 }
 tbody tr {
     border-bottom: 0.0625rem solid #ecf0f1;
@@ -33,21 +35,22 @@ td {
     padding: 1rem;
     color: #555;
     font-size: 0.95rem;
-	word-wrap: break-word;
-    overflow-wrap: break-word;
+	overflow-wrap: break-word; 
+	max-width: 100%;           
+
 }
 td a {
     color: #3498db;
     text-decoration: none;
     font-weight: 500;
-	word-break: break-word;
-    overflow-wrap: anywhere;
+	overflow-wrap: break-word; 
+	max-width: 100%;
+
 }
 td a:hover {
     text-decoration: underline;
     color: #2980b9;
 }
-
 .rating-cell {
     color: #f39c12;
     font-weight: 600;
@@ -70,29 +73,104 @@ td a:hover {
     white-space: normal;
     line-height: 1.3;
 }
-
-.judge-table-desktop td:nth-child(1) a,
+.table-row-muted {
+    opacity: 0.6;
+    background-color: #f8f9fa;
+}
+.judge-table-desktop {
+    table-layout: fixed;
+    width: 100%;
+    display: none;
+}
+.judge-table-desktop td:nth-child(1),
 .judge-table-desktop th:nth-child(1) {
-    word-wrap: break-word;
+    width: 25ch;  /* Judge names ~30 characters */
+    max-width: 35ch;
     overflow-wrap: break-word;
 }
-
-/* Court/Position column - handle long court names */
 .judge-table-desktop td:nth-child(2),
 .judge-table-desktop th:nth-child(2) {
-    word-wrap: break-word;
+    width: 25ch;  /* Courts can be long */
+    max-width: 35ch;
     overflow-wrap: break-word;
-    max-width: 18rem;
+}
+.judge-table-desktop td:nth-child(3),
+.judge-table-desktop th:nth-child(3) {
+    width: 20ch;  /* Locations */
+    max-width: 30ch;
+    overflow-wrap: break-word;
+}
+.judge-table-desktop td:nth-child(4),
+.judge-table-desktop th:nth-child(4) {
+    width: 12ch;  /* Rating */
+}
+.judge-table-desktop td:nth-child(5),
+.judge-table-desktop th:nth-child(5) {
+    width: 12ch;  /* Reviews count */
+}
+.judge-table-desktop td:nth-child(6),
+.judge-table-desktop th:nth-child(6) {
+    width: 12ch;  /* Links count */
+}
+/* Center align number columns in judge index table only */
+.judge-table-desktop .rating-cell,
+.judge-table-desktop .review-count {
+    text-align: center;
+}
+.judge-table-desktop .user-content-name a {
+     text-decoration: underline;
+}
+.judge-table-desktop .user-content-name a:hover {
+    color: #27ae60; 
 }
 
+/* Tablet: Reduce column widths to fit container */
+@media (min-width: 48rem) and (max-width: 64rem) {  /* 768px-1024px */
+    .judge-table-desktop td:nth-child(1),
+    .judge-table-desktop th:nth-child(1) {
+        width: 18ch;  /* Reduced from 30ch */
+        max-width: 25ch;  /* Reduced from 40ch */
+    }
 
-/* Tablet/Laptop view (768px-1439px) - 7 columns visible */
-@media (min-width: 48rem) and (max-width: 89.9375rem) {
-    /* Username becomes column 2 in 7-column layout */
-    .admin-user-table-desktop td:nth-child(2),
-    .admin-user-table-desktop th:nth-child(2) {
-        max-width: 10rem;
-        min-width: 7rem;
+    .judge-table-desktop td:nth-child(2),
+    .judge-table-desktop th:nth-child(2) {
+        width: 18ch;  /* Reduced from 35ch */
+        max-width: 25ch;  /* Reduced from 45ch */
+    }
+
+    .judge-table-desktop td:nth-child(3),
+    .judge-table-desktop th:nth-child(3) {
+        width: 18ch;  /* Reduced from 25ch */
+        max-width: 25ch;  /* Reduced from 30ch */
+    }
+	.judge-table-desktop td:nth-child(4),
+	.judge-table-desktop th:nth-child(4) {
+		width: 10ch;  /* Rating */
+	}
+	.judge-table-desktop td:nth-child(5),
+	.judge-table-desktop th:nth-child(5) {
+		width: 10ch;  /* Reviews count */
+	}
+	.judge-table-desktop td:nth-child(6),
+	.judge-table-desktop th:nth-child(6) {
+    width: 8ch;  /* Links count */
+	}
+}
+/* Hide 7th column (View) on tablet and below */
+@media (max-width: 63.9375rem) {  /* 1023px and below */
+    .judge-table-desktop th:nth-child(7),
+    .judge-table-desktop td:nth-child(7) {
+        display: none;
+    }
+}
+
+/* Set width on large screens */
+@media (min-width: 64rem) {  /* 1024px and above */
+    .judge-table-desktop td:nth-child(7),
+    .judge-table-desktop th:nth-child(7) {
+        width: 10ch;
+        text-align: center;
+		white-space: no-wrap;
     }
 }
 /* Mobile-First Defaults: Cards visible, table hidden */
@@ -102,14 +180,12 @@ td a:hover {
     max-width: 100%;
 }
 
-.judge-table-desktop {
-    display: none;
-}
-
 /* Desktop: Show table at 768px+, hide cards */
 @media (min-width: 48rem) {
     .judge-table-desktop {
         display: table;
+		overflow-wrap: break-word;  
+		max-width: 100%; 
     }
     
     .judge-cards-mobile {
@@ -117,7 +193,7 @@ td a:hover {
     }
 }
 
-/* Mobile cards styling (320px-767px) */
+/* Judges Mobile cards styling (320px-767px) */
 @media (max-width: 47.9375rem) {
     
 .judge-card-mobile {
@@ -127,41 +203,48 @@ td a:hover {
         margin-bottom: clamp(1rem, 4vw, 1.75rem);
         box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
         width: 100%;
+		line-height: 1.2;
+		overflow-wrap: break-word;
+        max-width: 100%;
     }
     
     .judge-card-header {
-        margin-bottom: clamp(0.75rem, 4vw, 1.25rem);
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;  /* Space between name and badges ONLY if both exist */
+        margin-bottom: clamp(.9rem, 2vw, 1.2rem);
     }
     
-	.judge-card-name {
-        margin: 0 0 clamp(0.5rem, 1vw, 1.2rem) 0;
-        font-size: clamp(1.1rem, 8vw, 1.8rem);
+    .judge-card-name {
+        margin: 0;  /* No margin - gap handles it */
+    }
+    
+    .judge-card-badges {
+        display: flex;
+        gap: clamp(0.5rem, 3vw, 1rem);
+        flex-wrap: wrap;
+        margin: 0;  /* No margin - parent gap handles it */
     }
     
     .judge-card-name a {
         color: #3498db;
-        text-decoration: none;
         font-weight: 600;
+		text-decoration: underline;
     }
     
     .judge-card-name a:hover {
         text-decoration: underline;
-    }
-    
-	.judge-card-badges {
-        display: flex;
-        gap: clamp(0.5rem, 3vw, 1rem);
-        flex-wrap: wrap;
-		margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+		color: #27ae60; 
     }
     
     .judge-card-rating {
-        padding: clamp(0.65rem, 4vw, 1.2rem);
+        padding: clamp(0.15rem, 1vw, .3rem) clamp(0.325rem, 2vw, .6rem) clamp(0.3rem, 2vw, .6rem) clamp(0.325rem, 2vw, .6rem);
         background-color: #f8f9fa;
         border-radius: 0.375rem;
-        margin-bottom: 0.75rem;
-        display: flex;
-        align-items: center;
+        margin-bottom: 0.5rem;
+        display: grid;
+        grid-template-columns: auto auto 1fr;  /* star, number, spacer */
+        align-items: baseline;
         gap: 0.5rem;
     }
     
@@ -177,10 +260,14 @@ td a:hover {
     }
     
     .rating-reviews {
+        grid-column: 3;  /* Goes in the 1fr spacer column */
+        justify-self: end;  /* Aligns to right edge */
         color: #7f8c8d;
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 4vw, 0.95rem);
+    }  
+	.judge-card-rating .rating-reviews {
+        margin-left: 0.5rem;  /* Extra space beyond the base gap */
     }
-    
     .rating-none {
         color: #95a5a6;
         font-style: italic;
@@ -195,8 +282,8 @@ td a:hover {
 	.judge-card-row {
         display: flex;
         justify-content: space-between;
-        gap: clamp(0.75rem, 6vw, 2.5rem);
-        padding: clamp(0.4rem, 3vw, 0.8rem) 0;
+        gap: clamp(0.5rem, 4vw, 1.5rem);
+        padding: clamp(0.15rem, 1.1vw, 0.3rem) 0;
         border-bottom: 0.0625rem solid #ecf0f1;
     }
     
@@ -207,58 +294,192 @@ td a:hover {
 	.detail-label {
         font-weight: 600;
         color: #555;
-        font-size: clamp(0.9rem, 5vw, 1.15rem);
+        font-size: clamp(0.8rem, 4vw, 1rem);
         white-space: nowrap;
     }
     
     .detail-value {
         color: #7f8c8d;
-        font-size: clamp(0.9rem, 5vw, 1.15rem);
+        font-size: clamp(0.8rem, 4vw, 1rem);
         text-align: right;
+		overflow-wrap: break-word;  
+		max-width: 100%; 
+		min-width: 0;
     }
-	/* Generic table-to-card conversion using data-labels for BANNED USERS TABLE*/
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop),
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) thead,
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tbody,
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) th,
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) td,
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tr {
-        display: block;
+}
+/* ==========================================================================
+   BANNED USERS TABLE - RESPONSIVE COLUMN WIDTHS
+   ========================================================================== */
+
+.banned-users-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* Tablets and Smaller Laptops (768px - 1439px) */
+@media (min-width: 48rem) and (max-width: 89.9375rem) {
+    .banned-users-table td:nth-child(1),
+    .banned-users-table th:nth-child(1) {
+        width: 15ch;  /* Username */
+        max-width: 18ch;
+        overflow-wrap: break-word;
     }
-    
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
+	
+    /* Hide Email column on tablet */
+    .banned-users-table th:nth-child(2),
+    .banned-users-table td:nth-child(2) {
+        display: none;
     }
-    
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tbody tr {
-        margin-bottom: 1.25rem;
-        border: 0.0625rem solid #ddd;
-        border-radius: 0.5rem;
-        padding: 0.9375rem;
+	
+    .banned-users-table td:nth-child(3),
+    .banned-users-table th:nth-child(3) {
+        width: 6ch;  /* Date */
+        max-width: 8ch;
+        overflow-wrap: break-word;
     }
-    
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tbody td {
-        border: none;
-        position: relative;
-        padding-left: 50%;
-        text-align: right;
+	/* Hide Admin column on tablet */
+    .banned-users-table td:nth-child(4),
+    .banned-users-table th:nth-child(4) {
+        display: none; /* Admin */  /*
+		width: 12ch;  
+        max-width: 18ch;
+        overflow-wrap: anywhere;   */
     }
-    
-    table:not(.judge-table-desktop):not(.admin-user-table-desktop) tbody td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 0.9375rem;
-        width: 45%;
-        padding-right: 0.625rem;
-        font-weight: 600;
-        text-align: left;
-        color: #2c3e50;
+
+    .banned-users-table td:nth-child(5),
+    .banned-users-table th:nth-child(5) {
+        width: 20ch;  /* Reason */
+        max-width: 28ch;
+        overflow-wrap: break-word;
+    }
+
+    .banned-users-table td:nth-child(6),
+    .banned-users-table th:nth-child(6) {
+        width: 9ch;  /* Status */
+        max-width: 11ch;
+        overflow-wrap: break-word;
+		text-align: center
+    }
+
+    .banned-users-table td:nth-child(7),
+    .banned-users-table th:nth-child(7) {
+        width: 7ch;  /* Actions */
+        max-width: 9ch;
+        overflow-wrap: break-word;
+		text-align: center
     }
 }
 
+/* Desktop/Laptop (1440px+) */
+@media (min-width: 90rem) {
 
+    .banned-users-table td:nth-child(1),
+    .banned-users-table th:nth-child(1) {
+        width: 15ch;  /* Username */
+        max-width: 20ch;
+        overflow-wrap: break-word;
+    }
+
+    .banned-users-table td:nth-child(2),
+    .banned-users-table th:nth-child(2) {
+        width: 20ch;  /* Email */
+        max-width: 28ch;
+        overflow-wrap: anywhere;
+    }
+
+    .banned-users-table td:nth-child(3),
+    .banned-users-table th:nth-child(3) {
+        width: 8ch;  /* Date */
+        max-width: 10ch;
+        overflow-wrap: break-word;
+    }
+
+    .banned-users-table td:nth-child(4),
+    .banned-users-table th:nth-child(4) {
+        width: 18ch;  /* Admin */
+        max-width: 20ch;
+        overflow-wrap: anywhere;
+    }
+
+    .banned-users-table td:nth-child(5),
+    .banned-users-table th:nth-child(5) {
+        width: 25ch;  /* Reason */
+        max-width: 30ch;
+        overflow-wrap: break-word;
+    }
+
+    .banned-users-table td:nth-child(6),
+    .banned-users-table th:nth-child(6) {
+        width: 12ch;  /* Status */
+        max-width: 14ch;
+        overflow-wrap: break-word;
+		text-align: center
+    }
+
+    .banned-users-table td:nth-child(7),
+    .banned-users-table th:nth-child(7) {
+        width: 12ch;  /* Actions */
+        max-width: 14ch;
+        overflow-wrap: break-word;
+		text-align: center
+    }
+}	
+
+@media (max-width: 47.9375rem) {
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table),
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) thead,
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody,
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) th,
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) td,
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tr {
+		display: block;
+	}
+
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody tr {
+		margin-bottom: 1.25rem;
+		border: 0.0625rem solid #ddd;
+		border-radius: 0.5rem;
+		padding: 0.9375rem;
+	}
+
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody td {
+		border: none;
+		position: relative;
+		padding: 0.2rem 0.5rem 0.2rem 30%;  /* 30% padding to push from the left side to make room for the data-labels */
+		text-align: left;
+		margin-bottom: 0.2rem;
+		line-height: 1.3
+	}
+
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody td::before {
+		content: attr(data-label);
+		position: absolute;
+		left: 0.9375rem;
+		width: 27%;
+		padding-right: 0.625rem;
+		font-weight: 600;
+		text-align: left;
+		color: #2c3e50;
+	}
+	/* Right-align Actions column content (buttons) */
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody td[data-label="Actions"] {
+		text-align: right;
+	}
+}
+/* Mobile: Admin Banned-User Cards (320px-767px) */
+@media (max-width: 47.9375rem) {
+    /* Standardize all mobile card labels to same size */
+    table tbody td::before {
+        font-size: 0.875rem;  /* Or whatever size you want - standardizes all */
+        font-weight: 600;
+    }
+}
 /* ==========================================================================
    ADMIN USER TABLE & CARDS - RESPONSIVE
    ========================================================================== */
@@ -284,9 +505,16 @@ td a:hover {
         display: none;
     }
 }
+/* Tablet/Laptop view (768px-1439px) - 7 columns visible */
+@media (min-width: 48rem) and (max-width: 89.9375rem) {
+    /* Username becomes column 2 in 7-column layout */
+    .admin-user-table-desktop td:nth-child(2),
+    .admin-user-table-desktop th:nth-child(2) {
+        max-width: 10rem;
+        min-width: 7rem;
+    }
 
 /* Tablet & Small Laptop (768px-1439px): Hide Email & Actions columns */
-@media (min-width: 48rem) and (max-width: 89.9375rem) {
     /* Hide Email column (3rd column) */
     .admin-user-table-desktop th:nth-child(3),
     .admin-user-table-desktop td:nth-child(3) {

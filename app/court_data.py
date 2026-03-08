@@ -1,4 +1,26 @@
 
+# URL shortener domains to block for security (prevents hidden destinations in media links)
+SHORTENED_URL_DOMAINS = {
+    # Major URL shorteners
+    'bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'ow.ly', 'is.gd', 'short.link',
+    'rebrand.ly', 'cutt.ly', 'tiny.cc', 'lnkd.in', 'buff.ly', 'adf.ly',
+    'x.co', 'v.gd', 'tr.im', 'cli.gs', 'linktr.ee', 'soo.gd', 'smallr.com',
+
+    # Regional/Platform specific
+    'youtu.be', 'amzn.to', 'nyti.ms', 'wapo.st', 'cnn.it', 'fxn.ws',
+    'lat.ms', 'reut.rs', 'bloom.bg', 'on.wsj.com', 'politi.co',
+
+    # Social media shorteners
+    'fb.me', 'ig.me', 'ln.is', 'wp.me', 'tumblr.co', 'trib.al',
+
+    # Enterprise/Marketing
+    'mcaf.ee', 'dld.bz', 'tmblr.co', 'dlvr.it', 'ift.tt', 'po.st',
+    'smarturl.it', 'fanlink.to', 'linkco.re', 'short.cm', 'switchy.io',
+
+    # International
+    'ht.ly', 'ur1.ca', 'korta.nu', 'migre.me', '4sq.com', 'pic.gd',
+    'chilp.it', 'clck.ru', '0rz.tw', '1url.com', '2big.at', '2tu.us'
+}
 
 STATES = [
     ('AL', 'Alabama'), ('AK', 'Alaska'), ('AZ', 'Arizona'), ('AR', 'Arkansas'),

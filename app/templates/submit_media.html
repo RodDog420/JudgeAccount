@@ -141,7 +141,7 @@
     
     <div class="form-group">
         {{ form.publication_date.label }}
-        {{ form.publication_date(class="form-control") }}
+        {{ form.publication_date(class="form-control", id="publication_date") }}
         {% if form.publication_date.errors %}
             {% for error in form.publication_date.errors %}
                 <span class="error">{{ error }}</span>
@@ -161,6 +161,9 @@
     
     <div class="form-group">
         {{ form.submit(class="btn btn-primary") }}
+    </div>
+    <div class="alert-info spacing-top-md">
+        <p class="alert-text">Add <strong>Admin@JudgeAccount.com</strong> to your allowed contacts to ensure we can reach you about issues relating to your post. Never any marketing, newsletters, or solicitations &mdash; we only contact users regarding their actual submissions.</p>
     </div>
 </form>
 
@@ -183,6 +186,9 @@ const preselectedCourt = null;
 function updateCourtOptions() {
     const selectedState = stateSelect.value;
     
+    // Capture the current court selection before clearing (if any)
+    const currentCourtSelection = courtSelect.value;
+    
     // Clear current court options
     courtSelect.innerHTML = '<option value="">Select a court...</option>';
     
@@ -193,8 +199,9 @@ function updateCourtOptions() {
             option.value = court[0];  // The court value
             option.text = court[1];   // The court display name
             
-            // Pre-select the court if it matches
-            if (preselectedCourt && court[0] === preselectedCourt) {
+            // Restore previous selection (either prefilled OR user's previous choice)
+            const courtToSelect = preselectedCourt || currentCourtSelection;
+            if (courtToSelect && court[0] === courtToSelect) {
                 option.selected = true;
             }
             
@@ -211,5 +218,12 @@ stateSelect.addEventListener('change', updateCourtOptions);
 
 // Initialize on page load
 updateCourtOptions();
+
+// Set max date to today to prevent future dates
+const publicationDateField = document.getElementById('publication_date');
+if (publicationDateField) {
+    const today = new Date().toISOString().split('T')[0];
+    publicationDateField.max = today;
+}
 </script>
 {% endblock %}

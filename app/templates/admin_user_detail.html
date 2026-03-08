@@ -50,10 +50,10 @@
                 {% endif %}
             </div>
             <div>
-                <strong>Total Reviews:</strong> {{ reviews|length }}
+                <strong>Total Review{% if reviews|length != 1 %}s{% endif %}:</strong> {{ reviews|length }}
             </div>
             <div>
-                <strong>Total Media Links:</strong> {{ media_links|length }}
+                <strong>Total Media Link{% if media_links|length != 1 %}s{% endif %}:</strong> {{ media_links|length }}
             </div>
             <div>
                 <strong>Verified Media:</strong> {{ media_links|selectattr('is_verified', 'equalto', True)|list|length }}
@@ -84,29 +84,28 @@
     </div>
     
     <!-- Admin Actions -->
-    <div class="admin-actions spacing-bottom-md">
+    <div class="admin-actions admin-actions-profile spacing-bottom-md">
         {% if not user.is_admin and user.id != current_user.id %}
             {% if user.is_banned %}
-                <a href="{{ url_for('auth.unban_user', user_id=user.id) }}" 
-                    class="btn btn-primary"
-                    onclick="return confirm('Are you sure you want to unban {{ user.username }}?');">
-                    Unban User
-                </a>
+                <button type="button" class="btn btn-primary"
+                        onclick="openModal('unban-user-modal-{{ user.id }}')">
+                    Unban<br> User
+                </button>
             {% else %}
                 <a href="{{ url_for('auth.ban_user', user_id=user.id) }}" 
-                    class="btn btn-warning shrt-btn">
-                    Ban User
+                    class="btn btn-warning">
+                    Ban <br>User
                 </a>
             {% endif %}
             
             <a href="{{ url_for('auth.add_admin_note', user_id=user.id) }}" 
-                class="btn btn-primary lrg-btn">
-                {% if user.admin_notes %}Edit{% else %}Add{% endif %} Admin Notes
+                class="btn btn-blue">
+                {% if user.admin_notes %}Edit{% else %}Add{% endif %} Admin<br> Notes
             </a>
             
             <a href="{{ url_for('auth.delete_user', user_id=user.id) }}" 
-                class="btn btn-secondary shrt-btn">
-                Delete User
+                class="btn btn-secondary">
+                Delete<br> User
             </a>
         {% else %}
             <p class="text-muted-italic">
@@ -118,10 +117,29 @@
             </p>
         {% endif %}
         
-        <a href="{{ url_for('auth.manage_users') }}" class="btn btn-gray lrg-btn ">
-            Back to User List
+        <a href="{{ url_for('auth.manage_users') }}" class="btn btn-gray ">
+            Back to <br>User List
         </a>
     </div>
+    
+    <!-- Unban User Modal -->
+    {% if user.is_banned and not user.is_admin and user.id != current_user.id %}
+    <div id="unban-user-modal-{{ user.id }}" class="modal-overlay">
+        <div class="modal-box">
+            <h3 class="modal-title">Unban User</h3>
+            <p class="modal-body">This will restore {{ user.username }}'s account access. Optionally include a message to the user.</p>
+            <form method="POST" action="{{ url_for('auth.unban_user', user_id=user.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <label class="modal-message-label" for="unban-msg-{{ user.id }}">Message to user (optional)</label>
+                <textarea id="unban-msg-{{ user.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been restored. Please review our community guidelines."></textarea>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-gray btn-small" onclick="closeModal('unban-user-modal-{{ user.id }}')">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-small">Confirm Unban</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
     
     <!-- User's Media Links -->
     <h2>Media Links ({{ media_links|length }})</h2>
@@ -239,12 +257,24 @@
             <tbody>
                 {% for log in admin_logs %}
                 <tr>
-                    <td class="table-cell-nowrap">{{ log.timestamp.strftime('%b %d, %Y %I:%M %p') }}</td>
-                    <td>
-                        <span class="badge badge-gray">{{ log.action_type.replace('_', ' ').title() }}</span>
+                    <td class="table-cell-nowrap" data-label="Date">{{ log.timestamp.strftime('%b %d, %Y %I:%M %p') }}</td>
+                    <td data-label="Action">
+                        <span class="badge badge-gray">
+                            {% if log.action_type == 'ban_user' %}Banned
+                            {% elif log.action_type == 'unban_user' %}Unbanned
+                            {% elif log.action_type == 'delete_user' %}Deleted
+                            {% elif log.action_type == 'add_admin_note' %}Note
+                            {% elif log.action_type == 'delete_review' %}Review Deleted
+                            {% elif log.action_type == 'delete_media_link' %}Media Deleted
+                            {% elif log.action_type == 'approve_media_link' %}Approved
+                            {% elif log.action_type == 'reject_media_link' %}Rejected
+                            {% elif log.action_type == 'dismiss_flag' %}Flag Dismissed
+                            {% else %}{{ log.action_type.replace('_', ' ').title() }}
+                            {% endif %}
+                        </span>
                     </td>
-                    <td class="user-content-username">{{ log.admin.username if log.admin else 'System' }}</td>
-                    <td class="table-cell-muted user-content-admin">{{ log.details or 'No details' }}</td>
+                    <td class="user-content-username" data-label="Admin">{{ log.admin.username if log.admin else 'System' }}</td>
+                    <td class="table-cell-muted user-content-admin" data-label="Details">{{ log.details or 'No details' }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -253,4 +283,17 @@
     {% endif %}
 </div>
 
+<script>
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+    }
+});
+</script>
 {% endblock %}

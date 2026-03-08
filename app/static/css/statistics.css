@@ -1,0 +1,881 @@
+/* ========================================================================
+   ADMIN STATISTICS DASHBOARD - MOBILE FIRST
+   ======================================================================== */
+
+/* ========== STICKY FILTER WRAPPER ========== */
+.stats-filter-wrapper {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+/* Mobile pin toggle button */
+.filter-pin-toggle {
+    display: none;
+}
+
+/* Desktop - becomes sticky and pushes content down */
+@media (min-width: 48rem) {
+    .stats-filter-wrapper.is-sticky {
+        position: sticky;
+        top: 4.5rem;
+        z-index: 900;
+        margin-bottom: 2rem;
+    }
+}
+
+/* Mobile pin toggle styling */
+@media (max-width: 47.9375rem) {
+    .filter-pin-toggle {
+		display: block;            /* Makes it a block element */
+		position: fixed;           /* Stays in place when scrolling */
+		top: 5rem;                 /* 5rem DOWN from top of viewport */
+		left: 0.75rem;             /* 0.75rem RIGHT from left edge */
+		z-index: 1001;             /* Layers ABOVE everything else */
+		background-color: #C1CBCC; /* Blue circle background */
+		color: white;              /* Icon color (white) */
+		border: none;              /* Removes default button border */
+		border-radius: 50%;        /* Makes it a CIRCLE (not square) */
+		width: 2.4rem;             /* Circle WIDTH */
+		height: 2.4rem;            /* Circle HEIGHT (same = perfect circle) */
+		font-size: 1.2rem;         /* Size of the 🔍 emoji inside */
+		cursor: pointer;           /* Shows hand cursor on hover */
+		box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2); /* Drop shadow for depth */
+		transition: all 0.3s ease; /* Smooth animation on hover */
+								   /* Icon should be ~50% of circle size */
+								   /* Width and height must match for perfect circle */
+								   /* Adjust top and left if position shifts */
+}
+    
+    .filter-pin-toggle:hover {
+        background-color: #B5C0C1;
+        transform: scale(1.1);
+    }
+   
+    .filter-pin-toggle.active {
+        background-color: #c3e6cb;
+    }
+    
+    /* Filter form on mobile */
+    .stats-filter-form {
+        position: fixed;
+        top: 3.795rem;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background-color: white;
+        padding: 0.75rem;
+        padding-bottom: 1rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+    }
+    
+    .stats-filter-form.expanded {
+        max-height: 30rem;
+    }
+    
+    .stats-filter-form.initial-expanded {
+        max-height: 30rem;
+    }
+    
+    .stats-filter-form.collapsed {
+        max-height: 4rem;
+    }
+}
+
+/* Tablet/Laptop pin toggle button */
+@media (min-width: 48rem) {
+    .filter-pin-toggle {
+        display: block;
+        position: fixed;
+        top: 5.5rem;
+        left: 1rem;
+        z-index: 1001;
+        background-color: #C1CBCC;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 2.4rem;
+        height: 2.4rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .filter-pin-toggle:hover {
+        background-color: #B5C0C1;
+        transform: scale(1.1);
+    }
+    
+    .filter-pin-toggle.active {
+        background-color: #c3e6cb;
+    }
+}
+
+/* Desktop (1024px+) - Align toggle with centered filter */
+@media (min-width: 64rem) {
+    .filter-pin-toggle {
+        left: calc((100vw - 50rem) / 2 + 3rem); /* Push right from left edge  */
+		top: 5.75rem;  /* Push down from nav  */
+    }
+}
+
+/* Tablet (768px-1023px) - Full-width collapsible filter */
+@media (min-width: 48rem) and (max-width: 63.9375rem) {
+    .stats-filter-form {
+        position: fixed;
+        top: 4.75rem;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background-color: white;
+        padding: 1rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        border-radius: 0.5rem;
+    }
+    
+    .stats-filter-form.expanded {
+        max-height: 30rem;
+    }
+    
+    .stats-filter-form.collapsed {
+        max-height: 4rem;
+    }
+    
+    .stats-filter-form.initial-expanded {
+        max-height: 30rem;
+    }
+}
+
+/* Desktop (1024px+) - Centered collapsible filter */
+@media (min-width: 64rem) {
+    .stats-filter-form {
+        position: fixed;
+        top: 4.75rem;
+        left: calc(50% - 25rem);
+        z-index: 1000;
+        background-color: white;
+        padding: 1rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        border-radius: 0.5rem;
+        width: 50rem;
+		margin: 0;
+    }
+    
+    .stats-filter-form.expanded {
+        max-height: 30rem;
+    }
+    
+    .stats-filter-form.collapsed {
+        max-height: 4rem;
+    }
+    
+    .stats-filter-form.initial-expanded {
+        max-height: 30rem;
+    }
+}
+
+/* Filter Header Row */
+.filter-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 3rem;
+}
+
+/* Title Wrapper - mobile specific positioning */
+.filter-title-wrapper {
+    flex-shrink: 0;
+    margin-left: 4rem;		/* ← THIS PUSHES IT FROM LEFT */
+}
+
+.filter-title-wrapper .form-section-title {
+    margin: 0;
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #2c3e50;
+}
+
+@media (min-width: 48rem) {
+    .filter-title-wrapper {
+        margin-left: 4rem;  /* ← THIS PUSHES IT FROM LEFT */
+    }
+    
+    .filter-title-wrapper .form-section-title {
+        font-size: 1.3rem;
+    }
+    .filter-title-wrapper {
+        margin-left: 7rem;
+    }
+    
+    .filter-title-wrapper .form-section-title {
+        font-size: 2rem;
+    }
+    
+    /* Hide line break on desktop - keep title on one line */
+    .filter-title-wrapper .form-section-title br {
+        display: none;
+    }
+}
+
+/* Size input group - compact on mobile */
+.form-group-size {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.form-group-size label {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+@media (min-width: 48rem) {
+    .form-group-size {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .form-group-size label {
+        font-size: 0.85rem;
+    }
+}
+
+.input-narrow {
+    width: 4rem;
+    max-width: 4rem;
+    padding: 0.25rem 0.3rem;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Dates Group - compact on mobile */
+.filter-dates-group {
+    display: flex;
+    flex-direction: row;
+    gap: 0.6rem;
+}
+
+.filter-dates-group .form-group {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Override forms.css padding for filter inputs */
+@media (max-width: 47.9375rem) {
+    .stats-filter-form .form-control {
+        padding: 0.3rem 0.4rem;
+        font-size: 1rem;
+        height: auto;
+    }
+    .stats-filter-form input[type="date"] {
+        padding: 0.25rem 0.3rem;
+    }
+}
+
+/* Form group baseline */
+.form-group {
+    margin-bottom: 0;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+@media (min-width: 48rem) {
+    .form-group label {
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+    }
+}
+.form-control {
+    width: 100%;
+    padding: 0.3rem 0.4rem;
+    border: 0.0625rem solid #ddd;
+    border-radius: 0.375rem;
+    font-size: 0.8rem;
+}
+
+/* Mobile - push stats page title and subtitle down for filter */
+@media (max-width: 47.9375rem) {
+    h1.stats-page-title {
+        margin-top: 3.5rem;
+        padding-top: 1rem;
+    }
+    
+    h1.stats-page-title + p.admin-mode-notice {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Desktop/Tablet - push stats page title and subtitle down for filter */
+@media (min-width: 48rem) {
+    h1.stats-page-title {
+        margin-top: 9rem;
+        padding-top: 1rem;
+    }
+    
+    h1.stats-page-title + p.admin-mode-notice {
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 47.9375rem) {
+    .filter-collapsed-overlay {
+        display: none;
+		position: fixed;
+        top: 4rem;
+        left: 0;
+        right: 0;
+        height: 4rem;
+        background-color: white;
+        border-bottom: 0.0625rem solid #ddd;
+        z-index: 1002;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+    }
+    
+    .filter-collapsed-overlay.show {
+        display: flex;
+    }
+    
+	.overlay-text {
+		color: #3498db;
+		font-size: 0.9rem;
+		font-weight: 600;
+	}
+
+	.overlay-text .filter-control-text {
+		color: #e74c3c;
+	}
+}
+
+
+/* Tablet (768px-1023px) - Full-width collapsed overlay */
+@media (min-width: 48rem) and (max-width: 63.9375rem) {
+    .filter-collapsed-overlay {
+        display: none;
+        position: fixed;
+        top: 4.75rem;
+        left: 0;
+        right: 0;
+        height: 4rem;
+        background-color: white;
+        border-bottom: 0.0625rem solid #ddd;
+        z-index: 1002;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+    }
+    
+    .filter-collapsed-overlay.show {
+        display: flex;
+    }
+    
+	.overlay-text {
+		color: #3498db;
+		font-size: 0.9rem;
+		font-weight: 600;
+	}
+
+	.overlay-text .filter-control-text {
+		color: #e74c3c;
+	}
+}
+
+/* Desktop (1024px+) - Centered collapsed overlay */
+@media (min-width: 64rem) {
+    .filter-collapsed-overlay {
+        display: none;
+        position: fixed;
+        top: 4.75rem;
+        left: calc(50% - 25rem);
+        height: 4rem;
+        width: 50rem;
+        background-color: white;
+        border-bottom: 0.0625rem solid #ddd;
+        z-index: 1002;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
+    }
+    
+    .filter-collapsed-overlay.show {
+        display: flex;
+    }
+    
+    .overlay-text {
+        color: #3498db;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+	.overlay-text .filter-control-text {
+		color: #e74c3c;
+	}
+}
+
+@media (min-width: 48rem) {
+    .form-control {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Buttons - compact on mobile */
+.filter-buttons-group {
+    display: flex;
+    gap: 0.6rem;
+	margin: 0.6rem 0 0 0;
+}
+
+.filter-buttons-group .btn {
+    flex: 1;
+}
+
+/* ========== STAT BOXES - MOBILE FIRST ========== */
+
+/* Mobile - 2 boxes per row */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    background-color: white;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.stat-box {
+    background-color: #f8f9fa;
+    padding: 0.5rem 0.35rem;
+    border-radius: 0.375rem;
+    text-align: center;
+    min-height: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #3498db;
+    margin-bottom: 0.2rem;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #7f8c8d;
+    font-weight: 500;
+    line-height: 1.1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Tablet - 3 boxes per row */
+@media (min-width: 48rem) {
+    .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        padding: 0;
+        background-color: transparent;
+        box-shadow: none;
+    }
+    
+    .stat-box {
+        background-color: white;
+        padding: 0.75rem 0.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+        min-height: 4.5rem;
+    }
+    
+    .stat-number {
+        font-size: 1.3rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* Laptop (1024px+) - 6 boxes per row, taller with wrapped text */
+@media (min-width: 64rem) {
+    .stats-container {
+        grid-template-columns: repeat(6, 1fr);
+        gap: clamp(0.3rem, 1vw, 0.75rem);
+    }
+    
+    .stat-box {
+		padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(0.3rem, 0.8vw, 0.5rem);
+		min-height: 5.5rem;
+		min-width: 0;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;  /* Align to top instead of center */
+		padding-top: 0.75rem;  /* Fixed top padding */
+	}
+
+	.stat-number {
+		font-size: clamp(1.3rem, 2.5vw, 1.5rem);
+		margin-bottom: 0.4rem;  /* Fixed space between number and label */
+	}
+
+	.stat-label {
+		font-size: clamp(0.75rem, 1.4vw, 0.85rem);
+		overflow-wrap: break-word;
+		line-height: 1.3;
+		max-width: 90%;
+		margin: 0 auto;
+		text-align: center;
+		hyphens: none;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		/* REMOVED min-height: 2.6em; */
+	}
+}
+/* ========== STATISTICS TABLES ========== */
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+
+}
+
+.stats-table thead {
+    background-color: #3498db;
+    color: white;
+}
+
+.stats-table th {
+    text-align: center;
+    padding: 0.75rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-bottom: 0.125rem solid #2980b9;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    vertical-align: top;
+}
+
+.stats-table tbody tr {
+    border-bottom: 0.0625rem solid #ecf0f1;
+    transition: background-color 0.2s ease;
+}
+
+.stats-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.stats-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.stats-table td {
+    padding: 0.75rem;
+    color: #555;
+    font-size: 0.9rem;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    vertical-align: middle;
+}
+
+.stats-table td a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.stats-table td a:hover {
+    text-decoration: underline;
+    color: #2980b9;
+}
+
+/* ========== TEXT COLUMN ALIGNMENT ========== */
+.stats-table td.user-content-name,
+.stats-table td.user-content-username,
+.stats-table td.stats-td-text {
+    text-align: left;
+}
+
+/* Override user-content-name for stats tables - prevent mid-word breaks */
+.stats-table .user-content-name {
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+/* For links inside (judge names) */
+.stats-table td a.user-content-name {
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+/* Mobile - Override tables.css generic card conversion */
+@media (max-width: 47.9375rem) {
+    /* More specific selector to override tables.css */
+    table.stats-table.admin-stats-table {
+        display: table;
+    }
+    
+    table.stats-table.admin-stats-table thead,
+    table.stats-table.admin-stats-table tbody,
+    table.stats-table.admin-stats-table tr {
+        display: table-row-group;
+    }
+    
+    table.stats-table.admin-stats-table thead tr,
+    table.stats-table.admin-stats-table tbody tr {
+        display: table-row;
+    }
+    
+    table.stats-table.admin-stats-table th,
+    table.stats-table.admin-stats-table td {
+        display: table-cell;
+    }
+    
+    table.stats-table.admin-stats-table thead tr {
+        position: static;
+    }
+    
+    table.stats-table.admin-stats-table tbody tr {
+        margin-bottom: 0;
+        border: none;
+        border-bottom: 0.0625rem solid #ecf0f1;
+        border-radius: 0;
+        padding: 0;
+    }
+    
+    table.stats-table.admin-stats-table tbody td {
+        border: 0.0625rem solid #ddd;
+        position: static;
+        padding: 0.5rem 0.35rem;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+    
+    table.stats-table.admin-stats-table tbody td::before {
+        content: none;
+    }
+    
+    table.stats-table.admin-stats-table th {
+        border: 0.0625rem solid #ddd;
+        font-size: 0.7rem;
+        padding: 0.5rem 0.25rem;
+    }
+    
+    table.stats-table.admin-stats-table tbody td:first-child {
+        font-weight: 600;
+        text-align: center;
+    }
+}
+
+/* ========== MOBILE CARDS (5+ columns only) ========== */
+
+/* Default: hide mobile cards on all screens */
+.highest-rated-cards-mobile,
+.lowest-rated-cards-mobile {
+    display: none;
+}
+
+.highest-rated-table-desktop,
+.lowest-rated-table-desktop {
+    display: table;
+}
+
+/* Mobile: hide desktop tables, show cards */
+@media (max-width: 47.9375rem) {
+    .highest-rated-table-desktop,
+    .lowest-rated-table-desktop {
+        display: none;
+    }
+    
+    .highest-rated-cards-mobile,
+    .lowest-rated-cards-mobile {
+        display: block;
+    }
+}
+
+/* Desktop: show tables, hide cards (redundant but explicit) */
+@media (min-width: 48rem) {
+    .highest-rated-cards-mobile,
+    .lowest-rated-cards-mobile {
+        display: none;
+    }
+    
+    .highest-rated-table-desktop,
+    .lowest-rated-table-desktop {
+        display: table;
+    }
+}
+
+/* Mobile card styling */
+.judge-stat-card-mobile {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    border-left: 0.25rem solid #3498db;
+}
+
+.card-header-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.0625rem solid #ecf0f1;
+}
+
+.rank-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: #3498db;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.card-judge-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.card-judge-name a {
+    color: #3498db;
+    text-decoration: none;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.card-judge-name a:hover {
+    text-decoration: underline;
+}
+
+.card-detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 0.0625rem solid #f8f9fa;
+}
+
+.card-detail-row:last-child {
+    border-bottom: none;
+}
+
+.card-label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.card-value {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    text-align: right;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    flex: 1;
+}
+
+/* ========== SECTION DIVIDERS ========== */
+.section-divider {
+    margin-top: 4.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.125rem solid #ecf0f1;
+}
+
+/* ========== RESPONSIVE FORM ACTIONS ========== */
+@media (max-width: 47.9375rem) {
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Mobile - Set consistent column widths for all 4-column tables */
+@media (max-width: 47.9375rem) {
+    /* Target all stats tables with 4 columns */
+    .stats-table td:nth-child(1),
+    .stats-table th:nth-child(1) {
+        width: 15%;
+        min-width: 1.75rem;
+    }
+    
+    .stats-table td:nth-child(2),
+    .stats-table th:nth-child(2) {
+        width: 30%;
+        min-width: 8ch;
+    }
+    
+    .stats-table td:nth-child(3),
+    .stats-table th:nth-child(3) {
+        width: 40%;
+        min-width: 12ch;
+    }
+    
+    .stats-table td:nth-child(4),
+    .stats-table th:nth-child(4) {
+        width: 15%;
+        min-width: 1.75rem;
+    }
+}
+/* Federal vs State table - let columns auto-size based on content to override %columsn shares above */
+@media (max-width: 47.9375rem) {
+    .federal-state-table td,
+    .federal-state-table th {
+        width: auto;
+        min-width: 0;
+    }
+}

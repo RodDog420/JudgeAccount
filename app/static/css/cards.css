@@ -1,3 +1,4 @@
+/*card.css*/
 .judge-profile {
     background-color: white;
     padding: 1.875rem;
@@ -41,6 +42,10 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
+.judge-info-value.user-content-name {
+    word-break: normal;  /* Reset the aggressive breaking */
+    overflow-wrap: break-word;  /* Use gentle breaking instead */
+}
 .review-card {
     background-color: white;
     padding: 1.5625rem;
@@ -48,16 +53,17 @@
     box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
     margin-bottom: 1.25rem;
     border-left: 0.25rem solid #3498db;
+	overflow-wrap: break-word; 
+	max-width: 100%;
+	
+}
+.review-card .admin-actions.admin-actions-dashboard {
+    justify-content: flex-end;  /* Only affects review cards */
 }
 .review-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.9375rem;
+    margin-bottom: 0.5rem;
     padding-bottom: 0.9375rem;
     border-bottom: 0.0625rem solid #eee;
-    flex-wrap: wrap;
-    gap: 0.5rem;
 }
 .review-rating {
     font-size: 1.3rem;
@@ -89,9 +95,9 @@
     color: #555;
     line-height: 1.8;
     font-size: 1rem;
-	overflow-wrap: break-word;
-    word-wrap: break-word; 
-    word-break: break-word;
+	overflow-wrap: anywhere;
+	max-width: 100%;
+
 }
 .no-reviews {
     text-align: center;
@@ -125,23 +131,108 @@
     box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
     margin-bottom: 1.25rem;
     border-left: 0.25rem solid #27ae60;
+	overflow-wrap: break-word; 
+	max-width: 100%;
+	
+}
+.judge-name-heading a:hover {
+    color: #27ae60;
+    text-decoration: underline;
+	word-break: break-word;
+    overflow-wrap: break-word;
+}
+.judge-name-heading a {
+    transition: color 0.3s ease;
+	word-break: break-word;
+	overflow-wrap: break-word; 
+	max-width: 100%;
 }
 .media-link-header {
+    margin-bottom: 0.5rem;
+}
+
+/* Media Link Info Grid - mobile: stacked */
+.media-link-info-grid {
     margin-bottom: 0.75rem;
+}
+
+/* Tablet and above: smart 2-column grid */
+@media (min-width: 48rem) {
+    .media-link-info-grid {
+        display: grid;
+        grid-template-columns: 1fr fit-content(60vw);
+        gap: 0.35rem 1rem;
+        align-items: start;
+        min-width: 0;
+    }
+
+    .media-link-info-grid .media-link-source {
+        justify-self: start;
+        text-align: left;
+        min-width: 0;
+    }
+
+    .media-link-info-grid .media-link-headline {
+        text-align: left;
+        min-width: 0;
+    }
+
+    .media-link-info-grid .submitter-info,
+    .media-link-info-grid .media-link-date {
+        text-align: left;
+        margin-bottom: 0;
+        justify-content: flex-start;
+		min-width: 0;
+    }
+}
+
+/* Review Info Grid - mobile: stacked */
+.review-info-grid {
+    margin-bottom: 0.75rem;
+	min-width: 0;
+}
+
+/* Tablet and above: smart 2-column grid */
+@media (min-width: 48rem) {
+    .review-info-grid {
+        display: grid;
+        grid-template-columns: 1fr fit-content(60vw);
+        gap: 0.35rem 1rem;
+        align-items: baseline;
+        min-width: 0;
+    }
+
+    .review-info-grid .review-rating {
+        justify-self: start;
+        text-align: left;
+        min-width: 0;
+    }
+
+    .review-info-grid .review-metadata {
+        text-align: left;
+        min-width: 0;
+    }
+
+    .review-info-grid .submitter-info {
+        text-align: left;
+        margin-bottom: 0;
+        justify-content: flex-start;
+		min-width: 0;
+    }
 }
 .media-link-headline {
     font-size: 1.3rem;
     margin: 0 0 0.5rem 0;
     color: #2c3e50;
-	word-wrap: break-word;
-    overflow-wrap: break-word;
+	overflow-wrap: anywhere; 
+	max-width: 100%;
 }
 .media-link-headline a {
-    color: #2c3e50;
+    color: #3498db;
     text-decoration: none;
     transition: color 0.3s ease;
-	word-break: break-all;
-    overflow-wrap: anywhere;
+	overflow-wrap: anywhere; 
+	max-width: 100%;
 }
 .media-link-headline a:hover {
     color: #27ae60;
@@ -155,8 +246,8 @@
     border-radius: 0.25rem;
     font-size: 0.85rem;
     font-weight: 600;
-	word-wrap: break-word;
-    overflow-wrap: break-word;
+	overflow-wrap: break-word; 
+	max-width: 100%;
 }
 .media-link-date {
     color: #7f8c8d;
@@ -170,8 +261,8 @@
     line-height: 1.8;
     font-size: 1rem;
     margin-bottom: 1.25rem;
-	overflow-wrap: break-word;
-    word-wrap: break-word; 
+	overflow-wrap: anywhere;
+	min-width: 0
 }
 .content-footer {
     display: flex;
@@ -190,6 +281,13 @@
     padding-top: 0.9375rem;
     border-top: 0.0625rem solid #eee;
 } */
+/* Flag badge and view profile button row */
+.flag-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+}
 .media-link-button {
     background-color: #3498db;
     color: white;
@@ -208,10 +306,10 @@
     text-decoration: none;
 }
 .media-link-submitted {
+    display: block;
     color: #7f8c8d;
     font-size: 0.85rem;
-	flex-basis: 100%;
-	padding-left: 1vw;
+    margin-bottom: 0.75rem;
 }
 .no-media-links {
     text-align: center;
@@ -248,4 +346,71 @@
     .media-link-date .date-separator {
         display: none;
     }
+}
+
+/* Tablet/Laptop - grid layout for consistent alignment */
+@media (min-width: 48rem) {
+    .flag-badge-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .flag-badge-row .badge {
+        grid-column: 1;
+        justify-self: start;
+        width: fit-content;
+    }
+    
+    .flag-badge-row .btn {
+        grid-column: 3;
+        justify-self: start;
+        width: 100%;
+    }
+}
+
+/* ==========================================================================
+   JUDGE.HTML ONLY - Media Card Footer 50/50 Button Layout
+   ========================================================================== */
+
+/* Media card footer: 50/50 button layout (scoped to judge.html only) */
+.media-link-card .content-footer {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 0.9375rem;
+    border-top: 0.0625rem solid #eee;
+    flex-wrap: nowrap;
+}
+
+.media-link-card .content-footer .btn,
+.media-link-card .content-footer > a.btn {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+    max-width: calc(50% - 0.25rem);
+}
+
+/* ==========================================================================
+   JUDGE.HTML ONLY - Review Header 2-Column Grid Layout
+   ========================================================================== */
+
+/* Review header: 2-column grid (rating left, metadata right) */
+.review-card .review-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: start;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.9375rem;
+    border-bottom: 0.0625rem solid #eee;
+}
+
+.review-card .review-header .review-rating {
+    /* Stays in column 1, auto-width */
+}
+
+.review-card .review-header .review-date {
+    justify-self: end;     /* Push container to right */
+    text-align: left;      /* Text left-aligned within container */
+    width: auto;           /* Container only as wide as content */
 }

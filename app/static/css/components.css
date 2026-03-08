@@ -31,7 +31,7 @@
     letter-spacing: 0.03125rem;
 }
 .badge-federal {
-    background-color: #3498db;
+    background-color: #0047AB;
     color: white;
 }
 .badge-retired {
@@ -39,7 +39,7 @@
     color: white;
 }
 .badge-concern {
-    background-color: #e74c3c;
+    background-color: #e68805;
     color: white;
 }
 .badge-fairness {
@@ -74,7 +74,10 @@
     font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
 }
-
+.badge-smaller {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.4rem;
+}
 
 /* ==========================================================================
    2. BUTTONS
@@ -105,11 +108,19 @@
     text-decoration: none;
 }
 .btn-secondary {
-    background-color: #e91e63;
+    background-color: #FF705A;
     color: white;
 }
 .btn-secondary:hover {
-    background-color: #c2185b;
+    background-color: #e74c3c;
+    text-decoration: none;
+}
+.btn-admin-ban-user {
+    background-color: #c0392b;
+    color: white;
+}
+.btn-admin-ban-user:hover {
+    background-color: #89281E;
     text-decoration: none;
 }
 .btn-blue {
@@ -207,7 +218,7 @@
     flex-wrap: wrap;
     gap: clamp(0.75rem, 4vw, 1.875rem);
     margin: 1.25rem 0;
-    justify-content: center;
+    justify-content: space-between;
 	gap: clamp(0.5rem, 3vw, 1.875rem); 
 }
 .stat-box {
@@ -238,7 +249,22 @@
     text-wrap: balance;
     max-width: 100%;
 }
+/* Judge profile stats - 3 boxes in justified alignment */
+.judge-stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.75rem, 4vw, 1.875rem);
+    margin: 1.25rem 0;
+    justify-items: space-between;
+}
 
+/* Mobile: Stack vertically for very small screens */
+@media (max-width: 47.9375rem) {
+    .judge-stats-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
 
 /* ==========================================================================
    5. ALERTS & INFO BOXES
@@ -349,22 +375,23 @@
     margin-top: 0.9375rem;
     border-radius: 0.3125rem;
 }
+
+.pending-verification strong,
+.pending-verification-admin strong {
+    color: #856404;
+}
+
+.verified-badge {
+    color: #27ae60;
+    font-weight: 600;
+}
 .pending-verification-admin {
     background-color: #fff3cd;
     border-left: 0.25rem solid #ffc107;
     padding: 0.625rem;
     margin-top: 0.9375rem;
+    text-align: center;
 }
-.pending-verification strong,
-.pending-verification-admin strong {
-    color: #856404;
-}
-.verified-badge {
-    color: #27ae60;
-    font-weight: 600;
-}
-
-
 /* ==========================================================================
    7. ADMIN COMPONENTS
    ========================================================================== */
@@ -428,14 +455,55 @@
     color: #7f8c8d;
     font-size: clamp(0.9rem, 3vw, 1rem);
     margin: 0.3125rem 0;
+	    /* Defensive text wrapping - production standard */
+    overflow-wrap: anywhere;   /* Modern, most aggressive */
+    word-break: break-word;    /* Fallback for older browsers */
+    max-width: 100%;           /* Never exceed container */
 }
 .submitter-info {
     color: #7f8c8d;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     margin: 0.3125rem 0;
 }
+.submitter-name {
+    overflow-wrap: anywhere;
+    min-width: 0;
+}
+
+/* Mobile: stack as separate lines, hide space, show label */
+.submitter-no-wrap {
+    display: block;
+    margin: 0;
+}
+.submitter-space {
+    display: none;
+}
+.submitter-on-label {
+    display: inline;
+}
+
+/* Tablet and above: inline, nowrap, show space, hide label */
+@media (min-width: 48rem) {
+    .submitter-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+		flex-wrap: wrap;
+    }
+    .submitter-name {
+        max-width: 57%;
+    }
+    .submitter-no-wrap {
+        display: inline;
+    }
+    .submitter-space {
+        display: inline;
+    }
+    .submitter-on-label {
+        display: none;
+    }
+}
 .review-metadata {
-    margin-top: 0.625rem;
     font-size: 0.9rem;
     color: #7f8c8d;
 	display: flex;
@@ -676,37 +744,38 @@
    to prevent long strings from breaking layouts
    ========================================================================== */
 
-.user-content-text {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-word;
-}
-.user-content-url {
-    word-break: break-all;
-    overflow-wrap: anywhere;
+/* Regular text - gentle breaking */
+.user-content-text,
+.user-content-username,
+.user-content-name,
+.user-content-admin {
+    overflow-wrap: break-word;  /* Break at word boundaries when possible */
+    max-width: 100%;
+	min-width: 0
 }
 
+/* URLs and Emails - aggressive breaking */
+.user-content-url,
 .user-content-email {
-    word-break: break-all;
-    overflow-wrap: anywhere;
-}
-.user-content-username {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-word;
-}
-.user-content-name {
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-    word-break: break-all;  
-}
-.user-content-admin {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    word-break: break-all;      /* CORRECT - URLs/emails have no word boundaries */
+    overflow-wrap: anywhere;    /* Belt and suspenders for these */
+    max-width: 100%;
 }
 .judge-name-text {
     flex-basis: 100%;  /* Name takes full width, pushing badges to next line */
+	max-width: 100%;
+    min-width: 0;  /* Critical - allows shrinking when badges are present */
+    display: inline-block;  /* Allows wrapping to work properly */
+	overflow-wrap: anywhere;
+}
+
+/* Ensure h1 doesn't prevent wrapping */
+h1.user-content-name {
+    display: flex;
+    flex-wrap: wrap;  /* Allow name and badges to wrap to new lines if needed */
+    align-items: center;
+    gap: 0.5rem;
+}
 }
 .user-content-name .badge {
     margin-top: 0.5rem;
@@ -751,6 +820,90 @@
         display: none;
     }
 }
+
+/* ==========================================================================
+   13. ADMIN ACTION MODALS
+   ========================================================================== */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+.modal-overlay.active {
+    display: flex;
+}
+.modal-box {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    max-width: 30rem;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+.modal-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+    color: #2c3e50;
+}
+.modal-body {
+    margin-bottom: 1.25rem;
+    color: #555;
+}
+.modal-message-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.375rem;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+.modal-message-input {
+    width: 100%;
+    min-height: 5rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.3125rem;
+    font-size: 0.95rem;
+    resize: vertical;
+    box-sizing: border-box;
+}
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+}
+@media (max-width: 47.9375rem) {
+    .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+    .modal-box {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0.5rem 0.5rem 0 0;
+        padding: 1.5rem 1rem;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .modal-message-input {
+        font-size: 16px;
+    }
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+    .modal-actions .btn {
+        width: 100%;
+    }
+}
+
 /* ==========================================================================
    SMALLEST SCREEN BUTTON SETTINGS
    ========================================================================== */
@@ -848,5 +1001,176 @@
 	/* Makes the metadata dates stack vertically on small user-dashboard screens instead of staying side-by-side and wrapping*/
     .review-metadata {
         flex-direction: column;
+    }
+    /* Stack buttons vertically in media link and review cards */
+    .media-link-card .user-actions,
+    .review-card .user-actions {
+        flex-direction: column;
+		gap: 0.75rem;
+    }
+    /* Make buttons full-width in cards */
+    .media-link-card .user-actions .btn,
+    .review-card .user-actions .btn {
+        width: 100%;
+		min-height: 2.75rem;
+    }
+}
+/* ========== ADMIN ACTIONS - UNIVERSAL RULES ========== */
+
+/* Base admin actions - shared across all pages */
+.admin-actions {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Desktop - hide all line breaks in buttons */
+@media (min-width: 48rem) {
+    .admin-actions .btn br {
+        display: none;
+    }
+}
+
+/* ========== MODERATION QUEUE (FLAGS) ========== */
+
+/* Defensive word-wrap for user-defined content in moderation queue */
+.flag-header-title,
+.flag-header-title a,
+.flag-reporter-info,
+.flagged-content-meta,
+.flagged-content-meta span,
+.flagged-content-text,
+.reporter-note-box {
+    overflow-wrap: anywhere;
+    max-width: 100%;
+}
+
+/* Mobile - 3 equal buttons, 4rem height */
+@media (max-width: 47.9375rem) {
+    .admin-actions-flags {
+        flex-wrap: nowrap;
+    }
+    
+    .admin-actions-flags .btn {
+        flex: 1;
+        min-height: 4rem;
+        padding: 0.5rem 0.25rem;
+        font-size: 0.85rem;
+        line-height: 1.3;
+    }
+}
+
+/* Tablet/Laptop - 3-column grid system for consistent button alignment */
+@media (min-width: 48rem) {
+    /* Page-wide grid for action buttons */
+    .admin-actions.admin-actions-flags {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.5rem;
+    }
+    
+    .admin-actions.admin-actions-flags .btn {
+        width: 100%;
+        text-align: center;
+        justify-self: start;
+        min-height: 3.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+/* ========== USER PROFILE PAGE ========== */
+
+/* Mobile - 2x2 grid, 4rem height */
+@media (max-width: 47.9375rem) {
+    .admin-actions-profile {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .admin-actions-profile .btn {
+        min-height: 4rem;
+        padding: 0.5rem 0.25rem;
+        font-size: 0.85rem;
+        line-height: 1.3;
+        display: flex;              
+        flex-direction: column;     
+        justify-content: center;    /* <-- This centers vertically */
+        align-items: center;        
+    }
+}
+
+/* ========== ADMIN DASHBOARD (MEDIA & REVIEWS) ========== */
+
+/* Mobile - 3 equal slots (33.33% each), 3rem height */
+@media (max-width: 47.9375rem) {
+    .admin-actions-dashboard {
+        flex-wrap: nowrap;
+    }
+    
+    .admin-actions-dashboard .btn,
+    .admin-actions-dashboard .verified-placeholder {
+        flex: 0 0 calc(33.33% - 0.33rem);
+        min-height: 3rem;
+        padding: 0.5rem 0.25rem;
+        font-size: 0.85rem;
+        line-height: 1.3;
+    }
+}
+
+/* Verified Placeholder - styled like button but not clickable */
+.verified-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: #27ae60;
+    border: 2px solid #27ae60;
+    border-radius: 0.3125rem;
+    font-weight: 600;
+    text-align: center;
+	padding: 0.5rem 1.85rem
+}
+
+
+
+
+/* ========== ADMIN DASHBOARD - JUDGE NAME + BADGE LAYOUT ========== */
+
+/* Single badge: name and badge on same line, space between */
+.admin-card-judge-header-single {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+/* Two badges: name on first line, both badges left-aligned on second line */
+.admin-card-judge-header-multi {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+/* Badge row used in multi-badge layout */
+.admin-card-judge-badges {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+@media (min-width: 48rem) {
+    .admin-card-judge-badges {
+        gap: 1.25rem;
+    }
+}
+/* Tablet and above: both badges on same line as judge name, justified opposite */
+@media (min-width: 48rem) {
+    .admin-card-judge-header-multi {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 }

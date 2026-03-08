@@ -68,7 +68,7 @@
             </select>
             
             <input type="text" id="bulk-reason" name="bulk_ban_reason" 
-                    placeholder="Reason for action..." class="form-control" required>
+                    placeholder="Reason" class="form-control" required>
             
             <button type="submit" class="btn btn-danger" 
                     onclick="return confirm('Are you sure you want to perform this bulk action on selected users?');">
@@ -82,7 +82,7 @@
     <!-- Users Table Box -->
     <div class="admin-table-box" id="admin-user-table">
         <div class="admin-table-controls">
-            <p class="content-count">Showing {{ user_data|length }} user(s)</p>
+            <p class="content-count">Showing {{ user_data|length }} user{% if user_data|length != 1 %}s{% endif %}</p>
             <button type="button" class="btn btn-secondary btn-small mobile-only" id="toggle-columns">
                 Show All Columns
             </button>

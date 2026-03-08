@@ -15,7 +15,7 @@
 <!-- Media Links Section -->
 <h2>My Media Links</h2>
 {% if media_links %}
-    <p class="content-count">You have submitted {{ media_links|length }} media link(s)</p>
+    <p class="content-count">You have submitted {{ media_links|length }} media link{% if media_links|length != 1 %}s{% endif %}</p>
     
     {% for media_link in media_links %}
     <div class="media-link-card">
@@ -76,7 +76,7 @@
 <!-- Reviews Section -->
 <h2 class="section-divider">My Reviews</h2>
 {% if reviews %}
-    <p class="content-count">You have submitted {{ reviews|length }} review(s)</p>
+    <p class="content-count">You have submitted {{ reviews|length }} review{% if reviews|length != 1 %}s{% endif %}</p>
     
     {% for review in reviews %}
     <div class="review-card">

@@ -1,0 +1,667 @@
+{% extends "base.html" %}
+{% set private_page = True %}
+
+{% block title %}Statistics Dashboard - Admin{% endblock %}
+
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
+{% block content %}
+
+<h1 class="stats-page-title">Statistics Dashboard</h1>
+<p class="admin-mode-notice">Comprehensive site analytics and metrics</p>
+
+<!-- Sticky Filter Control -->
+<div id="stats-filter-container" class="stats-filter-wrapper">
+    <button id="filter-toggle-mobile" class="filter-pin-toggle" aria-label="Toggle Filters">
+        <span class="pin-icon">🔍</span>
+    </button>
+    
+    <form method="GET" action="{{ url_for('auth.admin_statistics') }}" class="stats-filter-form" id="stats-filter-form">
+        <div class="filter-header-row">
+            <div class="filter-title-wrapper">
+                <h3 class="form-section-title">Filters & <br>Controls</h3>
+            </div>
+            
+            <div class="form-group form-group-size">
+                <label for="top_n">Size</label>
+                <input type="number" id="top_n" name="top_n" 
+                        value="{{ top_n }}" min="5" max="100" class="form-control input-narrow">
+            </div>
+        </div>
+        
+        <div class="filter-controls-row">
+            <div class="filter-dates-group">
+                <div class="form-group">
+                    <label for="start_date">Start Date</label>
+                    <input type="date" id="start_date" name="start_date" 
+                            value="{{ start_date.strftime('%Y-%m-%d') }}" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="end_date">End Date</label>
+                    <input type="date" id="end_date" name="end_date" 
+                            value="{{ end_date.strftime('%Y-%m-%d') }}" class="form-control">
+                </div>
+            </div>
+            
+            <div class="filter-buttons-group">
+                <button type="submit" class="btn btn-primary">Apply</button>
+                <a href="{{ url_for('auth.admin_statistics') }}" class="btn btn-secondary">Reset</a>
+            </div>
+        </div>
+    </form>
+    <div id="filter-overlay" class="filter-collapsed-overlay">
+        <span class="overlay-text">🔍 Click to expand <span class="filter-control-text">Filter Control Panel</span></span>
+    </div>
+</div>
+
+<!-- Summary Stats Cards -->
+<h2>Summary Statistics</h2>
+<div class="stats-container">
+    <div class="stat-box">
+        <span class="stat-number">{{ total_users }}</span>
+        <span class="stat-label">Total User{% if total_users != 1 %}s{% endif %}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ total_reviews }}</span>
+        <span class="stat-label">Total Review{% if total_reviews != 1 %}s{% endif %}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ total_media_links }}</span>
+        <span class="stat-label">Total Media Link{% if total_media_links != 1 %}s{% endif %}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ pending_verifications }}</span>
+        <span class="stat-label">Pending</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ overall_avg_rating }}</span>
+        <span class="stat-label">Overall Avg</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ total_concerns }}</span>
+        <span class="stat-label">Total Concern{% if total_concerns != 1 %}s{% endif %}</span>
+    </div>
+</div>
+
+<!-- Growth Metrics -->
+<h2 class="section-divider">Growth Metrics</h2>
+<p class="content-count">Range: {{ start_date.strftime('%b %d, %Y') }} to {{ end_date.strftime('%b %d, %Y') }}</p>
+
+<div class="stats-container">
+    <div class="stat-box">
+        <span class="stat-number">{{ users_in_range }}</span>
+        <span class="stat-label">New User{% if users_in_range != 1 %}s{% endif %}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ reviews_in_range }}</span>
+        <span class="stat-label">New Review{% if reviews_in_range != 1 %}s{% endif %}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ media_in_range }}</span>
+        <span class="stat-label">New Media</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ new_reviewed_judges }}</span>
+        <span class="stat-label">Newly Reviewed Judge{% if new_reviewed_judges != 1 %}s{% endif %}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ active_contributors }}</span>
+        <span class="stat-label">Active Contributor{% if active_contributors != 1 %}s{% endif %}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ verifications_in_range }}</span>
+        <span class="stat-label">Verification{% if verifications_in_range != 1 %}s{% endif %}</span>
+    </div>
+</div>
+
+<!-- Concern Type Breakdown -->
+<h2 class="section-divider">Concern Breakdown</h2>
+<div class="stats-container">
+    <div class="stat-box">
+        <span class="stat-number">{{ concern_breakdown['fairness'] }}</span>
+        <span class="stat-label">Fairness</span>
+        <span class="stat-label">
+            {% if total_reviews > 0 %}
+                ({{ "%.1f"|format((concern_breakdown['fairness'] / total_reviews) * 100) }}%)
+            {% else %}
+                (0%)
+            {% endif %}
+        </span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ concern_breakdown['bias'] }}</span>
+        <span class="stat-label">Bias</span>
+        <span class="stat-label">
+            {% if total_reviews > 0 %}
+                ({{ "%.1f"|format((concern_breakdown['bias'] / total_reviews) * 100) }}%)
+            {% else %}
+                (0%)
+            {% endif %}
+        </span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ concern_breakdown['temperament'] }}</span>
+        <span class="stat-label">Temperament</span>
+        <span class="stat-label">
+            {% if total_reviews > 0 %}
+                ({{ "%.1f"|format((concern_breakdown['temperament'] / total_reviews) * 100) }}%)
+            {% else %}
+                (0%)
+            {% endif %}
+        </span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ reviews_with_concerns }}</span>
+        <span class="stat-label">Review{% if reviews_with_concerns != 1 %}s{% endif %} with Concern{% if reviews_with_concerns != 1 %}s{% endif %}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">
+            {% if total_reviews > 0 %}
+                {{ "%.1f"|format((reviews_with_concerns / total_reviews) * 100) }}%
+            {% else %}
+                0%
+            {% endif %}
+        </span>
+        <span class="stat-label">Concern Rate</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">{{ multiple_concerns }}</span>
+        <span class="stat-label">Multiple Concern{% if multiple_concerns != 1 %}s{% endif %}</span>
+    </div>
+</div>
+
+
+<!-- Rating Distribution (3 columns - table all screens) -->
+<h2 class="section-divider">Rating Distribution</h2>
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>Rating</th>
+            <th>Count</th>
+            <th>Percent</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rating in range(5, 0, -1) %}
+        <tr>
+            <td>{{ rating }} ★</td>
+            <td>{{ rating_distribution[rating] }}</td>
+            <td>
+                {% if total_reviews > 0 %}
+                    {{ "%.1f"|format((rating_distribution[rating] / total_reviews) * 100) }}%
+                {% else %}
+                    0%
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- Federal vs State (4 columns - table all screens) -->
+<h2 class="section-divider">Federal vs State</h2>
+<table class="stats-table federal-state-table">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Judge<br>Count</th>
+            <th>Avg<br>Rating</th>
+            <th>Total<br>Reviews</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Federal</td>
+            <td>{{ federal_count }}</td>
+            <td>{{ federal_avg_rating }}</td>
+            <td>{{ federal_review_count }}</td>
+        </tr>
+        <tr>
+            <td>State</td>
+            <td>{{ state_count }}</td>
+            <td>{{ state_avg_rating }}</td>
+            <td>{{ state_review_count }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Retired vs Active (3 columns - table all screens) -->
+<h2 class="section-divider">Retired vs Active</h2>
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>Status</th>
+            <th>Judge Count</th>
+            <th>Avg<br>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Retired</td>
+            <td>{{ retired_count }}</td>
+            <td>{{ retired_avg_rating }}</td>
+        </tr>
+        <tr>
+            <td>Active</td>
+            <td>{{ active_count }}</td>
+            <td>{{ active_avg_rating }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Most Reviewed Judges (4 columns - table all screens) -->
+<h2 class="section-divider">Most Reviewed (Top {{ top_n }})</h2>
+{% if most_reviewed %}
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Judge</th>
+            <th>Court</th>
+            <th>Ct.</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for judge, count in most_reviewed %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td class="user-content-name">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
+                    {{ judge.full_name() }}
+                </a>
+            </td>
+            <td class="user-content-name">{{ judge.court }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="content-count">No data available.</p>
+{% endif %}
+
+<!-- Most Documented Judges (4 columns - table all screens) -->
+<h2 class="section-divider">Most Documented (Top {{ top_n }})</h2>
+{% if most_documented %}
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Judge</th>
+            <th>Court</th>
+            <th>Ct.</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for judge, count in most_documented %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td class="user-content-name">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
+                    {{ judge.full_name() }}
+                </a>
+            </td>
+            <td class="user-content-name">{{ judge.court }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="content-count">No data available.</p>
+{% endif %}
+
+<!-- Highest Rated Judges (5 columns - NEEDS MOBILE CARDS) -->
+<h2 class="section-divider">Highest Rated (Top {{ top_n }}, Min 3 Reviews)</h2>
+{% if highest_rated %}
+
+<!-- Desktop Table -->
+<table class="stats-table highest-rated-table-desktop">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Judge Name</th>
+            <th>Court</th>
+            <th>Avg<br>Rating</th>
+            <th>Review<br>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for judge, avg_rating, review_count in highest_rated %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td class="user-content-name">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
+                    {{ judge.full_name() }}
+                </a>
+            </td>
+            <td class="user-content-name">{{ judge.court }}</td>
+            <td>{{ "%.2f"|format(avg_rating) }}</td>
+            <td>{{ review_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Mobile Cards -->
+<div class="highest-rated-cards-mobile">
+    {% for judge, avg_rating, review_count in highest_rated %}
+    <div class="judge-stat-card-mobile">
+        <div class="card-header-row">
+            <span class="rank-badge">{{ loop.index }}</span>
+            <h3 class="card-judge-name">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}" class="user-content-name">
+                    {{ judge.full_name() }}
+                </a>
+            </h3>
+        </div>
+        <div class="card-detail-row">
+            <span class="card-label">Court:</span>
+            <span class="card-value user-content-name">{{ judge.court }}</span>
+        </div>
+        <div class="card-detail-row">
+            <span class="card-label">Rating:</span>
+            <span class="card-value">{{ "%.2f"|format(avg_rating) }} ★</span>
+        </div>
+        <div class="card-detail-row">
+            <span class="card-label">Reviews:</span>
+            <span class="card-value">{{ review_count }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<p class="content-count">No judges with at least 3 reviews.</p>
+{% endif %}
+
+<!-- Lowest Rated Judges (5 columns - NEEDS MOBILE CARDS) -->
+<h2 class="section-divider">Lowest Rated (Top {{ top_n }}, Min 3 Reviews)</h2>
+{% if lowest_rated %}
+
+<!-- Desktop Table -->
+<table class="stats-table lowest-rated-table-desktop">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Judge Name</th>
+            <th>Court</th>
+            <th>Avg<br>Rating</th>
+            <th>Review<br>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for judge, avg_rating, review_count in lowest_rated %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td class="user-content-name">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
+                    {{ judge.full_name() }}
+                </a>
+            </td>
+            <td class="user-content-name">{{ judge.court }}</td>
+            <td>{{ "%.2f"|format(avg_rating) }}</td>
+            <td>{{ review_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Mobile Cards -->
+<div class="lowest-rated-cards-mobile">
+    {% for judge, avg_rating, review_count in lowest_rated %}
+    <div class="judge-stat-card-mobile">
+        <div class="card-header-row">
+            <span class="rank-badge">{{ loop.index }}</span>
+            <h3 class="card-judge-name">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}" class="user-content-name">
+                    {{ judge.full_name() }}
+                </a>
+            </h3>
+        </div>
+        <div class="card-detail-row">
+            <span class="card-label">Court:</span>
+            <span class="card-value user-content-name">{{ judge.court }}</span>
+        </div>
+        <div class="card-detail-row">
+            <span class="card-label">Rating:</span>
+            <span class="card-value">{{ "%.2f"|format(avg_rating) }} ★</span>
+        </div>
+        <div class="card-detail-row">
+            <span class="card-label">Reviews:</span>
+            <span class="card-value">{{ review_count }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<p class="content-count">No judges with at least 3 reviews.</p>
+{% endif %}
+
+<!-- Most Concerning Judges (4 columns - table all screens) -->
+<h2 class="section-divider">Most Concerning (Top {{ top_n }})</h2>
+{% if most_concerning %}
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Judge</th>
+            <th>Court</th>
+            <th>Ct.</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for judge, concern_count in most_concerning %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td class="user-content-name">
+                <a href="{{ url_for('main.judge', judge_id=judge.id) }}">
+                    {{ judge.full_name() }}
+                </a>
+            </td>
+            <td class="user-content-name">{{ judge.court }}</td>
+            <td>{{ concern_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="content-count">No data available.</p>
+{% endif %}
+
+<!-- Most Active Users (3 columns - table all screens) -->
+<h2 class="section-divider">Most Active Users (Top {{ top_n }})</h2>
+{% if most_active_users %}
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Review Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user, review_count in most_active_users %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td class="user-content-username">
+                <a href="{{ url_for('auth.view_user_activity', user_id=user.id) }}">
+                    {{ user.username }}
+                </a>
+            </td>
+            <td>{{ review_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="content-count">No data available.</p>
+{% endif %}
+
+<!-- Geographic Distribution (4 columns - table all screens) -->
+<h2 class="section-divider">Geographic Distribution</h2>
+{% if judges_by_state %}
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>State</th>
+            <th>Judge<br>Count</th>
+            <th>Review<br>Count</th>
+            <th>Media<br>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for state, judge_count, review_count, media_count in judges_by_state %}
+        <tr>
+            <td>{{ state }}</td>
+            <td>{{ judge_count }}</td>
+            <td>{{ review_count or 0 }}</td>
+            <td>{{ media_count or 0 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="content-count">No data available.</p>
+{% endif %}
+
+<!-- Temporal Trends -->
+<h2 class="section-divider">Temporal Trends (Last 12 Months)</h2>
+
+<h3>Reviews Per Month</h3>
+{% if reviews_by_month %}
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for month, count in reviews_by_month %}
+        <tr>
+            <td>{{ month }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="content-count">No reviews in last 12 months.</p>
+{% endif %}
+
+<h3>Media Links Per Month</h3>
+{% if media_by_month %}
+<table class="stats-table">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for month, count in media_by_month %}
+        <tr>
+            <td>{{ month }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="content-count">No media links in last 12 months.</p>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterWrapper = document.getElementById('stats-filter-container');
+    const filterForm = document.getElementById('stats-filter-form');
+    const toggleBtn = document.getElementById('filter-toggle-mobile');
+    const overlay = document.getElementById('filter-overlay');
+    
+    if (!filterWrapper || !filterForm || !toggleBtn) return;
+    
+    let hasScrolled = false;
+    let isMobile = window.innerWidth < 768;
+    
+    // Initial state - all screen sizes start collapsed with overlay
+    filterForm.classList.add('collapsed');
+    toggleBtn.classList.remove('active');
+    if (overlay) overlay.classList.add('show');
+    
+    
+    // Scroll behavior - ALL screen sizes, any scroll collapses if expanded
+    window.addEventListener('scroll', function() {
+        // If filter is currently expanded, collapse it on any scroll
+        if (filterForm.classList.contains('expanded') || filterForm.classList.contains('initial-expanded')) {
+            filterForm.classList.remove('expanded', 'initial-expanded');
+            filterForm.classList.add('collapsed');
+            toggleBtn.classList.remove('active');
+            if (overlay) {
+                overlay.classList.add('show');
+            }
+        }
+    });
+    
+    // Function to toggle filter
+    function toggleFilter() {
+        console.log('Toggle filter clicked');
+        
+        if (filterForm.classList.contains('expanded') || filterForm.classList.contains('initial-expanded')) {
+            // Collapse
+            console.log('Collapsing filter');
+            filterForm.classList.remove('expanded', 'initial-expanded');
+            filterForm.classList.add('collapsed');
+            toggleBtn.classList.remove('active');
+            if (overlay) {
+                overlay.classList.add('show');
+                console.log('Overlay added');
+            }
+        } else {
+            // Expand
+            console.log('Expanding filter');
+            filterForm.classList.remove('collapsed');
+            filterForm.classList.add('expanded');
+            toggleBtn.classList.add('active');
+            if (overlay) {
+                overlay.classList.remove('show');
+                console.log('Overlay removed');
+            }
+        }
+    }
+    
+    // Toggle button click
+    toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleFilter();
+    });
+    
+    // Overlay click
+    if (overlay) {
+        overlay.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleFilter();
+        });
+    }
+    
+    // Window resize
+    window.addEventListener('resize', function() {
+        isMobile = window.innerWidth < 768;
+        
+        if (!isMobile) {
+            filterForm.classList.remove('expanded', 'collapsed', 'initial-expanded');
+            toggleBtn.classList.remove('active');
+            if (overlay) overlay.classList.remove('show');
+        } else if (!hasScrolled) {
+            filterForm.classList.add('initial-expanded');
+            if (overlay) overlay.classList.remove('show');
+        }
+    });
+});
+</script>
+{% endblock %}

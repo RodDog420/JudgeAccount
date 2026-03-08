@@ -74,9 +74,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/statistics.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index-filter.css') }}">
 </head>
 
 
@@ -128,6 +130,7 @@
                                 <a href="{{ url_for('auth.admin_dashboard') }}" class="admin-link">Dashboard</a>
                                 <a href="{{ url_for('auth.manage_users') }}" class="admin-link">Manage Users</a>
                                 <a href="{{ url_for('auth.moderation_queue') }}" class="admin-link">Flags</a>
+                                <a href="{{ url_for('auth.admin_statistics') }}" class="admin-link">Statistics</a>
                             </div>
                         </div>
                     {% endif %}
@@ -152,10 +155,10 @@
     </nav>
     
     <main class="container">
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                {% for message in messages %}
-                    <div class="flash-message">{{ message }}</div>
+                {% for category, message in messages %}
+                    <div class="flash-message{% if category == 'error' %} error{% endif %}">{{ message }}</div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
@@ -272,4 +275,66 @@
         });
     </script>
 </body>
+<!-- Color Dictionary
+BLACKS & GRAYS:
+#000000 - Black - Shadow effects (rgba variations)
+#333333 - Dark Gray - Body text color
+#555555 - Medium Gray - Review text, table body text
+#7f8c8d - Muted Gray - Review count, meta info, secondary text
+#95a5a6 - Lighter Gray - Disabled state, table cell muted
+#B5C0C1 - Lighter gray still - Mobile filter toggle pin background for Admin Stats 
+#ecf0f1 - Very Light Gray - Border color, separators
+#f4f4f4 - Background Gray - Page background
+#f8f9fa - Subtle Background - Card hover, highlighted areas
+
+BLUES:
+#3498db - Primary Blue - Links, headers, section highlights, primary actions
+#2980b9 - Dark Blue - Link hover, button hover
+#5dade2 - Light Blue - "You" badge
+#0047AB - Judge Table Header - "Federal" badge
+#34495e - Dark Blue-Gray - Nav hover background
+#2c3e50 - Navy Blue - Navigation background, footer background, headings
+
+REDS:
+#f8d7da - Light Red Background - Error flash message background
+#f5c6cb - Red Border - Error flash message border
+#FF705A - Btn-secondary
+#e74c3c - Btn-secondary Hover; "Report"/btn-danger; Concern badge - Alert/warning color
+#c0392b - Dark Red - "Report"/btn-danger hover; Btn Admin Ban User
+#89281E - Btn Admin Ban User Hover
+#ff6b6b - Bright Red - Admin mode notice, admin links
+#721c24 - Dark Red Text - Error flash message text
+#e91e63 - Btn Not in use
+#c2185b - Btn Not in use Hover
+
+GREENS:
+#d4edda - Light Green - Flash message background
+#c3e6cb - Green Border - Flash message border
+#27ae60 - Green - "Edit" buttons everywhere, verified badge, media link card border, no-media-links button
+#229954 - Dark Green - "Edit" button hover, no-media-links button hover
+#155724 - Dark Green - Flash message text
+
+ORANGES:
+#f39c12 - Orange - Star rating color, review rating, table rating cell
+#e67e22 - Dark Orange - Fairness concern badge
+#ffd353 - Light Orange - Greeting for user on nav-bar "Account" drop-down 
+
+PURPLES:
+#9b59b6 - Purple - Bias concern badge
+
+YELLOWS:
+#fff3cd - Light Yellow - Pending verification background
+#ffc107 - Yellow/Gold - Pending verification border
+#856404 - Dark Yellow/Brown - Pending verification text
+#ff9705 - Orange/Yellow - .btn-yellow button background
+#e68805 - Dark Orange/Yellow - .btn-yellow:hover button hover
+
+Common Breakpoints in rem:
+320px = 20rem
+375px = 23.4375rem
+425px = 26.5625rem
+768px = 48rem
+1024px = 64rem
+*/
+    -->
 </html>

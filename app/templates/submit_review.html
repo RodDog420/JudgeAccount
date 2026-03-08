@@ -147,7 +147,7 @@
     
     <div class="form-group">
         {{ form.court_date.label }}
-        {{ form.court_date(class="form-control") }}
+        {{ form.court_date(class="form-control", id="court_date") }}
         {% if form.court_date.errors %}
             {% for error in form.court_date.errors %}
                 <span class="error">{{ error }}</span>
@@ -184,6 +184,9 @@
     
     <div class="form-group">
         {{ form.submit(class="btn btn-primary") }}
+    </div>
+    <div class="alert-info spacing-top-md">
+        <p class="alert-text">Add <strong>Admin@JudgeAccount.com</strong> to your allowed contacts to ensure we can reach you about issues relating to your post. Never any marketing, newsletters, or solicitations &mdash; we only contact users regarding their actual submissions.</p>
     </div>
 </form>
 
@@ -234,6 +237,13 @@ stateSelect.addEventListener('change', updateCourtOptions);
 
 // Initialize on page load
 updateCourtOptions();
+
+// Set max date to today to prevent future dates
+const courtDateField = document.getElementById('court_date');
+if (courtDateField) {
+    const today = new Date().toISOString().split('T')[0];
+    courtDateField.max = today;
+}
 
 // Handle "Did you appear" redirect (only if the buttons exist)
 const appearedNoButton = document.getElementById('appeared-no');

@@ -33,13 +33,13 @@
         {% if not show_unbanned %}(active bans only){% endif %}
     </p>
     
-    <table>
+    <table class="banned-users-table">
         <thead>
             <tr>
-                <th>Username</th>
+                <th>User</th>
                 <th>Email</th>
-                <th>Banned Date</th>
-                <th>Banned By</th>
+                <th>Date</th>
+                <th>Admin</th>
                 <th>Reason</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -47,31 +47,25 @@
         </thead>
         <tbody>
             {% for banned in banned_users %}
-            <tr {% if banned.is_unbanned %}class="table-row-muted"{% endif %}>
-                <td data-label="Username" class="user-content-username">
+            <tr {% if not banned.is_unbanned %}class="table-row-muted"{% endif %}>
+                <td data-label="User" class="user-content-username text-smaller">
                     {{ banned.username }}
-                    {% if banned.is_unbanned %}
-                        <span class="badge badge-unbanned badge-small">UNBANNED</span>
-                    {% endif %}
                 </td>
-                <td data-label="Email" class="table-cell-muted user-content-email">{{ banned.email }}</td>
-                <td data-label="Banned Date" class="table-cell-muted">
+                <td data-label="Email" class="user-content-email text-smaller">{{ banned.email }}</td>
+                <td data-label="Date" class="text-smaller">
                     {{ banned.banned_at.strftime('%b %d, %Y') }}
                 </td>
-                <td data-label="Banned By" class="text-small user-content-username">
+                <td data-label="Admin" class="user-content-username text-smaller">
                     {{ banned.banned_by.username if banned.banned_by else 'System' }}
                 </td>
-                <td data-label="Reason" class="text-small user-content-admin">
+                <td data-label="Reason" class="user-content-admin text-smaller">
                     {{ banned.ban_reason[:100] }}{% if banned.ban_reason|length > 100 %}...{% endif %}
                 </td>
                 <td data-label="Status">
                     {% if banned.is_unbanned %}
-                        <span class="badge badge-active">UNBANNED</span>
-                        <div class="text-smaller text-muted spacing-top-sm">
-                            {{ banned.unbanned_at.strftime('%b %d, %Y') if banned.unbanned_at else '' }}
-                        </div>
+                        <span class="badge badge-gray badge-smaller">UNBANNED</span>
                     {% else %}
-                        <span class="badge badge-concern">BANNED</span>
+                        <span class="badge badge-concern badge-smaller">BANNED</span>
                     {% endif %}
                 </td>
                 <td data-label="Actions">
