@@ -263,6 +263,7 @@
 
         <!-- Judge Identity Section -->
         <div class="review-header">
+            <div>
             {% set badge_count = (1 if review.judge.is_federal else 0) + (1 if review.judge.is_retired else 0) %}
             {% if badge_count == 2 %}
                 <h3 class="judge-name-heading admin-card-judge-header-multi">
@@ -300,6 +301,7 @@
             <p class="judge-court-info">
                 {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
             </p>
+            </div>
         </div>
 
         <!-- Review Info Grid -->

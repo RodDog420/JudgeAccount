@@ -21,13 +21,26 @@
     <div class="media-link-card">
         <div class="media-link-header">
             <div>
-                <h3 class="judge-name-heading">
-                    <span class="judge-name-text">
-                        <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}" class="user-content-name">{{ media_link.judge.full_name() }}</a>
-                    </span>    {% if media_link.judge.is_federal %}
-                        <span class="badge badge-federal">Federal</span>
-                    {% endif %}
+                {% set badge_count = (1 if media_link.judge.is_federal else 0) + (1 if media_link.judge.is_retired else 0) %}
+                {% if badge_count == 2 %}
+                <h3 class="judge-name-heading admin-card-judge-header-multi">
+                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}" class="user-content-name">{{ media_link.judge.full_name() }}</a>
+                    <div class="admin-card-judge-badges">
+                        {% if media_link.judge.is_federal %}<span class="badge badge-federal">Federal</span>{% endif %}
+                        {% if media_link.judge.is_retired %}<span class="badge badge-retired">Retired</span>{% endif %}
+                    </div>
                 </h3>
+                {% elif badge_count == 1 %}
+                <h3 class="judge-name-heading admin-card-judge-header-single">
+                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}" class="user-content-name">{{ media_link.judge.full_name() }}</a>
+                    {% if media_link.judge.is_federal %}<span class="badge badge-federal">Federal</span>{% endif %}
+                    {% if media_link.judge.is_retired %}<span class="badge badge-retired">Retired</span>{% endif %}
+                </h3>
+                {% else %}
+                <h3 class="judge-name-heading">
+                    <a href="{{ url_for('main.judge', judge_id=media_link.judge_id) }}" class="user-content-name">{{ media_link.judge.full_name() }}</a>
+                </h3>
+                {% endif %}
                 <p class="judge-court-info user-content-name">
                     {{ media_link.judge.court }} - {{ media_link.judge.city }}, {{ media_link.judge.state }}
                 </p>
@@ -61,8 +74,10 @@
                 View Article
             </a>
             <a href="{{ url_for('auth.edit_media_link', media_link_id=media_link.id) }}" class="btn btn-primary">Edit</a>
-            <a href="{{ url_for('auth.delete_media_link', media_link_id=media_link.id) }}" class="btn btn-secondary" 
-                onclick="return confirm('Are you sure you want to delete this media link?');">Delete</a>
+            <form method="POST" action="{{ url_for('auth.delete_media_link', media_link_id=media_link.id) }}" class="form-inline-action">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-secondary" onclick="return confirm('Are you sure you want to delete this media link?');">Delete</button>
+            </form>
         </div>
     </div>
     {% endfor %}
@@ -82,14 +97,26 @@
     <div class="review-card">
         <div class="review-header">
             <div>
-                <h3 class="judge-name-heading">
-                    <span class="judge-name-text">
-                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}" class="user-content-name">{{ review.judge.full_name() }}</a>
-                    </span>
-                        {% if review.judge.is_federal %}
-                        <span class="badge badge-federal">Federal</span>
-                    {% endif %}
+                {% set badge_count = (1 if review.judge.is_federal else 0) + (1 if review.judge.is_retired else 0) %}
+                {% if badge_count == 2 %}
+                <h3 class="judge-name-heading admin-card-judge-header-multi">
+                    <span class="judge-name-text"><a href="{{ url_for('main.judge', judge_id=review.judge_id) }}" class="user-content-name">{{ review.judge.full_name() }}</a></span>
+                    <div class="admin-card-judge-badges">
+                        {% if review.judge.is_federal %}<span class="badge badge-federal">Federal</span>{% endif %}
+                        {% if review.judge.is_retired %}<span class="badge badge-retired">Retired</span>{% endif %}
+                    </div>
                 </h3>
+                {% elif badge_count == 1 %}
+                <h3 class="judge-name-heading admin-card-judge-header-single">
+                    <span class="judge-name-text"><a href="{{ url_for('main.judge', judge_id=review.judge_id) }}" class="user-content-name">{{ review.judge.full_name() }}</a></span>
+                    {% if review.judge.is_federal %}<span class="badge badge-federal">Federal</span>{% endif %}
+                    {% if review.judge.is_retired %}<span class="badge badge-retired">Retired</span>{% endif %}
+                </h3>
+                {% else %}
+                <h3 class="judge-name-heading">
+                    <span class="judge-name-text"><a href="{{ url_for('main.judge', judge_id=review.judge_id) }}" class="user-content-name">{{ review.judge.full_name() }}</a></span>
+                </h3>
+                {% endif %}
                 <p class="judge-court-info user-content-name">
                     {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
                 </p>
@@ -122,8 +149,10 @@
         
         <div class="user-actions">
             <a href="{{ url_for('auth.edit_review', review_id=review.id) }}" class="btn btn-primary">Edit</a>
-            <a href="{{ url_for('auth.delete_review', review_id=review.id) }}" class="btn btn-secondary" 
-                onclick="return confirm('Are you sure you want to delete this review?');">Delete</a>
+            <form method="POST" action="{{ url_for('auth.delete_review', review_id=review.id) }}" class="form-inline-action">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-secondary" onclick="return confirm('Are you sure you want to delete this review?');">Delete</button>
+            </form>
         </div>
     </div>
     {% endfor %}
