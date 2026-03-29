@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, BooleanField, SelectField, DateField, SubmitField, \
     URLField, RadioField
-from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Optional, URL
+from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Optional, URL, EqualTo
 from urllib.parse import urlparse
 from app.court_data import SHORTENED_URL_DOMAINS
 
@@ -178,7 +178,7 @@ class MediaLinkForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=64)])
     email = StringField('Email', validators=[DataRequired(), Length(max=120)])
-    password = StringField('Password', validators=[DataRequired(), Length(min=6)])
+    password = StringField('Password', validators=[DataRequired(), Length(min=8)])
     password2 = StringField('Confirm Password', validators=[DataRequired(), Length(min=6)])
     submit = SubmitField('Register')
 
@@ -311,3 +311,16 @@ class FlagContentForm(FlaskForm):
                                 validators=[Optional(), Length(max=500)],
                                 render_kw={"placeholder": "Provide more context about why you're reporting this..."})
     submit = SubmitField('Submit Report')
+
+
+class ResetPasswordRequestForm(FlaskForm):
+    """Form for requesting a password reset email"""
+    email = StringField('Email Address', validators=[DataRequired(), Length(max=120)])
+    submit = SubmitField('Send Reset Link')
+
+
+class ResetPasswordForm(FlaskForm):
+    """Form for setting a new password via reset link"""
+    password = StringField('New Password', validators=[DataRequired(), Length(min=8)])
+    password2 = StringField('Confirm New Password', validators=[DataRequired(), EqualTo('password', message='Passwords must match.')])
+    submit = SubmitField('Reset Password')

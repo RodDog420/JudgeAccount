@@ -28,10 +28,11 @@ class Judge(db.Model):
         return f"{self.first_name} {self.last_name}"
 
     def average_rating(self):
-        reviews_list = self.reviews.all()
-        if not reviews_list:
-            return 0
-        return sum(r.rating for r in reviews_list) / len(reviews_list)
+        from sqlalchemy import func
+        result = db.session.query(func.avg(Review.rating)).filter(
+            Review.judge_id == self.id
+        ).scalar()
+        return round(float(result), 1) if result else 0
 
     def review_count(self):
         return self.reviews.count()
@@ -42,8 +43,8 @@ class Judge(db.Model):
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    judge_id = db.Column(db.Integer, db.ForeignKey('judge.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    judge_id = db.Column(db.Integer, db.ForeignKey('judge.id'), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True, index=True)
 
     # Rating and concerns
     rating = db.Column(db.Integer, nullable=False)

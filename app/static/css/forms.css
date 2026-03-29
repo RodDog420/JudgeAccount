@@ -402,3 +402,24 @@ input[type="submit"]:hover {
         grid-column: 3;
     }
 }
+
+.form-inline-action {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: none;
+    margin: 0;
+    display: inline;
+}
+
+.form-inline-action .btn-secondary {
+    background-color: #FF705A;
+    color: white;
+	min-width: 12rem;
+}
+
+.form-inline-action .btn-secondary:hover {
+    background-color: #e74c3c;
+    color: white;
+}

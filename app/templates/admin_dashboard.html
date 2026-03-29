@@ -20,7 +20,7 @@
             id="admin-dash-filter-form">
         {{ form.hidden_tag() }}
 
-        <h3 class="form-section-title">Search & Filter Content</h3>
+        <h3 class="form-section-title">Admin Dashboard - Search & Filter Content</h3>
 
         <div class="admin-filter-grid">
             <div class="form-group">
@@ -261,52 +261,37 @@
     {% for review in reviews %}
     <div class="review-card">
 
-        <!-- Judge Identity Section -->
         <div class="review-header">
-            <div>
-            {% set badge_count = (1 if review.judge.is_federal else 0) + (1 if review.judge.is_retired else 0) %}
-            {% if badge_count == 2 %}
-                <h3 class="judge-name-heading admin-card-judge-header-multi">
-                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
-                        {{ review.judge.full_name() }}
-                    </a>
+            <div class="review-header-row">
+                <div class="review-header-left">
+                    <h3 class="judge-name-heading">
+                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">{{ review.judge.full_name() }}</a>
+                    </h3>
+                </div>
+                <div class="review-header-right">
+                    {% set badge_count = (1 if review.judge.is_federal else 0) + (1 if review.judge.is_retired else 0) %}
+                    {% if badge_count > 0 %}
                     <div class="admin-card-judge-badges">
-                        {% if review.judge.is_federal %}
-                            <span class="badge badge-federal">Federal</span>
-                        {% endif %}
-                        {% if review.judge.is_retired %}
-                            <span class="badge badge-retired">Retired</span>
-                        {% endif %}
+                        {% if review.judge.is_federal %}<span class="badge badge-federal">Federal</span>{% endif %}
+                        {% if review.judge.is_retired %}<span class="badge badge-retired">Retired</span>{% endif %}
                     </div>
-                </h3>
-            {% elif badge_count == 1 %}
-                <h3 class="judge-name-heading admin-card-judge-header-single">
-                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
-                        {{ review.judge.full_name() }}
-                    </a>
-                    {% if review.judge.is_federal %}
-                        <span class="badge badge-federal">Federal</span>
                     {% endif %}
-                    {% if review.judge.is_retired %}
-                        <span class="badge badge-retired">Retired</span>
-                    {% endif %}
-                </h3>
-            {% else %}
-                <h3 class="judge-name-heading">
-                    <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">
-                        {{ review.judge.full_name() }}
-                    </a>
-                </h3>
-            {% endif %}
-            <p class="judge-court-info">
-                {{ review.judge.court }} - {{ review.judge.city }}, {{ review.judge.state }}
-            </p>
+                </div>
+            </div>
+            <div class="review-header-row">
+                <div class="review-header-left">
+                    <span class="review-rating">{{ review.rating }} / 5 &#9733;</span>
+                </div>
+                <div class="review-header-right">
+                    <span class="review-header-court">{{ review.judge.court }}</span>
+                    <span class="review-header-court">{{ review.judge.city }}, {{ review.judge.state }}</span>
+                </div>
             </div>
         </div>
 
         <!-- Review Info Grid -->
         <div class="review-info-grid">
-            <span class="review-rating">{{ review.rating }} / 5 &#9733;</span>
+            <div class="review-metadata">Court Date: {{ review.court_date.strftime('%b %d, %Y') }}</div>
             <p class="submitter-info">
                 {% if review.user %}
                     <span class="submitter-no-wrap">
@@ -324,9 +309,6 @@
                     </span>
                 {% endif %}
             </p>
-            <div class="review-metadata">
-                Court Date: {{ review.court_date.strftime('%b %d, %Y') }}
-            </div>
             <div class="review-grid-empty"></div>
         </div>
         
@@ -349,7 +331,7 @@
         </div>
         
         <div class="admin-actions admin-actions-dashboard">
-            <button type="button" class="btn btn-secondary"
+            <button type="button" class="btn btn-secondary btn-wide"
                 onclick="openModal('delete-review-{{ review.id }}')">
                 Delete
             </button>

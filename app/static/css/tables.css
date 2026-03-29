@@ -426,29 +426,29 @@ td a:hover {
 }	
 
 @media (max-width: 47.9375rem) {
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table),
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) thead,
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody,
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) th,
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) td,
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tr {
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table),
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) thead,
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) tbody,
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) th,
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) td,
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) tr {
 		display: block;
 	}
 
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) thead tr {
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) thead tr {
 		position: absolute;
 		top: -9999px;
 		left: -9999px;
 	}
 
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody tr {
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) tbody tr {
 		margin-bottom: 1.25rem;
 		border: 0.0625rem solid #ddd;
 		border-radius: 0.5rem;
 		padding: 0.9375rem;
 	}
 
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody td {
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) tbody td {
 		border: none;
 		position: relative;
 		padding: 0.2rem 0.5rem 0.2rem 30%;  /* 30% padding to push from the left side to make room for the data-labels */
@@ -457,7 +457,7 @@ td a:hover {
 		line-height: 1.3
 	}
 
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody td::before {
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) tbody td::before {
 		content: attr(data-label);
 		position: absolute;
 		left: 0.9375rem;
@@ -468,7 +468,8 @@ td a:hover {
 		color: #2c3e50;
 	}
 	/* Right-align Actions column content (buttons) */
-	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table) tbody td[data-label="Actions"] {
+	table:not(.judge-table-desktop):not(.admin-user-table-desktop):not(.stats-table):not(.banned-users-table):not(.parisien-table) tbody td[data-label="Actions"] {
+
 		text-align: right;
 	}
 }
@@ -704,5 +705,64 @@ td a:hover {
         overflow-wrap: anywhere;
         max-width: 15rem;
         min-width: 10rem;
+    }
+}
+
+/* ==========================================================================
+   ADMIN USER DETAIL PAGE - Recent Admin Actions Table
+   ========================================================================== */
+
+/* Desktop/Tablet ONLY - Column widths for admin actions table */
+@media (min-width: 48rem) {
+    .user-profile-admin .table-no-shadow {
+        table-layout: fixed;
+    }
+
+    .user-profile-admin .table-no-shadow th:nth-child(1),
+    .user-profile-admin .table-no-shadow td:nth-child(1) {
+        width: 14%;
+    }
+
+    .user-profile-admin .table-no-shadow th:nth-child(2),
+    .user-profile-admin .table-no-shadow td:nth-child(2) {
+        width: 14%;
+    }
+
+    .user-profile-admin .table-no-shadow th:nth-child(3),
+    .user-profile-admin .table-no-shadow td:nth-child(3) {
+        width: 22%;
+    }
+
+    .user-profile-admin .table-no-shadow th:nth-child(4),
+    .user-profile-admin .table-no-shadow td:nth-child(4) {
+        width: 50%;
+    }
+
+    /* Center Action column content (badges) - headers stay left-aligned */
+    .user-profile-admin .table-no-shadow td:nth-child(2) {
+        text-align: center;
+    }
+}
+
+/* Tablet: 768px-920px - Adjusted column widths */
+@media (min-width: 48rem) and (max-width: 57.5rem) {
+    .user-profile-admin .table-no-shadow th:nth-child(1),
+    .user-profile-admin .table-no-shadow td:nth-child(1) {
+        width: 17%;
+    }
+
+    .user-profile-admin .table-no-shadow th:nth-child(2),
+    .user-profile-admin .table-no-shadow td:nth-child(2) {
+        width: 17%;
+    }
+
+    .user-profile-admin .table-no-shadow th:nth-child(3),
+    .user-profile-admin .table-no-shadow td:nth-child(3) {
+        width: 24%;
+    }
+
+    .user-profile-admin .table-no-shadow th:nth-child(4),
+    .user-profile-admin .table-no-shadow td:nth-child(4) {
+        width: 42%;
     }
 }

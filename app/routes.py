@@ -1,12 +1,23 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user
 from wtforms.validators import ValidationError
-from app import db
+from app import db, limiter
 from app.models import Judge, Review, MediaLink, User, ContentFlag
 from app.forms import ReviewForm, MediaLinkForm
 from app.court_data import STATES, COURTS_BY_STATE
 
 bp = Blueprint('main', __name__)
+
+
+@bp.route('/health')
+def health():
+    """Health check endpoint for Render and uptime monitoring."""
+    try:
+        db.session.execute(db.text('SELECT 1'))
+        return {'status': 'ok', 'database': 'ok'}, 200
+    except Exception as e:
+        current_app.logger.error(f"Health check failed: {e}")
+        return {'status': 'error', 'database': 'unavailable'}, 500
 
 
 @bp.route('/index', methods=['GET', 'POST'])
@@ -60,8 +71,8 @@ def index():
             query = query.filter(Judge.is_retired == True)
             active_filters.append(('retired', 'Retired Only'))
 
-        # Get all results
-        judges = query.all()
+        # Get results with cap
+        judges = query.limit(500).all()
 
         # Apply content filter (must be done after getting results)
         if form.filter_content.data == 'has_reviews':
@@ -92,7 +103,7 @@ def index():
         elif form.sort_by.data == 'documented_desc':
             judges.sort(key=lambda j: (j.review_count() + j.media_link_count()), reverse=True)
     else:
-        judges = query.all()
+        judges = query.limit(500).all()
         judges.sort(key=lambda j: (j.last_name.lower(), j.first_name.lower()))
 
     return render_template('index.html', judges=judges, form=form, active_filters=active_filters)
@@ -101,8 +112,8 @@ def index():
 @bp.route('/judge/<int:judge_id>')
 def judge(judge_id):
     judge = Judge.query.get_or_404(judge_id)
-    reviews = judge.reviews.all()
-    media_links = judge.media_links
+    reviews = judge.reviews.limit(200).all()
+    media_links = judge.media_links.limit(200).all() if hasattr(judge.media_links, 'limit') else judge.media_links[:200]
 
     # Check for pending flags on each review
     for review in reviews:
@@ -125,6 +136,7 @@ def judge(judge_id):
 
 @bp.route('/submit_review', methods=['GET', 'POST'])
 @login_required
+@limiter.limit("10 per hour")
 def submit_review():
     form = ReviewForm()
 
@@ -173,6 +185,8 @@ def submit_review():
                 validation_errors.append("Your Review is required.")
             elif len(form.review_text.data) < 10:
                 validation_errors.append("Your Review must be at least 10 characters.")
+            elif len(form.review_text.data) > 5000:
+                validation_errors.append("Your Review must be 5000 characters or fewer.")
 
             # If validation passed, use prefilled judge
             if not validation_errors:
@@ -237,6 +251,8 @@ def submit_review():
                 validation_errors.append("Your Review is required.")
             elif len(form.review_text.data) < 10:
                 validation_errors.append("Your Review must be at least 10 characters.")
+            elif len(form.review_text.data) > 5000:
+                validation_errors.append("Your Review must be 5000 characters or fewer.")
 
             # If validation passed, create/find judge and proceed
             if not validation_errors:
@@ -305,6 +321,7 @@ def submit_review():
 
 @bp.route('/submit_media_link', methods=['GET', 'POST'])
 @login_required
+@limiter.limit("10 per hour")
 def submit_media_link():
     form = MediaLinkForm()
 
@@ -617,8 +634,8 @@ def sitemap_xml():
     from flask import Response
     from datetime import datetime
 
-    # Get all judges for individual pages
-    judges = Judge.query.all()
+    # Get all judges for individual pages — capped to prevent memory spike
+    judges = Judge.query.limit(5000).all()
 
     # Static pages
     pages = [
@@ -632,6 +649,7 @@ def sitemap_xml():
         {'loc': url_for('main.contact', _external=True), 'priority': '0.5', 'changefreq': 'monthly'},
         {'loc': url_for('main.sitemap', _external=True), 'priority': '0.4', 'changefreq': 'monthly'},
         {'loc': url_for('main.support', _external=True), 'priority': '0.6', 'changefreq': 'monthly'},
+        {'loc': url_for('main.recall_judge_parisien', _external=True), 'priority': '0.9', 'changefreq': 'monthly'},
     ]
 
     # Add judge pages
@@ -647,124 +665,6 @@ def sitemap_xml():
     return response
 
 
-# Email System Debug Routes - Add these temporarily to routes.py for testing
-
-@bp.route('/debug_email_system')
-@login_required
-def debug_email_system():
-    """Comprehensive email system debugging"""
-    if not current_user.is_admin:
-        return "Admin only"
-
-    debug_results = []
-
-    # Test 1: Basic email configuration
-    try:
-        debug_results.append(f"✅ MAIL_SERVER: {current_app.config.get('MAIL_SERVER')}")
-        debug_results.append(f"✅ ADMIN_EMAIL: {current_app.config.get('ADMIN_EMAIL')}")
-        debug_results.append(f"✅ MAIL_DEFAULT_SENDER: {current_app.config.get('MAIL_DEFAULT_SENDER')}")
-
-        import os
-        debug_results.append(f"✅ MAIL_USERNAME env: {'SET' if os.environ.get('MAIL_USERNAME') else 'NOT SET'}")
-        debug_results.append(f"✅ MAIL_PASSWORD env: {'SET' if os.environ.get('MAIL_PASSWORD') else 'NOT SET'}")
-    except Exception as e:
-        debug_results.append(f"❌ Config error: {e}")
-
-    # Test 2: Flask-Mail initialization
-    try:
-        from app.email_utils import mail
-        debug_results.append(f"✅ Flask-Mail object: {mail}")
-    except Exception as e:
-        debug_results.append(f"❌ Flask-Mail import error: {e}")
-
-    # Test 3: SMTP Connection
-    try:
-        from app.email_utils import mail
-        with mail.connect() as conn:
-            debug_results.append("✅ SMTP connection successful")
-    except Exception as e:
-        debug_results.append(f"❌ SMTP connection failed: {e}")
-
-    # Test 4: Template file existence
-    import os
-    template_paths = [
-        os.path.join(current_app.root_path, 'templates', 'emails', 'admin_flag_notification.html'),
-        os.path.join(current_app.root_path, 'templates', 'emails', 'user_content_issue.html')
-    ]
-
-    for path in template_paths:
-        if os.path.exists(path):
-            debug_results.append(f"✅ Template exists: {path}")
-        else:
-            debug_results.append(f"❌ Template missing: {path}")
-
-    # Test 5: Simple email send
-    try:
-        from app.email_utils import send_email
-        result = send_email(
-            subject="🔧 DEBUG: Email System Test",
-            recipient=current_app.config.get('ADMIN_EMAIL'),
-            html_body="<h2>Email System Debug Test</h2><p>If you see this, basic email sending works!</p>"
-        )
-        debug_results.append(f"✅ Simple email send result: {result}")
-    except Exception as e:
-        debug_results.append(f"❌ Simple email send error: {e}")
-
-    # Test 6: Check recent database activity
-    try:
-        recent_reviews = Review.query.order_by(Review.created_date.desc()).limit(3).all()
-        recent_flags = ContentFlag.query.order_by(ContentFlag.created_date.desc()).limit(3).all()
-
-        debug_results.append(f"✅ Recent reviews count: {len(recent_reviews)}")
-        debug_results.append(f"✅ Recent flags count: {len(recent_flags)}")
-
-        if recent_reviews:
-            debug_results.append(
-                f"✅ Latest review: {recent_reviews[0].id} by {recent_reviews[0].user.username if recent_reviews[0].user else 'Anonymous'}")
-        if recent_flags:
-            debug_results.append(f"✅ Latest flag: {recent_flags[0].id} type: {recent_flags[0].flag_type}")
-
-    except Exception as e:
-        debug_results.append(f"❌ Database check error: {e}")
-
-    # Return debug results
-    return "<h2>🔧 Email System Debug Report</h2>" + "<br>".join(debug_results)
-
-
-@bp.route('/test_flag_email_manually')
-@login_required
-def test_flag_email_manually():
-    """Manually test flag notification email"""
-    if not current_user.is_admin:
-        return "Admin only"
-
-    try:
-        # Get any existing flag for testing
-        flag = ContentFlag.query.first()
-        if not flag:
-            return "❌ No flags found in database for testing"
-
-        # Get the associated content and judge
-        if hasattr(flag, 'review_id') and flag.review_id:
-            content = Review.query.get(flag.review_id)
-        elif hasattr(flag, 'media_link_id') and flag.media_link_id:
-            content = MediaLink.query.get(flag.media_link_id)
-        else:
-            return "❌ Flag has no associated content"
-
-        if not content:
-            return "❌ Associated content not found"
-
-        judge = Judge.query.get(content.judge_id)
-        if not judge:
-            return "❌ Associated judge not found"
-
-        # Try to send the notification
-        from app.email_utils import send_admin_flag_notification
-        result = send_admin_flag_notification(flag, content, judge)
-
-        return f"✅ Manual flag email test result: {result}<br>Flag ID: {flag.id}<br>Content type: {'Review' if hasattr(content, 'rating') else 'Media Link'}<br>Judge: {judge.first_name} {judge.last_name}"
-
-    except Exception as e:
-        current_app.logger.error(f"Manual flag email test error: {e}")
-        return f"❌ Manual flag email test error: {e}"
+@bp.route('/recall-judge-parisien')
+def recall_judge_parisien():
+    return render_template('recall_judge_parisien.html')

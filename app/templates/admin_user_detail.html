@@ -259,19 +259,28 @@
                 <tr>
                     <td class="table-cell-nowrap" data-label="Date">{{ log.timestamp.strftime('%b %d, %Y %I:%M %p') }}</td>
                     <td data-label="Action">
-                        <span class="badge badge-gray">
-                            {% if log.action_type == 'ban_user' %}Banned
-                            {% elif log.action_type == 'unban_user' %}Unbanned
-                            {% elif log.action_type == 'delete_user' %}Deleted
-                            {% elif log.action_type == 'add_admin_note' %}Note
-                            {% elif log.action_type == 'delete_review' %}Review Deleted
-                            {% elif log.action_type == 'delete_media_link' %}Media Deleted
-                            {% elif log.action_type == 'approve_media_link' %}Approved
-                            {% elif log.action_type == 'reject_media_link' %}Rejected
-                            {% elif log.action_type == 'dismiss_flag' %}Flag Dismissed
-                            {% else %}{{ log.action_type.replace('_', ' ').title() }}
-                            {% endif %}
-                        </span>
+                        {% if log.action_type == 'ban_user' %}
+                            <span class="badge badge-banned badge-small">Banned</span>
+                        {% elif log.action_type == 'unban_user' %}
+                            <span class="badge badge-unbanned badge-small">Unbanned</span>
+                        {% elif log.action_type == 'delete_user' %}
+                            <span class="badge badge-deleted badge-small">Deleted</span>
+                        {% elif log.action_type == 'add_admin_note' %}
+                            <span class="badge badge-gray badge-small">Note</span>
+                        {% elif log.action_type == 'delete_review' %}
+                            <span class="badge badge-deleted badge-small">Review Deleted</span>
+                        {% elif log.action_type == 'delete_media_link' %}
+                            <span class="badge badge-deleted badge-small">Media Deleted</span>
+                        {% elif log.action_type == 'approve_media_link' %}
+                            <span class="badge badge-approved badge-small">Approved</span>
+                        {% elif log.action_type == 'reject_media_link' %}
+                            <span class="badge badge-rejected badge-small">Rejected</span>
+                        {% elif log.action_type == 'dismiss_flag' %}
+                            <span class="badge badge-gray badge-small">Flag Dismissed</span>
+                        {% else %}
+                            <span class="badge badge-gray">{{ log.action_type.replace('_', ' ').title() }}</span>
+                        {% endif %}
+                    </td>
                     </td>
                     <td class="user-content-username" data-label="Admin">{{ log.admin.username if log.admin else 'System' }}</td>
                     <td class="table-cell-muted user-content-admin" data-label="Details">{{ log.details or 'No details' }}</td>

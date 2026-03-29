@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, session
 from flask_login import login_user, logout_user, current_user, login_required
 from urllib.parse import urlparse
 from functools import wraps
-from app import db
 from app.models import User, Review, Judge, MediaLink, BannedUser, AdminLog, ContentFlag
 from app.forms import LoginForm, RegistrationForm, FlagContentForm
 from flask_wtf.csrf import generate_csrf
+from app import db, limiter
 
 bp = Blueprint('auth', __name__)
 
@@ -33,6 +33,7 @@ def admin_required(f):
 # ============================================================================
 
 @bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -50,6 +51,7 @@ def login():
             return redirect(url_for('auth.login'))
 
         login_user(user, remember=form.remember_me.data)
+        session.permanent = True  # ← activates PERMANENT_SESSION_LIFETIME
 
         # NEW: Update last login time
         user.last_login = db.func.now()
@@ -65,6 +67,7 @@ def login():
 
 
 @bp.route('/register', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -99,8 +102,9 @@ def logout():
 @bp.route('/dashboard')
 @login_required
 def dashboard():
-    reviews = Review.query.filter_by(user_id=current_user.id).order_by(Review.created_at.desc()).all()
-    media_links = MediaLink.query.filter_by(user_id=current_user.id).order_by(MediaLink.created_at.desc()).all()
+    reviews = Review.query.filter_by(user_id=current_user.id).order_by(Review.created_at.desc()).limit(50).all()
+    media_links = MediaLink.query.filter_by(user_id=current_user.id).order_by(MediaLink.created_at.desc()).limit(
+        50).all()
 
     # NEW: Update last activity
     current_user.last_activity = db.func.now()
@@ -158,7 +162,7 @@ def edit_review(review_id):
     return render_template('edit_review.html', form=form, review=review, courts_by_state=COURTS_BY_STATE)
 
 
-@bp.route('/delete_review/<int:review_id>')
+@bp.route('/delete_review/<int:review_id>', methods=['POST'])
 @login_required
 def delete_review(review_id):
     review = Review.query.get_or_404(review_id)
@@ -224,7 +228,7 @@ def edit_media_link(media_link_id):
     return render_template('edit_media_link.html', form=form, media_link=media_link, courts_by_state=COURTS_BY_STATE)
 
 
-@bp.route('/delete_media_link/<int:media_link_id>')
+@bp.route('/delete_media_link/<int:media_link_id>', methods=['POST'])
 @login_required
 def delete_media_link(media_link_id):
     media_link = MediaLink.query.get_or_404(media_link_id)
@@ -291,8 +295,8 @@ def admin_dashboard():
         elif form.filter_concerns.data == 'temperament':
             review_query = review_query.filter(Review.temperament_concern == True)
 
-        all_reviews = review_query.all()
-        all_media_links = media_query.all()
+        all_reviews = review_query.limit(100).all()
+        all_media_links = media_query.limit(100).all()
 
         if form.sort_by.data == 'newest':
             all_reviews.sort(key=lambda r: r.created_at, reverse=True)
@@ -455,7 +459,7 @@ def manage_users():
             )
         )
 
-    users = query.all()
+    users = query.limit(100).all()
 
     user_data = []
     for user in users:
@@ -675,7 +679,11 @@ def bulk_actions():
         flash('No users selected.')
         return redirect(url_for('auth.manage_users'))
 
-    user_ids = [int(uid) for uid in user_ids]
+    try:
+        user_ids = [int(uid) for uid in user_ids]
+    except (ValueError, TypeError):
+        flash('Invalid request.')
+        return redirect(url_for('auth.manage_users'))
 
     if current_user.id in user_ids:
         flash('You cannot perform bulk actions on yourself.')
@@ -1255,3 +1263,47 @@ def admin_statistics():
         verifications_in_range=verifications_in_range,
         multiple_concerns=multiple_concerns
     )
+
+
+@bp.route('/reset_password_request', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    from app.forms import ResetPasswordRequestForm
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data.lower()).first()
+        if user:
+            from app.email_utils import send_password_reset_email
+            send_password_reset_email(user)
+        flash('If that email address is registered, a reset link has been sent. Check your inbox.')
+        return redirect(url_for('auth.login'))
+    return render_template('reset_password_request.html', form=form)
+
+
+@bp.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
+    from app.forms import ResetPasswordForm
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        user_id = s.loads(token, salt='password-reset', max_age=900)
+    except SignatureExpired:
+        flash('That reset link has expired. Please request a new one.')
+        return redirect(url_for('auth.reset_password_request'))
+    except BadSignature:
+        flash('That reset link is invalid.')
+        return redirect(url_for('auth.reset_password_request'))
+    user = User.query.get_or_404(user_id)
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset. Please log in.')
+        return redirect(url_for('auth.login'))
+    return render_template('reset_password.html', form=form)
+
+

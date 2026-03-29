@@ -22,6 +22,7 @@ body {
 }
 .container {
     max-width: 75rem;
+	width: 100%;
     margin: 0 auto;
     padding: 1.25rem;
     flex: 1;
@@ -857,6 +858,211 @@ footer {
     color: #229954;
 }
 
+
+/* ==========================================================================
+   RECALL JUDGE PARISIEN PAGE — recall_judge_parisien.html
+   ========================================================================== */
+
+.parisien-section {
+    background-color: white;
+    padding: 1.875rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.875rem;
+}
+
+.parisien-stat-number--red {
+    color: #e74c3c;
+}
+
+.parisien-chart-img {
+    display: block;
+    width: 100%;
+    border: 0.0625rem solid #ecf0f1;
+    border-radius: 0.3125rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+    margin-top: 0.625rem;
+}
+
+.parisien-download-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+.parisien-download-card {
+    background-color: #f8f9fa;
+    border-left: 0.25rem solid #3498db;
+    border-radius: 0.3125rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.parisien-download-card-title {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.parisien-download-card-desc {
+    color: #555;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+.parisien-download-card .btn {
+    margin-top: auto;
+}
+
+.parisien-footnote {
+    font-size: 0.82rem;
+    color: #7f8c8d;
+    font-style: italic;
+    margin-top: 0.75rem;
+    line-height: 1.6;
+}
+
+.parisien-td-red {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.parisien-td-bold {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.parisien-tr-composite {
+    background-color: #fef9f9;
+    border-top: 0.125rem solid #e74c3c;
+}
+
+.parisien-stats-justified {
+    justify-content: space-between;
+    width: 100%;
+}
+
+.parisien-stats-justified .stat-box {
+    flex: 1 1 0;
+}
+
+.parisien-electoral {
+    border-left: 0.25rem solid #2c3e50;
+}
+
+.parisien-cjc-section h2 {
+    text-align: center;
+}
+
+.parisien-cjc-section .btn {
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Mobile card structure */
+.parisien-card-mobile {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    border-left: 0.25rem solid #0047AB;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.parisien-card-mobile.parisien-tr-composite {
+    border-top: 0.125rem solid #e74c3c;
+    background-color: #fef9f9;
+}
+
+.parisien-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.0625rem solid #ecf0f1;
+}
+
+.parisien-card-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.3rem 1rem;
+    align-items: start;
+}
+
+.parisien-card-grid--longitudinal .parisien-card-value {
+    max-width: 10rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.parisien-card-key {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.parisien-card-value {
+    font-size: 0.9rem;
+    color: #555;
+    text-align: left;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.parisien-card-value.parisien-td-red {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.parisien-card-value.parisien-td-bold {
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* Mobile-only: table hidden, cards visible */
+@media (max-width: 47.9375rem) {
+    .parisien-table { display: none; }
+
+    table.parisien-table tbody td {
+        padding: 0.2rem 0.5rem 0.2rem 45%;
+    }
+
+    table.parisien-table tbody td::before {
+        width: 42%;
+    }
+}
+
+/* Tablet and above: cards hidden, download grids expand */
+@media (min-width: 48rem) {
+    .parisien-cards-mobile { display: none; }
+
+    .parisien-download-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .parisien-download-grid--two-col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .parisien-cjc-section .btn {
+        padding: 1rem 6rem;
+    }
+}
+
+/* Desktop: stat label font size and line clamp */
+@media (min-width: 64rem) {
+    .parisien-stats-justified .stat-label {
+        -webkit-line-clamp: 3;
+        font-size: clamp(0.65rem, 1.2vw, 0.78rem);
+    }
+}
 
 /* ==========================================================================
    MOBILE RESPONSIVE STYLES (320px - 767px / Phones Only)

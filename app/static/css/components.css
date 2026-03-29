@@ -78,7 +78,26 @@
     font-size: 0.6rem;
     padding: 0.15rem 0.4rem;
 }
-
+.badge-banned {
+    background-color: #c2185b;  /* Red */
+    color: white;
+}
+.badge-unbanned {
+    background-color: #f39c12;  /* Orange */
+    color: white;
+}
+.badge-approved {
+    background-color: #27ae60;  /* Green */
+    color: white;
+}
+.badge-rejected {
+    background-color: #721c24;  /* Dark red */
+    color: white;
+}
+.badge-deleted {
+    background-color: #e74c3c;  /* Red */
+    color: white;
+}
 /* ==========================================================================
    2. BUTTONS
    ========================================================================== */
@@ -188,8 +207,13 @@
     width: 13rem;
 	min-width: unset;
 }
+.btn-wide {
+    min-width: 12rem;
+}
+
 .full-btn { /* No effect on desktop - button behaves normally */
 }
+
 /* ==========================================================================
    3. STARS & RATINGS
    ========================================================================== */
