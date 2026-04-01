@@ -664,7 +664,8 @@ def sitemap_xml():
     response = Response(sitemap_xml, mimetype='application/xml')
     return response
 
-
-@bp.route('/recall-judge-parisien')
-def recall_judge_parisien():
-    return render_template('recall_judge_parisien.html')
+#
+# @bp.route('/recall-judge-parisien')
+# def recall_judge_parisien():
+#    return render_template('recall_judge_parisien.html')
+#
