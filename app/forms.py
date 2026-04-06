@@ -182,18 +182,6 @@ class RegistrationForm(FlaskForm):
     password2 = StringField('Confirm Password', validators=[DataRequired(), Length(min=6)])
     submit = SubmitField('Register')
 
-    def validate_username(self, username):
-        from app.models import User
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('Username already taken. Please choose a different one.')
-
-    def validate_email(self, email):
-        from app.models import User
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            raise ValidationError('Email already registered. Please use a different one.')
-
     def validate_password2(self, password2):
         if self.password.data != password2.data:
             raise ValidationError('Passwords must match.')

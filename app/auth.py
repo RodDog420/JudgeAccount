@@ -74,9 +74,20 @@ def register():
 
     form = RegistrationForm()
     if form.validate_on_submit():
-        # NEW: Check if username or email is banned
+        # Check for existing username or email — generic message, no field-level detail
+        existing = User.query.filter(
+            db.or_(
+                User.username == form.username.data,
+                User.email == form.email.data.lower()
+            )
+        ).first()
+        if existing:
+            flash('Registration could not be completed. Please try again with different credentials.')
+            return redirect(url_for('auth.register'))
+
+        # Check if username or email is banned
         if BannedUser.is_banned(username=form.username.data, email=form.email.data):
-            flash('This username or email address is not eligible for registration.')
+            flash('Registration could not be completed. Please try again with different credentials.')
             return redirect(url_for('auth.register'))
 
         user = User(username=form.username.data, email=form.email.data)
