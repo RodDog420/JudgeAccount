@@ -209,72 +209,9 @@
     </footer>
 
     <!-- Mobile Navigation & Dropdown JavaScript -->
-    <script>
-        const navToggle = document.getElementById('nav-toggle');
-        const navLinks = document.getElementById('nav-links');
-        const dropdownToggles = document.querySelectorAll('.nav-dropdown-toggle');
-        
-        // Mobile menu toggle
-        navToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            navLinks.classList.toggle('nav-active');
-            navToggle.classList.toggle('active');
-        });
-        
-        // Close mobile menu when clicking a direct link (not dropdown)
-        navLinks.querySelectorAll('a:not(.nav-dropdown-menu a)').forEach(link => {
-            link.addEventListener('click', function() {
-                navLinks.classList.remove('nav-active');
-                navToggle.classList.remove('active');
-            });
-        });
-        
-        // Dropdown toggle functionality
-        dropdownToggles.forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const dropdown = this.parentElement;
-                const isOpen = dropdown.classList.contains('dropdown-open');
-                
-                // Close all dropdowns
-                document.querySelectorAll('.nav-dropdown').forEach(d => {
-                    d.classList.remove('dropdown-open');
-                });
-                
-                // Toggle current dropdown
-                if (!isOpen) {
-                    dropdown.classList.add('dropdown-open');
-                }
-            });
-        });
-        
-        // Close dropdown menu when clicking a link inside it
-        document.querySelectorAll('.nav-dropdown-menu a').forEach(link => {
-            link.addEventListener('click', function() {
-                document.querySelectorAll('.nav-dropdown').forEach(d => {
-                    d.classList.remove('dropdown-open');
-                });
-                // Also close mobile menu
-                navLinks.classList.remove('nav-active');
-                navToggle.classList.remove('active');
-            });
-        });
-        
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.nav-dropdown')) {
-                document.querySelectorAll('.nav-dropdown').forEach(d => {
-                    d.classList.remove('dropdown-open');
-                });
-            }
-            
-            // Close mobile menu when clicking outside
-            if (!navLinks.contains(event.target) && !navToggle.contains(event.target)) {
-                navLinks.classList.remove('nav-active');
-                navToggle.classList.remove('active');
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+
+    {% block extra_js %}{% endblock %}
 </body>
 <!-- Color Dictionary
 BLACKS & GRAYS:

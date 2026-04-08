@@ -131,7 +131,7 @@
                     <h3 class="modal-title">Dismiss Flag</h3>
                     <p class="modal-body">The flag will be dismissed and the content will remain visible.</p>
                     <form method="POST" action="{{ url_for('auth.dismiss_flag', flag_id=flag.id) }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="modal-actions">
                             <button type="button" class="btn btn-gray btn-small" onclick="closeModal('dismiss-modal-{{ flag.id }}')">Cancel</button>
                             <button type="submit" class="btn btn-primary btn-small">Confirm Dismiss</button>
@@ -146,7 +146,7 @@
                     <h3 class="modal-title">Delete Flagged Content</h3>
                     <p class="modal-body">This will permanently delete the content. Optionally include a message to the submitter.</p>
                     <form method="POST" action="{{ url_for('auth.flag_action', flag_id=flag.id) }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="action" value="delete_content">
                         <label class="modal-message-label" for="delete-msg-{{ flag.id }}">Message to submitter (optional)</label>
                         <textarea id="delete-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your submission was removed for violating our content policy."></textarea>
@@ -165,7 +165,7 @@
                     <h3 class="modal-title">Ban User</h3>
                     <p class="modal-body">This will suspend the user's account. Optionally include a message to the user.</p>
                     <form method="POST" action="{{ url_for('auth.flag_action', flag_id=flag.id) }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="action" value="ban_user">
                         <label class="modal-message-label" for="ban-msg-{{ flag.id }}">Message to user (optional)</label>
                         <textarea id="ban-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been suspended for violating our community guidelines."></textarea>
@@ -183,7 +183,7 @@
                     <h3 class="modal-title">Unban User</h3>
                     <p class="modal-body">This will restore the user's account access. Optionally include a message to the user.</p>
                     <form method="POST" action="{{ url_for('auth.unban_from_flag', flag_id=flag.id) }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <label class="modal-message-label" for="unban-msg-{{ flag.id }}">Message to user (optional)</label>
                         <textarea id="unban-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been restored. Please review our community guidelines."></textarea>
                         <div class="modal-actions">
@@ -203,17 +203,8 @@
     </div>
 {% endif %}
 
-<script>
-function openModal(id) {
-    document.getElementById(id).classList.add('active');
-}
-function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-}
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal-overlay')) {
-        e.target.classList.remove('active');
-    }
-});
-</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/modals.js') }}"></script>
 {% endblock %}

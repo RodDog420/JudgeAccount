@@ -70,6 +70,9 @@ input[type="checkbox"] {
     align-items: center;
     margin-bottom: 0.9375rem;
 }
+.main-form-badge-container {
+    margin-top: 0.75rem;
+}
 .checkbox-group label {
     margin-bottom: 0;
     cursor: pointer;
@@ -422,4 +425,28 @@ input[type="submit"]:hover {
 .form-inline-action .btn-secondary:hover {
     background-color: #e74c3c;
     color: white;
+}
+
+
+/* ==============================================
+   PASSWORD SHOW/HIDE TOGGLE
+   Used on login, register, reset_password
+   ============================================== */
+.password-field-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.password-field-input {
+    padding-right: 70px;
+}
+.password-toggle-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #555;
+    padding: 0;
 }

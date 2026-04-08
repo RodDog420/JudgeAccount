@@ -719,6 +719,19 @@ def bulk_actions():
                 )
         flash(f'{len(users)} user(s) have been banned.')
 
+    elif action == 'unban':
+        for user in users:
+            if user.is_banned:
+                user.unban()
+                AdminLog.log_action(
+                    admin_user=current_user,
+                    action_type='unban_user',
+                    target_user=user,
+                    details='Bulk unbanned user'
+                )
+        db.session.commit()
+        flash(f'{len(users)} user(s) have been unbanned.')
+
     elif action == 'delete':
         delete_reason = request.form.get('bulk_delete_reason', 'Bulk delete by admin')
         for user in users:
@@ -1315,6 +1328,6 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset. Please log in.')
         return redirect(url_for('auth.login'))
-    return render_template('reset_password.html', form=form)
+    return render_template('reset_password.html', form=form, token=token)
 
 

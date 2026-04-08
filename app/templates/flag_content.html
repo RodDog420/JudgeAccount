@@ -54,35 +54,8 @@
     </form>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const flagTypeSelect = document.querySelector('select[name="flag_type"]');
-    const descriptionField = document.querySelector('textarea[name="description"]');
-    const form = flagTypeSelect.closest('form');
+{% endblock %}
 
-    // Function to toggle required status
-    function toggleDescriptionRequired() {
-        if (flagTypeSelect.value === 'other') {
-            descriptionField.setAttribute('required', 'required');
-        } else {
-            descriptionField.removeAttribute('required');
-        }
-    }
-
-    // Run on page load
-    toggleDescriptionRequired();
-
-    // Run when dropdown changes
-    flagTypeSelect.addEventListener('change', toggleDescriptionRequired);
-
-    // Extra validation on form submit
-    form.addEventListener('submit', function(e) {
-        if (flagTypeSelect.value === 'other' && !descriptionField.value.trim()) {
-            e.preventDefault();
-            alert('Please provide an explanation when selecting "Other" as the violation type.');
-            descriptionField.focus();
-        }
-    });
-});
-</script>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/flag-content.js') }}"></script>
 {% endblock %}

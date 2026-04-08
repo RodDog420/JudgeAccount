@@ -129,7 +129,7 @@
             <h3 class="modal-title">Unban User</h3>
             <p class="modal-body">This will restore {{ user.username }}'s account access. Optionally include a message to the user.</p>
             <form method="POST" action="{{ url_for('auth.unban_user', user_id=user.id) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <label class="modal-message-label" for="unban-msg-{{ user.id }}">Message to user (optional)</label>
                 <textarea id="unban-msg-{{ user.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been restored. Please review our community guidelines."></textarea>
                 <div class="modal-actions">
@@ -292,17 +292,8 @@
     {% endif %}
 </div>
 
-<script>
-function openModal(id) {
-    document.getElementById(id).classList.add('active');
-}
-function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-}
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal-overlay')) {
-        e.target.classList.remove('active');
-    }
-});
-</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/modals.js') }}"></script>
 {% endblock %}

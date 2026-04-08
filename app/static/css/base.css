@@ -252,14 +252,6 @@ footer {
     text-decoration: underline;
 }
 
-.page-section > p:last-of-type a {
-    display: inline-block;
-    margin-top: 1rem;
-    color: #3498db;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
 /* Adjust anchor link landing position to account for fixed header */
 #table-of-contents {
     scroll-margin-top: 6rem;
@@ -491,6 +483,14 @@ footer {
 /* ==========================================================================
    SUPPORT PAGE - UNIQUE STYLES
    ========================================================================== */
+
+.page-section > p:last-of-type a:not(.email-breakable-link) {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #3498db;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
 
 .why-support-grid {
     display: grid;

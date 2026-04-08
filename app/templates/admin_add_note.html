@@ -33,7 +33,7 @@
     </div>
     
     <form method="POST" action="{{ url_for('auth.add_admin_note', user_id=user.id) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         
         <div class="form-group">
             <label for="admin_note">Admin Notes</label>

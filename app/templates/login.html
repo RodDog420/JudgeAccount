@@ -25,11 +25,11 @@
     
     <div class="form-group">
         {{ form.password.label }}
-        <div style="position: relative; display: flex; align-items: center;">
-            {{ form.password(type="password", class="form-control", id="password", style="padding-right: 70px;") }}
+        <div class="password-field-wrapper">
+            {{ form.password(type="password", class="form-control password-field-input", id="password") }}
             <button type="button"
                     onclick="togglePassword('password', this)"
-                    style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 0.85rem; color: #555; padding: 0;">
+                    class="password-toggle-btn">
                 Show
             </button>
         </div>
@@ -56,17 +56,8 @@
     </p>
 </form>
 
-<script>
-function togglePassword(fieldId, btn) {
-    var field = document.getElementById(fieldId);
-    if (field.type === 'password') {
-        field.type = 'text';
-        btn.textContent = 'Hide';
-    } else {
-        field.type = 'password';
-        btn.textContent = 'Show';
-    }
-}
-</script>
+{% endblock %}
 
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/password-toggle.js') }}"></script>
 {% endblock %}

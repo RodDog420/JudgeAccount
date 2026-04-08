@@ -57,13 +57,14 @@
     
     <!-- Bulk Actions Box -->
     <form method="POST" action="{{ url_for('auth.bulk_actions') }}" id="bulk-action-form" class="admin-bulk-actions-box">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         
         <div class="bulk-action-bar">
             <label for="bulk-action-select">Bulk Action:</label>
             <select id="bulk-action-select" name="bulk_action" class="form-control">
                 <option value="">Select Action</option>
                 <option value="ban">Ban Selected Users</option>
+                <option value="unban">Unban Selected Users</option>
                 <option value="delete">Delete Selected Users</option>
             </select>
             
@@ -229,75 +230,8 @@
 
 </div>
 
-<script>
-// Bulk action checkbox handling
-const selectAllCheckbox = document.getElementById('select-all');
-const userCheckboxes = document.querySelectorAll('.user-checkbox');
-const selectedCount = document.getElementById('selected-count');
-const bulkReasonInput = document.getElementById('bulk-reason');
-const bulkActionSelect = document.getElementById('bulk-action-select');
+{% endblock %}
 
-function updateSelectedCount() {
-    const checked = document.querySelectorAll('.user-checkbox:checked').length;
-    selectedCount.textContent = `${checked} selected`;
-    
-    // Enable/disable bulk action controls based on selection
-    const hasSelection = checked > 0;
-    bulkActionSelect.disabled = !hasSelection;
-    bulkReasonInput.disabled = !hasSelection;
-}
-
-// Select all functionality
-if (selectAllCheckbox) {
-    selectAllCheckbox.addEventListener('change', function() {
-        userCheckboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-        updateSelectedCount();
-    });
-}
-
-// Individual checkbox functionality
-userCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', function() {
-        // Update select-all checkbox
-        const allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
-        const noneChecked = Array.from(userCheckboxes).every(cb => !cb.checked);
-        
-        if (selectAllCheckbox) {
-            selectAllCheckbox.checked = allChecked;
-            selectAllCheckbox.indeterminate = !allChecked && !noneChecked;
-        }
-        
-        updateSelectedCount();
-    });
-});
-
-// Initialize count on page load
-updateSelectedCount();
-
-// Disable bulk action controls initially
-bulkActionSelect.disabled = true;
-bulkReasonInput.disabled = true;
-
-// Toggle all columns visibility on mobile
-const toggleColumnsBtn = document.getElementById('toggle-columns');
-const adminTableBox = document.getElementById('admin-user-table');
-
-if (toggleColumnsBtn && adminTableBox) {
-    let showingAll = false;
-    
-    toggleColumnsBtn.addEventListener('click', function() {
-        showingAll = !showingAll;
-        
-        if (showingAll) {
-            adminTableBox.classList.add('show-all-columns');
-            this.textContent = 'Show Priority Columns';
-        } else {
-            adminTableBox.classList.remove('show-all-columns');
-            this.textContent = 'Show All Columns';
-        }
-    });
-}
-</script>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-users.js') }}"></script>
 {% endblock %}

@@ -809,6 +809,13 @@ h1.user-content-name {
     margin-left: 0;
 }
 
+@media (max-width: 23rem) {
+    .email-breakable-link {
+        word-break: break-all;
+        overflow-wrap: anywhere;
+    }
+}
+
 /* ==========================================================================
    12. SPACING UTILITIES
    ========================================================================== */

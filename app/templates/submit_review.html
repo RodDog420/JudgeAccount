@@ -31,7 +31,7 @@
 </div>
 {% endif %}
 
-<form method="POST" action="{{ url_for('main.submit_review') }}">
+<form method="POST" action="{{ url_for('main.submit_review') }}" class="judge-submit-form">
     {{ form.hidden_tag() }}
     {% if prefilled_judge %}
     <input type="hidden" name="prefilled_judge_id" value="{{ prefilled_judge.id }}">
@@ -109,7 +109,7 @@
         {% endif %}
     </div>
 
-    <div class="checkbox-group">
+    <div class="checkbox-group main-form-badge-container">
         {% if prefilled_judge %}
             {{ form.is_federal(disabled="disabled") }}
         {% else %}
@@ -190,77 +190,14 @@
     </div>
 </form>
 
-<script>
-// Convert Python dictionary to JavaScript object
-const courtsByState = {{ courts_by_state | tojson }};
+<div id="courts-data"
+     data-courts='{{ courts_by_state | tojson }}'
+     data-preselected-court="{{ prefilled_judge.court if prefilled_judge else '' }}"
+     data-redirect-url="{{ url_for('main.submit_media_link', judge_id=prefilled_judge.id) if prefilled_judge else url_for('main.submit_media_link') }}">
+</div>
 
-// Get the state and court dropdown elements
-const stateSelect = document.getElementById('state-select');
-const courtSelect = document.getElementById('court-select');
+{% endblock %}
 
-// Store the pre-selected court value (if any)
-{% if prefilled_judge %}
-const preselectedCourt = "{{ prefilled_judge.court }}";
-{% else %}
-const preselectedCourt = null;
-{% endif %}
-
-// Function to update court dropdown based on selected state
-function updateCourtOptions() {
-    const selectedState = stateSelect.value;
-    
-    // Clear current court options
-    courtSelect.innerHTML = '<option value="">Select a court...</option>';
-    
-    // If a state is selected, add its courts
-    if (selectedState && courtsByState[selectedState]) {
-        courtsByState[selectedState].forEach(function(court) {
-            const option = document.createElement('option');
-            option.value = court[0];  // The court value
-            option.text = court[1];   // The court display name
-            
-            // Pre-select the court if it matches
-            if (preselectedCourt && court[0] === preselectedCourt) {
-                option.selected = true;
-            }
-            
-            courtSelect.appendChild(option);
-        });
-        courtSelect.disabled = preselectedCourt ? true : false;  // Disable if pre-filled
-    } else {
-        courtSelect.disabled = true;
-    }
-}
-
-// Listen for state selection changes
-stateSelect.addEventListener('change', updateCourtOptions);
-
-// Initialize on page load
-updateCourtOptions();
-
-// Set max date to today to prevent future dates
-const courtDateField = document.getElementById('court_date');
-if (courtDateField) {
-    const today = new Date().toISOString().split('T')[0];
-    courtDateField.max = today;
-}
-
-// Handle "Did you appear" redirect (only if the buttons exist)
-const appearedNoButton = document.getElementById('appeared-no');
-if (appearedNoButton) {
-    appearedNoButton.addEventListener('change', function() {
-        if (this.checked) {
-            if (confirm('You will be redirected to submit a media link instead. Continue?')) {
-                {% if prefilled_judge %}
-                window.location.href = "{{ url_for('main.submit_media_link', judge_id=prefilled_judge.id) }}";
-                {% else %}
-                window.location.href = "{{ url_for('main.submit_media_link') }}";
-                {% endif %}
-            } else {
-                document.getElementById('appeared-yes').checked = true;
-            }
-        }
-    });
-}
-</script>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/submit-review.js') }}"></script>
 {% endblock %}

@@ -105,48 +105,13 @@
     </div>
 </form>
 
-<script>
-// Convert Python dictionary to JavaScript object
-const courtsByState = {{ courts_by_state | tojson }};
+<div id="courts-data"
+     data-courts='{{ courts_by_state | tojson }}'
+     data-preselected-court="{{ media_link.judge.court }}">
+</div>
 
-// Get the state and court dropdown elements
-const stateSelect = document.getElementById('state-select');
-const courtSelect = document.getElementById('court-select');
+{% endblock %}
 
-// Store the pre-selected court value
-const preselectedCourt = "{{ media_link.judge.court }}";
-
-// Function to update court dropdown based on selected state
-function updateCourtOptions() {
-    const selectedState = stateSelect.value;
-    
-    // Clear current court options
-    courtSelect.innerHTML = '<option value="">Select a court...</option>';
-    
-    // If a state is selected, add its courts
-    if (selectedState && courtsByState[selectedState]) {
-        courtsByState[selectedState].forEach(function(court) {
-            const option = document.createElement('option');
-            option.value = court[0];  // The court value
-            option.text = court[1];   // The court display name
-            
-            // Pre-select the current court
-            if (court[0] === preselectedCourt) {
-                option.selected = true;
-            }
-            
-            courtSelect.appendChild(option);
-        });
-        courtSelect.disabled = true;  // Keep disabled since judge info can't be changed
-    } else {
-        courtSelect.disabled = true;
-    }
-}
-
-// Listen for state selection changes
-stateSelect.addEventListener('change', updateCourtOptions);
-
-// Initialize on page load
-updateCourtOptions();
-</script>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/edit-media-link.js') }}"></script>
 {% endblock %}
