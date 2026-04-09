@@ -208,8 +208,9 @@
         </div>
     </footer>
 
-    <!-- Mobile Navigation & Dropdown JavaScript -->
+    <!-- Global JavaScript -->
     <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/confirm-actions.js') }}"></script>
 
     {% block extra_js %}{% endblock %}
 </body>
@@ -273,6 +274,14 @@ Common Breakpoints in rem:
 425px = 26.5625rem
 768px = 48rem
 1024px = 64rem
-*/
-    -->
+
+--- Defensive text wrapping - production standard 
+        overflow-wrap: break-word;  
+        max-width: 100%; 
+        min-width: 0;
+
+overflow-wrap: break-word;  - Breaks long words ONLY when necessary 
+max-width: 100%;            - Hard limit - never exceed container 
+min-width: 0;               - Allow flex/grid shrinking */
+-->
 </html>

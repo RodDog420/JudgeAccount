@@ -138,7 +138,7 @@ def edit_review(review_id):
     form = ReviewForm()
     from app.court_data import STATES, COURTS_BY_STATE
     form.state.choices = STATES
-    form.court.choices = []
+    form.court.choices = COURTS_BY_STATE.get(request.form.get('state', ''), [])
 
     if request.method == 'POST' and form.validate_on_submit():
         review.rating = form.rating.data

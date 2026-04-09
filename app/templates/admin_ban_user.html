@@ -57,7 +57,7 @@
         
         <div class="form-actions">
             <button type="submit" class="btn btn-danger"
-                    onclick="return confirm('Are you absolutely sure you want to ban {{ user.username }}? This will prevent them from accessing the site.');">
+                    data-confirm="Are you absolutely sure you want to ban {{ user.username }}? This will prevent them from accessing the site.">
                 Confirm Ban
             </button>
             <a href="{{ url_for('auth.view_user_activity', user_id=user.id) }}" class="btn btn-gray">

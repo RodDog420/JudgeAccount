@@ -103,22 +103,22 @@
         {% else %}
             <div class="admin-actions admin-actions-flags spacing-top-sm">
                 <button type="button" class="btn btn-primary"
-                        onclick="openModal('dismiss-modal-{{ flag.id }}')">
+                        data-modal-open="dismiss-modal-{{ flag.id }}">
                     Dismiss<br> Flag
                 </button>
                 <button type="button" class="btn btn-secondary"
-                        onclick="openModal('delete-modal-{{ flag.id }}')">
+                        data-modal-open="delete-modal-{{ flag.id }}">
                     Delete <br>Content
                 </button>
                 {% if flag_user %}
                     {% if flag_user.is_banned %}
                         <button type="button" class="btn btn-gray"
-                                onclick="openModal('unban-modal-{{ flag.id }}')">
+                                data-modal-open="unban-modal-{{ flag.id }}">
                             Unban<br>User
                         </button>
                     {% else %}
                         <button type="button" class="btn btn-admin-ban-user"
-                                onclick="openModal('ban-modal-{{ flag.id }}')">
+                                data-modal-open="ban-modal-{{ flag.id }}">
                             Ban<br> User
                         </button>
                     {% endif %}
@@ -133,7 +133,10 @@
                     <form method="POST" action="{{ url_for('auth.dismiss_flag', flag_id=flag.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="modal-actions">
-                            <button type="button" class="btn btn-gray btn-small" onclick="closeModal('dismiss-modal-{{ flag.id }}')">Cancel</button>
+                            <button type="button" class="btn btn-gray btn-small"
+                                    data-modal-close="dismiss-modal-{{ flag.id }}">
+                                Cancel
+                            </button>
                             <button type="submit" class="btn btn-primary btn-small">Confirm Dismiss</button>
                         </div>
                     </form>
@@ -151,7 +154,10 @@
                         <label class="modal-message-label" for="delete-msg-{{ flag.id }}">Message to submitter (optional)</label>
                         <textarea id="delete-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your submission was removed for violating our content policy."></textarea>
                         <div class="modal-actions">
-                            <button type="button" class="btn btn-gray btn-small" onclick="closeModal('delete-modal-{{ flag.id }}')">Cancel</button>
+                            <button type="button" class="btn btn-gray btn-small"
+                                    data-modal-close="delete-modal-{{ flag.id }}">
+                                Cancel
+                            </button>
                             <button type="submit" class="btn btn-secondary btn-small">Confirm Delete</button>
                         </div>
                     </form>
@@ -170,7 +176,10 @@
                         <label class="modal-message-label" for="ban-msg-{{ flag.id }}">Message to user (optional)</label>
                         <textarea id="ban-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been suspended for violating our community guidelines."></textarea>
                         <div class="modal-actions">
-                            <button type="button" class="btn btn-gray btn-small" onclick="closeModal('ban-modal-{{ flag.id }}')">Cancel</button>
+                            <button type="button" class="btn btn-gray btn-small"
+                                    data-modal-close="ban-modal-{{ flag.id }}">
+                                Cancel
+                            </button>
                             <button type="submit" class="btn btn-warning btn-small">Confirm Ban</button>
                         </div>
                     </form>
@@ -187,7 +196,10 @@
                         <label class="modal-message-label" for="unban-msg-{{ flag.id }}">Message to user (optional)</label>
                         <textarea id="unban-msg-{{ flag.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been restored. Please review our community guidelines."></textarea>
                         <div class="modal-actions">
-                            <button type="button" class="btn btn-gray btn-small" onclick="closeModal('unban-modal-{{ flag.id }}')">Cancel</button>
+                            <button type="button" class="btn btn-gray btn-small"
+                                    data-modal-close="unban-modal-{{ flag.id }}">
+                                Cancel
+                            </button>
                             <button type="submit" class="btn btn-primary btn-small">Confirm Unban</button>
                         </div>
                     </form>

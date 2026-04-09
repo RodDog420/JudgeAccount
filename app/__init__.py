@@ -8,6 +8,7 @@ from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_talisman import Talisman
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -22,6 +23,7 @@ limiter = Limiter(
 )
 
 csrf = CSRFProtect()
+talisman = Talisman()
 
 
 def configure_logging(app):
@@ -80,6 +82,29 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     limiter.init_app(app)
     csrf.init_app(app)
+
+    # Security headers via Talisman.
+    # force_https and strict_transport_security are False because Render
+    # terminates HTTPS at the proxy — Flask receives HTTP internally.
+    # Redirecting to HTTPS here would cause redirect loops.
+    talisman.init_app(
+        app,
+        force_https=False,
+        strict_transport_security=False,
+        frame_options='DENY',
+        x_content_type_options=True,
+        referrer_policy='strict-origin-when-cross-origin',
+        content_security_policy={
+            'default-src': "'self'",
+            'script-src': "'self'",
+            'style-src': "'self'",
+            'img-src': "'self' data:",
+            'font-src': "'self'",
+            'connect-src': "'self'",
+            'frame-src': "'none'",
+            'object-src': "'none'",
+        }
+    )
 
     from app.email_utils import init_mail
     init_mail(app)

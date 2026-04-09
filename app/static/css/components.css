@@ -1205,3 +1205,10 @@ h1.user-content-name {
         align-items: center;
     }
 }
+/* ==============================================
+   ADMIN DASHBOARD SPACER
+   Replaces inline style on verified media placeholder row
+   ============================================== */
+.admin-dash-spacer {
+    flex: 0 0 calc(33.33% - 0.33rem);
+}

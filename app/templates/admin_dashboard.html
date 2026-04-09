@@ -177,19 +177,19 @@
         <div class="admin-actions admin-actions-dashboard">
             {% if not media_link.is_verified %}
                 <button type="button" class="btn btn-primary"
-                    onclick="openModal('approve-media-{{ media_link.id }}')">
+                    data-modal-open="approve-media-{{ media_link.id }}">
                     Approve
                 </button>
                 <button type="button" class="btn btn-warning"
-                    onclick="openModal('reject-media-{{ media_link.id }}')">
+                    data-modal-open="reject-media-{{ media_link.id }}">
                     Reject
                 </button>
             {% else %}
                 <div class="verified-placeholder">Verified</div>
-                <div style="flex: 0 0 calc(33.33% - 0.33rem);"></div>
+                <div class="admin-dash-spacer"></div>
             {% endif %}
             <button type="button" class="btn btn-secondary"
-                onclick="openModal('delete-media-{{ media_link.id }}')">
+                data-modal-open="delete-media-{{ media_link.id }}">
                 Delete
             </button>
         </div>
@@ -204,7 +204,10 @@
                     <label class="modal-message-label" for="approve-msg-{{ media_link.id }}">Message to submitter (optional)</label>
                     <textarea id="approve-msg-{{ media_link.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your submission has been approved and is now live."></textarea>
                     <div class="modal-actions">
-                        <button type="button" class="btn btn-gray btn-small" onclick="closeModal('approve-media-{{ media_link.id }}')">Cancel</button>
+                        <button type="button" class="btn btn-gray btn-small"
+                                data-modal-close="approve-media-{{ media_link.id }}">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn btn-primary btn-small">Confirm Approve</button>
                     </div>
                 </form>
@@ -221,7 +224,10 @@
                     <label class="modal-message-label" for="reject-msg-{{ media_link.id }}">Message to submitter (optional)</label>
                     <textarea id="reject-msg-{{ media_link.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. This submission did not meet our content guidelines."></textarea>
                     <div class="modal-actions">
-                        <button type="button" class="btn btn-gray btn-small" onclick="closeModal('reject-media-{{ media_link.id }}')">Cancel</button>
+                        <button type="button" class="btn btn-gray btn-small"
+                                data-modal-close="reject-media-{{ media_link.id }}">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn btn-warning btn-small">Confirm Reject</button>
                     </div>
                 </form>
@@ -238,7 +244,10 @@
                     <label class="modal-message-label" for="delete-media-msg-{{ media_link.id }}">Message to submitter (optional)</label>
                     <textarea id="delete-media-msg-{{ media_link.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your submission was removed for violating our content policy."></textarea>
                     <div class="modal-actions">
-                        <button type="button" class="btn btn-gray btn-small" onclick="closeModal('delete-media-{{ media_link.id }}')">Cancel</button>
+                        <button type="button" class="btn btn-gray btn-small"
+                                data-modal-close="delete-media-{{ media_link.id }}">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn btn-secondary btn-small">Confirm Delete</button>
                     </div>
                 </form>
@@ -332,7 +341,7 @@
         
         <div class="admin-actions admin-actions-dashboard">
             <button type="button" class="btn btn-secondary btn-wide"
-                onclick="openModal('delete-review-{{ review.id }}')">
+                data-modal-open="delete-review-{{ review.id }}">
                 Delete
             </button>
         </div>
@@ -347,7 +356,10 @@
                     <label class="modal-message-label" for="delete-review-msg-{{ review.id }}">Message to submitter (optional)</label>
                     <textarea id="delete-review-msg-{{ review.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your review was removed for violating our content policy."></textarea>
                     <div class="modal-actions">
-                        <button type="button" class="btn btn-gray btn-small" onclick="closeModal('delete-review-{{ review.id }}')">Cancel</button>
+                        <button type="button" class="btn btn-gray btn-small"
+                                data-modal-close="delete-review-{{ review.id }}">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn btn-secondary btn-small">Confirm Delete</button>
                     </div>
                 </form>

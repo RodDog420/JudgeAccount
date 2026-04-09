@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /c/Users/rodkr/judge-review add app/auth.py app/forms.py config.py)",
+      "Bash(git -C /c/Users/rodkr/judge-review status)",
+      "Bash(git:*)"
+    ]
+  }
+}

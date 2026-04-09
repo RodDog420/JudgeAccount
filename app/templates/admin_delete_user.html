@@ -60,7 +60,7 @@
         
         <div class="form-actions">
             <button type="submit" class="btn btn-danger"
-                    onclick="return confirm('FINAL WARNING: Are you ABSOLUTELY CERTAIN you want to permanently delete {{ user.username }}? This CANNOT be undone!');">
+                    data-confirm="FINAL WARNING: Are you ABSOLUTELY CERTAIN you want to permanently delete {{ user.username }}? This CANNOT be undone!">
                 ⚠️ PERMANENTLY DELETE USER
             </button>
             <a href="{{ url_for('auth.view_user_activity', user_id=user.id) }}" class="btn btn-gray">

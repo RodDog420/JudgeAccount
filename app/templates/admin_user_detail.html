@@ -88,7 +88,7 @@
         {% if not user.is_admin and user.id != current_user.id %}
             {% if user.is_banned %}
                 <button type="button" class="btn btn-primary"
-                        onclick="openModal('unban-user-modal-{{ user.id }}')">
+                        data-modal-open="unban-user-modal-{{ user.id }}">
                     Unban<br> User
                 </button>
             {% else %}
@@ -133,7 +133,10 @@
                 <label class="modal-message-label" for="unban-msg-{{ user.id }}">Message to user (optional)</label>
                 <textarea id="unban-msg-{{ user.id }}" name="admin_message" class="modal-message-input" placeholder="e.g. Your account has been restored. Please review our community guidelines."></textarea>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-gray btn-small" onclick="closeModal('unban-user-modal-{{ user.id }}')">Cancel</button>
+                    <button type="button" class="btn btn-gray btn-small"
+                            data-modal-close="unban-user-modal-{{ user.id }}">
+                        Cancel
+                    </button>
                     <button type="submit" class="btn btn-primary btn-small">Confirm Unban</button>
                 </div>
             </form>
