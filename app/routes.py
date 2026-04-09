@@ -14,10 +14,10 @@ def health():
     """Health check endpoint for Render and uptime monitoring."""
     try:
         db.session.execute(db.text('SELECT 1'))
-        return {'status': 'ok', 'database': 'ok'}, 200
+        return {'status': 'ok'}, 200
     except Exception as e:
         current_app.logger.error(f"Health check failed: {e}")
-        return {'status': 'error', 'database': 'unavailable'}, 500
+        return {'status': 'error'}, 500
 
 
 @bp.route('/index', methods=['GET', 'POST'])

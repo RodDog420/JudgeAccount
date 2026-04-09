@@ -512,8 +512,8 @@ def view_user_activity(user_id):
     """View detailed activity for a specific user"""
     user = User.query.get_or_404(user_id)
 
-    reviews = Review.query.filter_by(user_id=user.id).order_by(Review.created_at.desc()).all()
-    media_links = MediaLink.query.filter_by(user_id=user.id).order_by(MediaLink.created_at.desc()).all()
+    reviews = Review.query.filter_by(user_id=user.id).order_by(Review.created_at.desc()).limit(200).all()
+    media_links = MediaLink.query.filter_by(user_id=user.id).order_by(MediaLink.created_at.desc()).limit(200).all()
     admin_logs = AdminLog.query.filter_by(target_user_id=user.id).order_by(AdminLog.timestamp.desc()).limit(20).all()
 
     return render_template('admin_user_detail.html',
@@ -670,9 +670,9 @@ def view_banned_users():
     show_unbanned = request.args.get('show_unbanned', 'false') == 'true'
 
     if show_unbanned:
-        banned_users = BannedUser.query.order_by(BannedUser.banned_at.desc()).all()
+        banned_users = BannedUser.query.order_by(BannedUser.banned_at.desc()).limit(500).all()
     else:
-        banned_users = BannedUser.query.filter_by(is_unbanned=False).order_by(BannedUser.banned_at.desc()).all()
+        banned_users = BannedUser.query.filter_by(is_unbanned=False).order_by(BannedUser.banned_at.desc()).limit(500).all()
 
     return render_template('admin_banned_users.html',
                            banned_users=banned_users,
@@ -851,9 +851,9 @@ def moderation_queue():
     show_resolved = request.args.get('show_resolved', 'false') == 'true'
 
     if show_resolved:
-        flags = ContentFlag.query.order_by(ContentFlag.created_at.desc()).all()
+        flags = ContentFlag.query.order_by(ContentFlag.created_at.desc()).limit(500).all()
     else:
-        flags = ContentFlag.query.filter_by(is_resolved=False).order_by(ContentFlag.created_at.desc()).all()
+        flags = ContentFlag.query.filter_by(is_resolved=False).order_by(ContentFlag.created_at.desc()).limit(500).all()
 
     return render_template('moderation_queue.html', flags=flags, show_resolved=show_resolved)
 
@@ -1329,5 +1329,3 @@ def reset_password(token):
         flash('Your password has been reset. Please log in.')
         return redirect(url_for('auth.login'))
     return render_template('reset_password.html', form=form, token=token)
-
-
