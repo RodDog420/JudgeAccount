@@ -269,24 +269,27 @@
     
     {% for review in reviews %}
     <div class="review-card">
-
         <div class="review-header">
-            <div class="review-header-row">
-                <div class="review-header-left">
-                    <h3 class="judge-name-heading">
-                        <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">{{ review.judge.full_name() }}</a>
-                    </h3>
+            {% set badge_count = (1 if review.judge.is_federal else 0) + (1 if review.judge.is_retired else 0) %}
+            {% if badge_count == 2 %}
+            <h3 class="judge-name-heading admin-card-judge-header-multi">
+                <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">{{ review.judge.full_name() }}</a>
+                <div class="admin-card-judge-badges">
+                    {% if review.judge.is_federal %}<span class="badge badge-federal">Federal</span>{% endif %}
+                    {% if review.judge.is_retired %}<span class="badge badge-retired">Retired</span>{% endif %}
                 </div>
-                <div class="review-header-right">
-                    {% set badge_count = (1 if review.judge.is_federal else 0) + (1 if review.judge.is_retired else 0) %}
-                    {% if badge_count > 0 %}
-                    <div class="admin-card-judge-badges">
-                        {% if review.judge.is_federal %}<span class="badge badge-federal">Federal</span>{% endif %}
-                        {% if review.judge.is_retired %}<span class="badge badge-retired">Retired</span>{% endif %}
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
+            </h3>
+            {% elif badge_count == 1 %}
+            <h3 class="judge-name-heading admin-card-judge-header-single">
+                <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">{{ review.judge.full_name() }}</a>
+                {% if review.judge.is_federal %}<span class="badge badge-federal">Federal</span>{% endif %}
+                {% if review.judge.is_retired %}<span class="badge badge-retired">Retired</span>{% endif %}
+            </h3>
+            {% else %}
+            <h3 class="judge-name-heading">
+                <a href="{{ url_for('main.judge', judge_id=review.judge_id) }}">{{ review.judge.full_name() }}</a>
+            </h3>
+            {% endif %}
             <div class="review-header-row">
                 <div class="review-header-left">
                     <span class="review-rating">{{ review.rating }} / 5 &#9733;</span>

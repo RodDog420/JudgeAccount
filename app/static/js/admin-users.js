@@ -41,21 +41,3 @@ updateSelectedCount();
 bulkActionSelect.disabled = true;
 bulkReasonInput.disabled = true;
 
-const toggleColumnsBtn = document.getElementById('toggle-columns');
-const adminTableBox = document.getElementById('admin-user-table');
-
-if (toggleColumnsBtn && adminTableBox) {
-    let showingAll = false;
-
-    toggleColumnsBtn.addEventListener('click', function() {
-        showingAll = !showingAll;
-
-        if (showingAll) {
-            adminTableBox.classList.add('show-all-columns');
-            this.textContent = 'Show Priority Columns';
-        } else {
-            adminTableBox.classList.remove('show-all-columns');
-            this.textContent = 'Show All Columns';
-        }
-    });
-}

@@ -4,7 +4,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (opener) {
             var id = opener.getAttribute('data-modal-open');
             var modal = document.getElementById(id);
-            if (modal) modal.classList.add('active');
+            if (modal) {
+                // If the trigger has an href, pass it to the modal's confirm button
+                var confirmBtn = modal.querySelector('[data-modal-confirm-btn]');
+                if (confirmBtn && opener.getAttribute('href')) {
+                    confirmBtn.setAttribute('href', opener.getAttribute('href'));
+                }
+                modal.classList.add('active');
+            }
+            e.preventDefault();
             return;
         }
 

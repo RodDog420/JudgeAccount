@@ -911,6 +911,12 @@ h1.user-content-name {
     justify-content: flex-end;
     margin-top: 1.25rem;
 }
+.modal-actions-equal {
+    justify-content: stretch;
+}
+.modal-actions-equal .btn {
+    flex: 1;
+}
 @media (max-width: 47.9375rem) {
     .modal-overlay {
         align-items: flex-end;

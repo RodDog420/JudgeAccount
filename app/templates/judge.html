@@ -4,7 +4,7 @@
 {% block title %}{{ judge.full_name() }} - JudgeAccount{% endblock %}
 
 {% block meta_description %}
-<meta name="description" content="View JudgeAccount’s profile and community-submitted information for {{ judge.full_name() }}.">
+<meta name="description" content="View JudgeAccount's profile and community-submitted information for {{ judge.full_name() }}.">
 {% endblock %}
 
 {% block content %}
@@ -44,6 +44,18 @@
         <div class="stat-box">
             <span class="stat-number">{{ verified_links|length }}</span>
             <span class="stat-label">Verified Media Link{% if verified_links|length != 1 %}s{% endif %}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Review Confirmation Modal -->
+<div class="modal-overlay" id="review-confirm-modal">
+    <div class="modal-box">
+        <h2 class="modal-title">Before You Review</h2>
+        <p class="modal-body">Only individuals who have appeared before this judge may submit a review. Did you personally appear in front of this judge?</p>
+        <div class="modal-actions modal-actions-equal">
+            <a href="#" class="btn btn-primary" data-modal-confirm-btn>Yes, I Have</a>
+            <button type="button" class="btn btn-secondary" data-modal-close="review-confirm-modal">No, I Have Not</button>
         </div>
     </div>
 </div>
@@ -96,7 +108,6 @@
     </div>
     {% endfor %}
 
-    <!-- Submit Button - Always show when media links exist -->
     <div class="spacing-top-md">
         <a href="{{ url_for('main.submit_media_link', judge_id=judge.id) }}" class="btn btn-primary">
             Submit a Media Link
@@ -159,16 +170,25 @@
     </div>
     {% endfor %}
 
-    <!-- Submit Button - Always show when reviews exist -->
     <div class="spacing-top-md">
-        <a href="{{ url_for('main.submit_review', judge_id=judge.id) }}" class="btn btn-primary">
+        <a href="{{ url_for('main.submit_review', judge_id=judge.id) }}"
+           class="btn btn-primary"
+           data-modal-open="review-confirm-modal">
             Submit a Review
         </a>
     </div>
 {% else %}
     <div class="no-reviews">
         <p>No reviews yet for this judge.</p>
-        <a href="{{ url_for('main.submit_review', judge_id=judge.id) }}" class="btn btn-primary">Be the First to Review</a>
+        <a href="{{ url_for('main.submit_review', judge_id=judge.id) }}"
+           class="btn btn-primary"
+           data-modal-open="review-confirm-modal">
+            Be the First to Review
+        </a>
     </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/modals.js') }}"></script>
 {% endblock %}

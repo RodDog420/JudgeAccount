@@ -84,9 +84,6 @@
     <div class="admin-table-box" id="admin-user-table">
         <div class="admin-table-controls">
             <p class="content-count">Showing {{ user_data|length }} user{% if user_data|length != 1 %}s{% endif %}</p>
-            <button type="button" class="btn btn-secondary btn-small mobile-only" id="toggle-columns">
-                Show All Columns
-            </button>
         </div>
 
         {% if user_data %}

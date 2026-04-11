@@ -452,16 +452,18 @@
 .review-card .review-header:has(> .review-rating) {
     display: flex;
     justify-content: space-between;
-	align-items: baseline;
-    
+    align-items: flex-end;
 }
+
 .review-card .review-header > .review-rating {
     text-align: left;
+    flex-shrink: 0;
 }
 
 .review-card .review-header > .review-date {
     text-align: right;
-    flex-shrink: 0;
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 /*.btn-wide needs to load here so it loads after components.css*/
 .btn-wide {
