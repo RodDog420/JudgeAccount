@@ -1,0 +1,8 @@
+.env
+venv/
+migrations/versions/
+__pycache__/
+*.pyc
+*.pyo
+*.dump
+instance/
