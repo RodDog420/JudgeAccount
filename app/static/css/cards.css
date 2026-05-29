@@ -152,9 +152,9 @@
     color: #555;
     line-height: 1.8;
     font-size: 1rem;
-	overflow-wrap: anywhere;
-	max-width: 100%;
-
+    overflow-wrap: anywhere;
+    max-width: 100%;
+    white-space: pre-wrap;
 }
 .no-reviews {
     text-align: center;

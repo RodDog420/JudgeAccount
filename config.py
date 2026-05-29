@@ -23,6 +23,7 @@ class Config:
     SESSION_COOKIE_SAMESITE = 'Lax'
     PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
     SESSION_REFRESH_EACH_REQUEST = False
+    WTF_CSRF_TIME_LIMIT = 7200
 
     # Email configuration for Gmail SMTP
     MAIL_SERVER = 'smtp.gmail.com'

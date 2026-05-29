@@ -1,6 +1,6 @@
 import logging
 import sys
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
@@ -124,6 +124,13 @@ def create_app(config_class=Config):
         db.session.rollback()
         app.logger.error("500 Internal Server Error: %s", str(error))
         return render_template('errors/500.html'), 500
+
+    from flask_wtf.csrf import CSRFError
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        flash('Your session timed out while you were composing — this is a security feature, not a site error. Please go back in your browser, copy your content, refresh the page, and resubmit.')
+        return redirect(request.referrer or url_for('routes.index'))
 
     @login_manager.user_loader
     def load_user(user_id):
