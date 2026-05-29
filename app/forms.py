@@ -81,7 +81,7 @@ class MediaLinkForm(FlaskForm):
     news_source = StringField('News Source', validators=[DataRequired(), Length(min=2, max=200)])
     url = URLField('URL', validators=[DataRequired(), URL(), Length(max=1000)])
     publication_date = DateField('Publication Date', validators=[DataRequired()])
-    summary = TextAreaField('Brief Summary', validators=[DataRequired(), Length(min=20, max=2000)])
+    summary = TextAreaField('Brief Summary', validators=[DataRequired(), Length(min=20)])
 
     submit = SubmitField('Submit Media Link')
 

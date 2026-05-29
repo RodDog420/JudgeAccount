@@ -175,7 +175,7 @@
             </div>
             
             <div class="media-link-summary user-content-text">
-                {{ media_link.summary }}
+                {{ media_link.summary | nl2br }}
             </div>
             
             {% if not media_link.is_verified %}
@@ -234,7 +234,7 @@
             {% endif %}
             
             <div class="review-text user-content-text">
-                {{ review.review_text }}
+                {{ review.review_text | nl2br }}
             </div>
         </div>
         {% endfor %}

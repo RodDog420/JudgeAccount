@@ -83,7 +83,7 @@
         </div>
         
         <div class="media-link-summary user-content-text">
-            {{ media_link.summary }}
+            {{ media_link.summary | nl2br }}
         </div>
         
         <span class="media-link-submitted">
@@ -147,7 +147,7 @@
         {% endif %}
         
         <div class="review-text user-content-text">
-            {{ review.review_text }}
+            {{ review.review_text | nl2br }}
         </div>
         
         <div class="content-footer">

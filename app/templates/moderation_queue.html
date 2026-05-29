@@ -84,12 +84,12 @@
             {% if flag.review_id and flag.review %}
                 <p class="flagged-content-meta"><strong>Judge:</strong> <span class="user-content-name">{{ flag.review.judge.full_name() if flag.review.judge else 'Deleted Judge' }}</span></p>
                 <p class="flagged-content-meta"><strong>Rating:</strong> {{ flag.review.rating }}/5</p>
-                <p class="flagged-content-text user-content-text">{{ flag.review.review_text }}</p>
+                <p class="flagged-content-text user-content-text">{{ flag.review.review_text | nl2br }}</p>
             {% elif flag.media_link_id and flag.media_link %}
                 <p class="flagged-content-meta"><strong>Judge:</strong> <span class="user-content-name">{{ flag.media_link.judge.full_name() if flag.media_link.judge else 'Deleted Judge' }}</span></p>
                 <p class="flagged-content-meta"><strong>Headline:</strong> <span class="user-content-text">{{ flag.media_link.headline }}</span></p>
                 <p class="flagged-content-meta"><strong>Source:</strong> <span class="user-content-text">{{ flag.media_link.news_source }}</span></p>
-                <p class="flagged-content-text user-content-text">{{ flag.media_link.summary }}</p>
+                <p class="flagged-content-text user-content-text">{{ flag.media_link.summary | nl2br }}</p>
             {% else %}
                 <p class="flagged-content-meta"><em>Content has been deleted</em></p>
             {% endif %}

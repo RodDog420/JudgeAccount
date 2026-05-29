@@ -132,6 +132,12 @@ def create_app(config_class=Config):
         flash('Your session timed out while you were composing — this is a security feature, not a site error. Please go back in your browser, copy your content, refresh the page, and resubmit.')
         return redirect(request.referrer or url_for('routes.index'))
 
+    from markupsafe import Markup, escape
+
+    @app.template_filter('nl2br')
+    def nl2br(value):
+        return Markup(escape(value).replace('\n', Markup('<br>\n')))
+
     @login_manager.user_loader
     def load_user(user_id):
         from app.models import User

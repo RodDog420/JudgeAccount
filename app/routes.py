@@ -467,8 +467,6 @@ def submit_media_link():
                 validation_errors.append("Brief Summary is required.")
             elif len(form.summary.data) < 20:
                 validation_errors.append("Brief Summary must be at least 20 characters.")
-            elif len(form.summary.data) > 2000:
-                validation_errors.append("Brief Summary must be 2000 characters or fewer.")
 
             # Run URL validation directly if URL field has data and basic validation passed
             if form.url.data and form.url.data.strip() and not any("URL" in error for error in validation_errors):

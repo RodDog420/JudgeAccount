@@ -154,7 +154,6 @@
     font-size: 1rem;
     overflow-wrap: anywhere;
     max-width: 100%;
-    white-space: pre-wrap;
 }
 .no-reviews {
     text-align: center;
