@@ -303,6 +303,11 @@ ARIZONA_COURTS = [
     ('Santa Cruz County Justice Court', 'Santa Cruz County Justice Court'),
     ('Yavapai County Justice Court', 'Yavapai County Justice Court'),
     ('Yuma County Justice Court', 'Yuma County Justice Court'),
+    ('Phoenix Municipal Court', 'Phoenix Municipal Court'),
+    ('Tucson City Court', 'Tucson City Court'),
+    ('Mesa Municipal Court', 'Mesa Municipal Court'),
+    ('Tempe Municipal Court', 'Tempe Municipal Court'),
+    ('Scottsdale City Court', 'Scottsdale City Court'),
 ]
 
 ARKANSAS_COURTS = [
@@ -613,6 +618,7 @@ COLORADO_COURTS = [
     ('Washington County Probate Court', 'Washington County Probate Court'),
     ('Weld County Probate Court', 'Weld County Probate Court'),
     ('Yuma County Probate Court', 'Yuma County Probate Court'),
+    ('Denver Municipal Court', 'Denver Municipal Court'),
 ]
 
 CONNECTICUT_COURTS = [
@@ -1074,6 +1080,8 @@ GEORGIA_COURTS = [
     ('Wilkes County Probate Court', 'Wilkes County Probate Court'),
     ('Wilkinson County Probate Court', 'Wilkinson County Probate Court'),
     ('Worth County Probate Court', 'Worth County Probate Court'),
+    ('Atlanta Municipal Court', 'Atlanta Municipal Court'),
+    ('Savannah Municipal Court', 'Savannah Municipal Court'),
 ]
 
 HAWAII_COURTS = [
@@ -2023,6 +2031,7 @@ MASSACHUSETTS_COURTS = [
     ('Plymouth County Probate and Family Court', 'Plymouth County Probate and Family Court'),
     ('Suffolk County Probate and Family Court', 'Suffolk County Probate and Family Court'),
     ('Worcester County Probate and Family Court', 'Worcester County Probate and Family Court'),
+    ('Boston Municipal Court', 'Boston Municipal Court'),
 ]
 
 MICHIGAN_COURTS = [
@@ -2561,6 +2570,8 @@ MISSOURI_COURTS = [
     ('Webster County Probate Court', 'Webster County Probate Court'),
     ('Worth County Probate Court', 'Worth County Probate Court'),
     ('Wright County Probate Court', 'Wright County Probate Court'),
+    ('Kansas City Municipal Court', 'Kansas City Municipal Court'),
+    ('St. Louis Municipal Court', 'St. Louis Municipal Court'),
 ]
 
 MONTANA_COURTS = [
@@ -2758,7 +2769,8 @@ NEBRASKA_COURTS = [
     ('Wayne County Court', 'Wayne County Court'),
     ('Webster County Court', 'Webster County Court'),
     ('Wheeler County Court', 'Wheeler County Court'),
-    ('York County Court', 'York County Court')
+    ('York County Court', 'York County Court'),
+    ('Omaha Municipal Court', 'Omaha Municipal Court'),
 ]
 
 NEVADA_COURTS = [
@@ -2794,6 +2806,8 @@ NEVADA_COURTS = [
     ('Storey County Justice Court', 'Storey County Justice Court'),
     ('Washoe County Justice Court', 'Washoe County Justice Court'),
     ('White Pine County Justice Court', 'White Pine County Justice Court'),
+    ('Las Vegas Justice Court', 'Las Vegas Justice Court'),
+    ('Henderson Municipal Court', 'Henderson Municipal Court'),
 ]
 
 NEW_HAMPSHIRE_COURTS = [
@@ -2897,6 +2911,9 @@ NEW_JERSEY_COURTS = [
     ('Sussex County Surrogate Court', 'Sussex County Surrogate Court'),
     ('Union County Surrogate Court', 'Union County Surrogate Court'),
     ('Warren County Surrogate Court', 'Warren County Surrogate Court'),
+    ('Newark Municipal Court', 'Newark Municipal Court'),
+    ('Jersey City Municipal Court', 'Jersey City Municipal Court'),
+    ('Paterson Municipal Court', 'Paterson Municipal Court'),
 ]
 
 NEW_MEXICO_COURTS = [
@@ -3089,6 +3106,10 @@ NEW_YORK_COURTS = [
     ('Westchester County Surrogate\'s Court', 'Westchester County Surrogate\'s Court'),
     ('Wyoming County Surrogate\'s Court', 'Wyoming County Surrogate\'s Court'),
     ('Yates County Surrogate\'s Court', 'Yates County Surrogate\'s Court'),
+    ('New York City Criminal Court', 'New York City Criminal Court'),
+    ('Buffalo City Court', 'Buffalo City Court'),
+    ('Rochester City Court', 'Rochester City Court'),
+    ('Yonkers City Court', 'Yonkers City Court'),
 ]
 
 NORTH_CAROLINA_COURTS = [
@@ -3493,6 +3514,12 @@ OHIO_COURTS = [
     ('Williams County Probate Court', 'Williams County Probate Court'),
     ('Wood County Probate Court', 'Wood County Probate Court'),
     ('Wyandot County Probate Court', 'Wyandot County Probate Court'),
+    ('Columbus Municipal Court', 'Columbus Municipal Court'),
+    ('Cleveland Municipal Court', 'Cleveland Municipal Court'),
+    ('Cincinnati Municipal Court', 'Cincinnati Municipal Court'),
+    ('Toledo Municipal Court', 'Toledo Municipal Court'),
+    ('Akron Municipal Court', 'Akron Municipal Court'),
+    ('Dayton Municipal Court', 'Dayton Municipal Court'),
 ]
 
 OKLAHOMA_COURTS = [
@@ -3608,6 +3635,8 @@ OKLAHOMA_COURTS = [
     ('Washita County District Court', 'Washita County District Court'),
     ('Woods County District Court', 'Woods County District Court'),
     ('Woodward County District Court', 'Woodward County District Court'),
+    ('Oklahoma City Municipal Court', 'Oklahoma City Municipal Court'),
+    ('Tulsa Municipal Court', 'Tulsa Municipal Court'),
 ]
 
 OREGON_COURTS = [
@@ -3781,6 +3810,7 @@ PENNSYLVANIA_COURTS = [
     ('Westmoreland County Orphans\' Court', 'Westmoreland County Orphans\' Court'),
     ('Wyoming County Orphans\' Court', 'Wyoming County Orphans\' Court'),
     ('York County Orphans\' Court', 'York County Orphans\' Court'),
+    ('Philadelphia Municipal Court', 'Philadelphia Municipal Court'),
 ]
 
 RHODE_ISLAND_COURTS = [
@@ -4369,6 +4399,12 @@ TEXAS_COURTS = [
     ('Young County District Court', 'Young County District Court'),
     ('Zapata County District Court', 'Zapata County District Court'),
     ('Zavala County District Court', 'Zavala County District Court'),
+    ('Houston Municipal Courts', 'Houston Municipal Courts'),
+    ('Dallas Municipal Courts', 'Dallas Municipal Courts'),
+    ('San Antonio Municipal Courts', 'San Antonio Municipal Courts'),
+    ('Austin Municipal Court', 'Austin Municipal Court'),
+    ('Fort Worth Municipal Courts', 'Fort Worth Municipal Courts'),
+    ('El Paso Municipal Courts', 'El Paso Municipal Courts'),
 ]
 
 UTAH_COURTS = [
@@ -4711,6 +4747,7 @@ WASHINGTON_COURTS = [
     ('Whatcom County District Court', 'Whatcom County District Court'),
     ('Whitman County District Court', 'Whitman County District Court'),
     ('Yakima County District Court', 'Yakima County District Court'),
+    ('Seattle Municipal Court', 'Seattle Municipal Court'),
 ]
 
 WEST_VIRGINIA_COURTS = [
@@ -4835,6 +4872,7 @@ WISCONSIN_COURTS = [
     ('Waushara County Circuit Court', 'Waushara County Circuit Court'),
     ('Winnebago County Circuit Court', 'Winnebago County Circuit Court'),
     ('Wood County Circuit Court', 'Wood County Circuit Court'),
+    ('Milwaukee Municipal Court', 'Milwaukee Municipal Court'),
 ]
 
 WYOMING_COURTS = [
