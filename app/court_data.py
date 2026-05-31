@@ -4688,6 +4688,7 @@ WASHINGTON_COURTS = [
     ('Asotin County Superior Court', 'Asotin County Superior Court'),
     ('Benton County District Court', 'Benton County District Court'),
     ('Benton County Superior Court', 'Benton County Superior Court'),
+    ('Bremerton Municipal Court', 'Bremerton Municipal Court'),
     ('Chelan County District Court', 'Chelan County District Court'),
     ('Chelan County Superior Court', 'Chelan County Superior Court'),
     ('Clallam County District Court', 'Clallam County District Court'),
