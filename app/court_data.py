@@ -2710,6 +2710,7 @@ NEBRASKA_COURTS = [
     ('Dixon County Court', 'Dixon County Court'),
     ('Dodge County Court', 'Dodge County Court'),
     ('Douglas County Court', 'Douglas County Court'),
+    ('Douglas County Separate Juvenile Court', 'Douglas County Separate Juvenile Court'),
     ('Dundy County Court', 'Dundy County Court'),
     ('Fillmore County Court', 'Fillmore County Court'),
     ('Franklin County Court', 'Franklin County Court'),
