@@ -443,43 +443,31 @@ def admin_reject_media_link(media_link_id):
 @bp.route('/admin/delete_judge/<int:judge_id>', methods=['POST'])
 @admin_required
 def admin_delete_judge(judge_id):
-    try:
-        judge = Judge.query.get_or_404(judge_id)
-        judge_name = judge.full_name()
-        court = judge.court
-        current_app.logger.info("admin_delete_judge: starting delete for judge %s (ID: %s)", judge_name, judge_id)
+    judge = Judge.query.get_or_404(judge_id)
+    judge_name = judge.full_name()
+    court = judge.court
 
-        media_links = MediaLink.query.filter_by(judge_id=judge_id).all()
-        current_app.logger.info("admin_delete_judge: found %s media links", len(media_links))
-        for ml in media_links:
-            ContentFlag.query.filter_by(media_link_id=ml.id).delete()
-            AdminLog.query.filter_by(target_media_link_id=ml.id).update({'target_media_link_id': None})
-            db.session.delete(ml)
+    media_links = MediaLink.query.filter_by(judge_id=judge_id).all()
+    for ml in media_links:
+        ContentFlag.query.filter_by(media_link_id=ml.id).delete()
+        AdminLog.query.filter_by(target_media_link_id=ml.id).update({'target_media_link_id': None})
+        db.session.delete(ml)
 
-        reviews = judge.reviews.all()
-        current_app.logger.info("admin_delete_judge: found %s reviews", len(reviews))
-        for review in reviews:
-            ContentFlag.query.filter_by(review_id=review.id).delete()
-            AdminLog.query.filter_by(target_review_id=review.id).update({'target_review_id': None})
+    for review in judge.reviews.all():
+        ContentFlag.query.filter_by(review_id=review.id).delete()
+        AdminLog.query.filter_by(target_review_id=review.id).update({'target_review_id': None})
 
-        AdminLog.log_action(
-            admin_user=current_user,
-            action_type='delete_judge',
-            details=f'Deleted judge {judge_name} (ID: {judge_id}, Court: {court})'
-        )
+    AdminLog.log_action(
+        admin_user=current_user,
+        action_type='delete_judge',
+        details=f'Deleted judge {judge_name} (ID: {judge_id}, Court: {court})'
+    )
 
-        db.session.delete(judge)
-        db.session.commit()
-        current_app.logger.info("admin_delete_judge: successfully deleted judge %s", judge_name)
+    db.session.delete(judge)
+    db.session.commit()
 
-        flash(f'{judge_name} and all associated content has been permanently deleted.')
-        return redirect(url_for('main.index'))
-
-    except Exception as e:
-        db.session.rollback()
-        current_app.logger.exception("admin_delete_judge FAILED for judge_id %s: %s", judge_id, str(e))
-        flash('Delete failed — the error has been logged.')
-        return redirect(request.referrer or url_for('main.index'))
+    flash(f'{judge_name} and all associated content has been permanently deleted.')
+    return redirect(url_for('main.index'))
 
 
 # ============================================================================
