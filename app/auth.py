@@ -440,6 +440,26 @@ def admin_reject_media_link(media_link_id):
     return redirect(url_for('auth.admin_dashboard'))
 
 
+@bp.route('/admin/delete_judge/<int:judge_id>', methods=['POST'])
+@admin_required
+def admin_delete_judge(judge_id):
+    judge = Judge.query.get_or_404(judge_id)
+    judge_name = judge.full_name()
+    court = judge.court
+
+    AdminLog.log_action(
+        admin_user=current_user,
+        action_type='delete_judge',
+        details=f'Deleted judge {judge_name} (ID: {judge_id}, Court: {court})'
+    )
+
+    db.session.delete(judge)
+    db.session.commit()
+
+    flash(f'{judge_name} and all associated content has been permanently deleted.')
+    return redirect(url_for('main.index'))
+
+
 # ============================================================================
 #  USER MANAGEMENT ROUTES
 # ============================================================================

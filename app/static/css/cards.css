@@ -468,3 +468,37 @@
 .btn-wide {
     min-width: 12rem;
 }
+/* ==========================================================================
+   JUDGE.HTML ONLY - Admin Delete Judge Section (admin-only, bottom of page)
+   ========================================================================== */
+.admin-judge-delete-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 0.125rem solid #a52a2a;
+    text-align: center;
+}
+@media (min-width: 64rem) {
+    .admin-judge-delete-section {
+        padding-left: 11vw;
+        padding-right: 11vw;
+    }
+}
+.admin-judge-delete-heading {
+    color: #a52a2a;
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    margin-top: 0;
+}
+.admin-judge-delete-warning {
+    color: #555555;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    margin-top: 0.5rem;
+    text-align: left;
+}
+.btn-judge-delete {
+    background-color: #a52a2a;
+    color: white;
+}
+.btn-judge-delete:hover {
+    background-color: #7a1f1f;
+    text-decoration: none;
+}

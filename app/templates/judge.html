@@ -187,6 +187,45 @@
         </a>
     </div>
 {% endif %}
+{% if current_user.is_authenticated and current_user.is_admin %}
+<div class="admin-judge-delete-section">
+    <h2 class="admin-judge-delete-heading">Admin: Delete Judge Profile</h2>
+    <p class="admin-judge-delete-warning">
+        Permanently deletes this judge profile and all associated reviews and media links.
+        This cannot be undone.
+    </p>
+    <button type="button"
+            class="btn btn-judge-delete"
+            data-modal-open="delete-judge-{{ judge.id }}">
+        Delete Judge Profile
+    </button>
+</div>
+
+<div id="delete-judge-{{ judge.id }}" class="modal-overlay">
+    <div class="modal-box">
+        <h3 class="modal-title">Delete Judge Profile</h3>
+        <p class="modal-body">
+            This will permanently delete <strong>{{ judge.full_name() }}</strong> and ALL associated
+            reviews and media links. This cannot be undone.
+        </p>
+        <div class="modal-actions">
+            <button type="button"
+                    class="btn btn-gray btn-small"
+                    data-modal-close="delete-judge-{{ judge.id }}">
+                Cancel
+            </button>
+            <form method="POST"
+                    action="{{ url_for('auth.admin_delete_judge', judge_id=judge.id) }}"
+                    class="form-inline-action">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-judge-delete btn-small">
+                    Confirm Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
