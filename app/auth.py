@@ -453,12 +453,14 @@ def admin_delete_judge(judge_id):
         current_app.logger.info("admin_delete_judge: found %s media links", len(media_links))
         for ml in media_links:
             ContentFlag.query.filter_by(media_link_id=ml.id).delete()
+            AdminLog.query.filter_by(target_media_link_id=ml.id).update({'target_media_link_id': None})
             db.session.delete(ml)
 
         reviews = judge.reviews.all()
         current_app.logger.info("admin_delete_judge: found %s reviews", len(reviews))
         for review in reviews:
             ContentFlag.query.filter_by(review_id=review.id).delete()
+            AdminLog.query.filter_by(target_review_id=review.id).update({'target_review_id': None})
 
         AdminLog.log_action(
             admin_user=current_user,
