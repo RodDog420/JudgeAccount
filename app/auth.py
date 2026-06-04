@@ -447,6 +447,18 @@ def admin_delete_judge(judge_id):
     judge_name = judge.full_name()
     court = judge.court
 
+    # Explicitly delete media links and their content flags before deleting the judge.
+    # PostgreSQL enforces FK constraints strictly — unlike SQLite, it will refuse to
+    # delete a judge if any media_link.judge_id still points to it.
+    media_links = MediaLink.query.filter_by(judge_id=judge_id).all()
+    for ml in media_links:
+        ContentFlag.query.filter_by(media_link_id=ml.id).delete()
+        db.session.delete(ml)
+
+    # Delete content flags on reviews before the judge cascade removes the reviews.
+    for review in judge.reviews.all():
+        ContentFlag.query.filter_by(review_id=review.id).delete()
+
     AdminLog.log_action(
         admin_user=current_user,
         action_type='delete_judge',
