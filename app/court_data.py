@@ -4101,6 +4101,7 @@ TENNESSEE_COURTS = [
     ('Meigs County Chancery Court', 'Meigs County Chancery Court'),
     ('Monroe County Chancery Court', 'Monroe County Chancery Court'),
     ('Montgomery County Chancery Court', 'Montgomery County Chancery Court'),
+    ('Montgomery County General Sessions Court', 'Montgomery County General Sessions Court'),
     ('Moore County Chancery Court', 'Moore County Chancery Court'),
     ('Morgan County Chancery Court', 'Morgan County Chancery Court'),
     ('Obion County Chancery Court', 'Obion County Chancery Court'),
