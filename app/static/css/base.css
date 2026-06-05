@@ -339,6 +339,7 @@ footer {
 .inquiry-types-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    grid-auto-rows: 1fr;
     gap: 1.25rem;
     margin: 1.875rem 0;
 }
@@ -349,6 +350,8 @@ footer {
     border-radius: 0.5rem;
     box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
     border-left: 0.25rem solid #3498db;
+    display: flex;
+    flex-direction: column;
 }
 
 .inquiry-type-card h3 {
@@ -367,6 +370,7 @@ footer {
     color: #7f8c8d;
     font-size: 0.85rem;
     font-style: italic;
+    margin-top: auto;
 }
 
 
