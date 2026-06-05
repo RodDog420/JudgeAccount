@@ -881,6 +881,7 @@ GEORGIA_COURTS = [
     ('Alcovy Judicial Circuit Superior Court', 'Alcovy Judicial Circuit Superior Court'),
     ('Appling County Probate Court', 'Appling County Probate Court'),
     ('Atkinson County Probate Court', 'Atkinson County Probate Court'),
+    ('Atlanta Judicial Circuit Superior Court', 'Atlanta Judicial Circuit Superior Court'),
     ('Atlanta Municipal Court', 'Atlanta Municipal Court'),
     ('Atlantic Judicial Circuit Superior Court', 'Atlantic Judicial Circuit Superior Court'),
     ('Augusta Judicial Circuit Superior Court', 'Augusta Judicial Circuit Superior Court'),
