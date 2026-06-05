@@ -10,7 +10,7 @@
 {% block content %}
 
 <h1>Submit a Media Link</h1>
-<p>Share news articles, court records, or documented reports about a judge. Our court list is focused on the courts that handle the most consequential matters — federal courts and state district, circuit, and superior courts presiding over felony criminal and significant civil cases. If your judge sits in a lower court such as General Sessions, municipal, or small claims court, <a href="{{ url_for('main.contact') }}">contact us</a> and we will add it.</p>
+<p>Our court list is focused on the courts that handle the most consequential matters — federal courts and state district, circuit, and superior courts presiding over felony criminal and significant civil cases. If your judge sits in a lower court such as General Sessions, municipal, or small claims court, <a href="{{ url_for('main.contact') }}">contact us</a> and we will add it.</p>
 <form method="POST" action="{{ url_for('main.submit_media_link') }}" class="judge-submit-form">
     {{ form.hidden_tag() }}
     {% if prefilled_judge %}
